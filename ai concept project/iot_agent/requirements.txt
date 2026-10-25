@@ -1,0 +1,7 @@
+openai>=1.40,<2   # 3.x pulls httpx2, which breaks with older brotli builds (e.g. Anaconda)
+python-dotenv>=0.21
+PyYAML>=6.0
+numpy>=1.26
+faiss-cpu>=1.8
+scikit-learn>=1.4
+streamlit>=1.37

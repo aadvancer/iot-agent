@@ -1,0 +1,324 @@
+{
+ "system": "topology_agent",
+ "case_id": "C001",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Only cam_living was affected, with RSSI -84 dBm (below the -80 dBm threshold for intermittent disconnections) and logs showing 14 heartbeat losses in 24h, while the base station and the other two devices remained normal. The customer moved the base station closer and reports the camera has stayed online since, confirming weak signal as the cause.",
+ "output": {
+  "repair_steps": [
+   "Move the camera or base station closer to improve signal strength.",
+   "Remove obstructions such as concrete walls or metal objects between the camera and base station.",
+   "If the signal remains weak, install an official RP-1 repeater.",
+   "Check Device Settings > Device Info to confirm RSSI is above -80 dBm.",
+   "Monitor the camera for 24 hours to confirm no intermittent offline events."
+  ],
+  "customer_reply": "Thanks for your patience. I'm glad moving the base station closer resolved the camera's intermittent offline issue. For future reference, you can check the RSSI under Device Settings > Device Info; above -80 dBm is acceptable, ideally above -70 dBm. Since the camera has stayed online all day, the weak signal was the cause. If it happens again, consider installing an RP-1 repeater. Have a great day!"
+ },
+ "rule_hints": [
+  {
+   "cause": "WEAK_SIGNAL",
+   "tier": "L1",
+   "evidence": "cam_living rssi -84 dBm"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_living"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_living"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "WEAK_SIGNAL camera intermittent offline RSSI -84 fix procedure"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Move the Living Room Cam closer to the base station (or remove obstructions such as concrete walls/metal between them), or install an official RP-1 repeater. In Device Settings > Device Info, confirm the RSSI improves to above -80 dBm (ideally above -70 dBm), then monitor the camera for a day to see if the intermittent offline stops.",
+    "target_cause": "WEAK_SIGNAL"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "WEAK_SIGNAL",
+    "rationale": "Only cam_living was affected, with RSSI -84 dBm (below the -80 dBm threshold for intermittent disconnections) and logs showing 14 heartbeat losses in 24h, while the base station and the other two devices remained normal. The customer moved the base station closer and reports the camera has stayed online since, confirming weak signal as the cause."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 41,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 3,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_living",
+      "name": "Living Room Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "intermittent"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_living"
+   },
+   "result": {
+    "id": "cam_living",
+    "name": "Living Room Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -84,
+    "battery": null,
+    "status": "intermittent"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "cam_living heartbeat lost 14 times in last 24h",
+     "cam_living reconnected (rssi -84)"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_living"
+   },
+   "result": {
+    "device_id": "cam_living",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "WEAK_SIGNAL camera intermittent offline RSSI -84 fix procedure"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     },
+     {
+      "source": "manual_peripherals#Wireless range and signal strength",
+      "text": "Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater."
+     },
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Move the Living Room Cam closer to the base station (or remove obstructions such as concrete walls/metal between them), or install an official RP-1 repeater. In Device Settings > Device Info, confirm the RSSI improves to above -80 dBm (ideally above -70 dBm), then monitor the camera for a day to see if the intermittent offline stops."
+   },
+   "result": {
+    "outcome": "I moved the base station back out to the hallway so it's closer to the living room camera, and the camera has stayed online all day since. I couldn't find any RSSI number in the app's Device Info, so I can't tell you that reading."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 41,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 3,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_living",
+     "name": "Living Room Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "intermittent"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_living"
+  ],
+  "device_details": {
+   "cam_living": {
+    "id": "cam_living",
+    "name": "Living Room Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -84,
+    "battery": null,
+    "status": "intermittent"
+   }
+  },
+  "firmware_compat": {
+   "cam_living": {
+    "device_id": "cam_living",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "cam_living heartbeat lost 14 times in last 24h",
+    "cam_living reconnected (rssi -84)"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "Move the Living Room Cam closer to the base station (or remove obstructions such as concrete walls/metal between them), or install an official RP-1 repeater. In Device Settings > Device Info, confirm the RSSI improves to above -80 dBm (ideally above -70 dBm), then monitor the camera for a day to see if the intermittent offline stops.",
+    "target_cause": "WEAK_SIGNAL",
+    "outcome": "I moved the base station back out to the hallway so it's closer to the living room camera, and the camera has stayed online all day since. I couldn't find any RSSI number in the app's Device Info, so I can't tell you that reading.",
+    "resolved": true
+   }
+  ],
+  "knowledge_snippets": [
+   "[escalation_policy#Close at frontline (L1)] Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved.",
+   "[manual_peripherals#Wireless range and signal strength] Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater.",
+   "[historical_cases#H-01 Garage camera keeps dropping] Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+  ]
+ },
+ "wall_seconds": 31.6,
+ "llm_calls": 6,
+ "tokens": 13009,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "user_turns": 1,
+ "console_calls": 5
+}

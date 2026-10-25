@@ -1,0 +1,31 @@
+{
+  "case_id": "C005",
+  "complaint": "The back door sensor went offline. Probably the signal, it's a bit far from the base.",
+  "hidden_state": {
+    "base_station": {"model": "HB-200", "fw": "4.2", "online": true, "uplink_status": "ok",
+                     "storage_used_pct": 48, "loop_recording": true, "error_codes": ["E-610"]},
+    "devices": [
+      {"id": "door_back", "name": "Back Door", "model": "SEN-D1", "fw": "1.3", "bound_in_base": true, "bound_in_app": true, "rssi": null, "battery": 81, "status": "offline"},
+      {"id": "motion_living", "name": "Living Motion", "model": "SEN-M1", "fw": "1.4", "bound_in_base": true, "bound_in_app": true, "rssi": null, "battery": 74, "status": "offline"},
+      {"id": "win_bed", "name": "Bedroom Window", "model": "SEN-D1", "fw": "1.3", "bound_in_base": true, "bound_in_app": true, "rssi": null, "battery": 66, "status": "offline"},
+      {"id": "cam_front", "name": "Front Cam", "model": "CAM-S1", "fw": "2.1", "bound_in_base": true, "bound_in_app": true, "rssi": -65, "battery": 70, "status": "online"}
+    ],
+    "logs": ["14:02:11 door_back lost", "14:02:11 motion_living lost", "14:02:12 win_bed lost",
+             "E-610 radio module self-test warning", "rssi history (7 days) for all three sensors: -55 to -66 dBm"]
+  },
+  "user_knowledge": {
+    "noticed_other_devices": "I didn't check the other sensors",
+    "recent_changes": "none",
+    "base_led": "solid blue"
+  },
+  "action_outcomes": {
+    "restart_base_station": "All three sensors stay offline.",
+    "move_device_closer": "The back door sensor stays offline even next to the base station.",
+    "replace_battery": "No change."
+  },
+  "gt_root_cause": "BATCH_LINK_FAILURE",
+  "gt_tier": "L2",
+  "gt_key_checks": ["S1", "S2", "S3"],
+  "difficulty": "hard",
+  "notes": "Distractor: user blames signal for one device, but three sensors dropped in the same second with good RSSI history and E-610."
+}

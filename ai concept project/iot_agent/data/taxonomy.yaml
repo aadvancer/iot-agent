@@ -1,0 +1,101 @@
+# Closed label set of root causes for gateway-centric smart security systems.
+# tier: L1 = frontline can resolve; L2 = must escalate to FAE.
+# stage: the troubleshooting stage (S1..S5) where the decisive evidence is found.
+#   S1 base station status   S2 binding / capacity   S3 master-slave link quality
+#   S4 firmware / protocol    S5 peripheral itself
+
+root_causes:
+  BS_NETWORK_DOWN:
+    tier: L1
+    stage: S1
+    symptoms: [all devices offline in app, base station LED blinking red, no live view for any camera]
+    evidence: base_station.online == false and uplink_status == "no_internet"
+    resolution: Check router and Ethernet/Wi-Fi uplink of the base station, power-cycle router then base station.
+
+  PAIR_TIMEOUT:
+    tier: L1
+    stage: S2
+    symptoms: [new device cannot be added, pairing times out after 120 s]
+    evidence: target device bound_in_base == false, base not at capacity, device not in pairing mode or too far during pairing
+    resolution: Hold SYNC button 3 s until LED blinks blue, keep device within 1 m of base, retry pairing.
+
+  CAPACITY_EXCEEDED:
+    tier: L1
+    stage: S2
+    symptoms: [new device cannot be added although pairing mode is correct, error E-201]
+    evidence: number of bound devices == base_station.max_devices
+    resolution: Remove an unused device from the base station, or move devices to a second base station.
+
+  WEAK_SIGNAL:
+    tier: L1
+    stage: S3
+    symptoms: [single device intermittently offline, delayed notifications, choppy live view]
+    evidence: one device rssi < -80 dBm, other devices normal
+    resolution: Move device or base station closer (< 2 walls), remove metal obstacles, or add the official repeater.
+
+  BATTERY_LOW:
+    tier: L1
+    stage: S5
+    symptoms: [battery camera offline or misses events, live view fails to start]
+    evidence: device battery < 10 %
+    resolution: Charge the camera fully (about 6 h), enable power-saving mode if events are frequent.
+
+  PERIPHERAL_FW_OUTDATED:
+    tier: L1
+    stage: S4
+    symptoms: [device connected but features missing / events not uploaded, error E-305]
+    evidence: peripheral fw below minimum required by base firmware, OTA upgrade succeeds
+    resolution: Trigger OTA upgrade for the peripheral from the app (device near base, battery > 30 %).
+
+  STORAGE_FULL:
+    tier: L1
+    stage: S1
+    symptoms: [new events not recorded, playback list stops at a date, error E-402]
+    evidence: base_station.storage_used_pct >= 98 and loop_recording == false
+    resolution: Enable loop recording or format storage after backing up clips.
+
+  PROTOCOL_CONFLICT:
+    tier: L2
+    stage: S4
+    symptoms: [device drops after base station firmware update, OTA upgrade of peripheral fails repeatedly, error E-305 persists]
+    evidence: base protocol version not supported by peripheral firmware and peripheral OTA fails
+    escalation_reason: Requires protocol-level debugging or factory firmware rollback.
+
+  BATCH_LINK_FAILURE:
+    tier: L2
+    stage: S3
+    symptoms: [several devices offline at the same time, base station itself online]
+    evidence: two or more devices offline with normal rssi history, base online, power-cycle does not recover
+    escalation_reason: Indicates base station radio module or system-level fault.
+
+  UPLINK_BLOCKED_PERSIST:
+    tier: L2
+    stage: S1
+    symptoms: [base station online locally but events never reach cloud, error E-503 repeats]
+    evidence: base online, internet reachable, cloud reporting fails after router reboot and DNS reset
+    escalation_reason: Cloud channel / certificate problem needing backend investigation.
+
+  BINDING_TABLE_CORRUPT:
+    tier: L2
+    stage: S2
+    symptoms: [device shown in app but base station does not list it, re-pairing fails with E-207]
+    evidence: bound_in_app == true and bound_in_base == false and re-pair fails
+    escalation_reason: Base station binding database inconsistent; needs FAE tooling to repair.
+
+  HW_FAULT_SUSPECTED:
+    tier: L2
+    stage: S5
+    symptoms: [device fails even placed next to base station after factory reset]
+    evidence: good signal, sufficient battery, compatible firmware, still fails after reset
+    escalation_reason: Possible hardware defect; RMA decision belongs to FAE.
+
+# Hard escalation rules used by the triage module (proposed method only).
+escalation_rules:
+  - id: R1_BATCH
+    description: Two or more peripherals abnormal at the same time while base station is online.
+  - id: R2_PROTOCOL
+    description: Firmware/protocol incompatibility that remains after an OTA attempt.
+  - id: R3_FIX_FAILED
+    description: The standard L1 fix for the leading hypothesis was executed and did not resolve the issue.
+  - id: R4_TOPOLOGY_MISMATCH
+    description: App binding list and base station binding table disagree.

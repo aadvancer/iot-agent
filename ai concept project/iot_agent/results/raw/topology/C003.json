@@ -1,0 +1,290 @@
+{
+ "system": "topology_agent",
+ "case_id": "C003",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The Hallway Motion sensor was connected but not sending events, and the base station log showed \"E-305 protocol v2 not supported\" after the base station firmware update to 4.5 (which supports only v3). Firmware compatibility check confirmed the sensor was on protocol v2 with an OTA path to 1.4. The customer performed the OTA update, and motion alerts resumed, confirming the root cause.",
+ "output": {
+  "repair_steps": [
+   "Open the Hallway Motion device settings in the app",
+   "Start the available OTA firmware update to version 1.4",
+   "Keep the base station powered and online during the update",
+   "Confirm motion alerts resume after the update completes"
+  ],
+  "customer_reply": "Thank you for your patience. The Hallway Motion sensor was using an older protocol (v2) that the updated base station no longer supports. The OTA firmware update to version 1.4 brought the sensor up to protocol v3, restoring motion alerts. Your system is now fully operational."
+ },
+ "rule_hints": [
+  {
+   "cause": "PERIPHERAL_FW_OUTDATED",
+   "tier": "L1",
+   "evidence": "motion_hall protocol v2 unsupported, OTA to 1.4 available"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_hall"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_hall"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the app, open the Hallway Motion device settings and start the available firmware update to version 1.4 (OTA). Keep the base station powered and online during the update, and report whether the update completes and whether motion alerts resume.",
+    "target_cause": "PERIPHERAL_FW_OUTDATED"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "PERIPHERAL_FW_OUTDATED",
+    "rationale": "The Hallway Motion sensor was connected but not sending events, and the base station log showed \"E-305 protocol v2 not supported\" after the base station firmware update to 4.5 (which supports only v3). Firmware compatibility check confirmed the sensor was on protocol v2 with an OTA path to 1.4. The customer performed the OTA update, and motion alerts resumed, confirming the root cause."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 30,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 3,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "connected_no_events"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_hall"
+   },
+   "result": {
+    "id": "motion_hall",
+    "name": "Hallway Motion",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": -61,
+    "battery": 72,
+    "status": "connected_no_events"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "base station firmware updated 4.2 -> 4.5 at 03:10",
+     "motion_hall: E-305 protocol v2 not supported"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_hall"
+   },
+   "result": {
+    "device_id": "motion_hall",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "1.4"
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the app, open the Hallway Motion device settings and start the available firmware update to version 1.4 (OTA). Keep the base station powered and online during the update, and report whether the update completes and whether motion alerts resume."
+   },
+   "result": {
+    "outcome": "I started the firmware update in the app for Hallway Motion. It finished in about 3 minutes, and motion alerts are working again."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.5",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 30,
+   "loop_recording": true,
+   "error_codes": [
+    "E-305"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 3,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "connected_no_events"
+    },
+    {
+     "id": "cam_front",
+     "name": "Front Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "motion_hall"
+  ],
+  "device_details": {
+   "motion_hall": {
+    "id": "motion_hall",
+    "name": "Hallway Motion",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": -61,
+    "battery": 72,
+    "status": "connected_no_events"
+   }
+  },
+  "firmware_compat": {
+   "motion_hall": {
+    "device_id": "motion_hall",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "1.4"
+   }
+  },
+  "logs": {
+   "": [
+    "base station firmware updated 4.2 -> 4.5 at 03:10",
+    "motion_hall: E-305 protocol v2 not supported"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "In the app, open the Hallway Motion device settings and start the available firmware update to version 1.4 (OTA). Keep the base station powered and online during the update, and report whether the update completes and whether motion alerts resume.",
+    "target_cause": "PERIPHERAL_FW_OUTDATED",
+    "outcome": "I started the firmware update in the app for Hallway Motion. It finished in about 3 minutes, and motion alerts are working again.",
+    "resolved": true
+   }
+  ],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 20.9,
+ "llm_calls": 5,
+ "tokens": 8728,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "user_turns": 1,
+ "console_calls": 5
+}

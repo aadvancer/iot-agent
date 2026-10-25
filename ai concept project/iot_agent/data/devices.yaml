@@ -1,0 +1,42 @@
+# Fictional product line used throughout the project (not any real vendor's data).
+base_stations:
+  HB-100:
+    max_devices: 8
+    radio: sub-GHz proprietary
+    firmware:
+      "3.1": {protocol: [v2]}
+      "3.4": {protocol: [v2]}
+  HB-200:
+    max_devices: 16
+    radio: sub-GHz proprietary
+    firmware:
+      "4.0": {protocol: [v2, v3]}
+      "4.2": {protocol: [v2, v3]}
+      "4.5": {protocol: [v3]}        # v2 dropped from 4.5
+
+peripherals:
+  CAM-S1:   # outdoor battery camera
+    type: camera
+    battery: true
+    firmware:
+      "1.6": {protocol: v2, ota_to: "2.1"}
+      "1.8": {protocol: v2, ota_to: "2.1"}
+      "2.1": {protocol: v3}
+  CAM-I2:   # indoor wired camera
+    type: camera
+    battery: false
+    firmware:
+      "1.2": {protocol: v2, ota_to: null}   # legacy hardware rev, cannot reach v3
+      "2.0": {protocol: v3}
+  SEN-D1:   # door/window sensor
+    type: sensor
+    battery: true
+    firmware:
+      "1.0": {protocol: v2, ota_to: "1.3"}
+      "1.3": {protocol: v3}
+  SEN-M1:   # motion sensor
+    type: sensor
+    battery: true
+    firmware:
+      "1.1": {protocol: v2, ota_to: "1.4"}
+      "1.4": {protocol: v3}

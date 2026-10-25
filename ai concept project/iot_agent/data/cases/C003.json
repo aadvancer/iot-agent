@@ -1,0 +1,29 @@
+{
+  "case_id": "C003",
+  "complaint": "Since yesterday my hallway motion sensor doesn't send any alerts. It still shows in the app.",
+  "hidden_state": {
+    "base_station": {"model": "HB-200", "fw": "4.5", "online": true, "uplink_status": "ok",
+                     "storage_used_pct": 30, "loop_recording": true, "error_codes": ["E-305"]},
+    "devices": [
+      {"id": "motion_hall", "name": "Hallway Motion", "model": "SEN-M1", "fw": "1.1", "bound_in_base": true, "bound_in_app": true, "rssi": -61, "battery": 72, "status": "connected_no_events"},
+      {"id": "cam_front", "name": "Front Cam", "model": "CAM-S1", "fw": "2.1", "bound_in_base": true, "bound_in_app": true, "rssi": -67, "battery": 69, "status": "online"},
+      {"id": "door_front", "name": "Front Door", "model": "SEN-D1", "fw": "1.3", "bound_in_base": true, "bound_in_app": true, "rssi": -57, "battery": 83, "status": "online"}
+    ],
+    "logs": ["base station firmware updated 4.2 -> 4.5 at 03:10", "motion_hall: E-305 protocol v2 not supported"]
+  },
+  "user_knowledge": {
+    "recent_changes": "nothing that I did; maybe an automatic update overnight",
+    "sensor_led": "blinks normally when I walk past",
+    "app_notification": "there is a small update badge on the sensor in the app"
+  },
+  "action_outcomes": {
+    "restart_base_station": "No change, still no alerts.",
+    "ota_upgrade": "Firmware updates to 1.4 in about 3 minutes; alerts work again.",
+    "move_device_closer": "No change."
+  },
+  "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+  "gt_tier": "L1",
+  "gt_key_checks": ["S1", "S4"],
+  "difficulty": "medium",
+  "notes": "Looks like a protocol conflict but OTA path exists, so it must NOT be escalated (cf. H-07)."
+}
