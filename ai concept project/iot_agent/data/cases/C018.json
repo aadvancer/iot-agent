@@ -1,0 +1,114 @@
+{
+  "case_id": "C018",
+  "complaint": "The porch camera won't start live view; it just spins and then says camera unavailable. It started a couple of days ago. I thought it was the Wi-Fi because our router was updated recently, so I rebooted the router twice, but nothing changed. The other cameras are fine.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-200",
+      "fw": "4.2",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": []
+    },
+    "devices": [
+      {
+        "id": "cam_porch",
+        "name": "Porch Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -62,
+        "battery": 7,
+        "status": "offline"
+      },
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -58,
+        "battery": 82,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 74,
+        "status": "online"
+      },
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -69,
+        "battery": 17,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -61,
+        "battery": 48,
+        "status": "online"
+      },
+      {
+        "id": "motion_stairs",
+        "name": "Stairs Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 57,
+        "status": "online"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "04:10:48 cloud time sync ok (drift 1 s)",
+      "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+      "cam_porch battery level 7%",
+      "23:57:40 remote app session authenticated",
+      "23:58:01 cam_garden heartbeat ok",
+      "23:58:02 win_kitchen heartbeat ok",
+      "23:59:20 local app session opened from the home network"
+    ]
+  },
+  "user_knowledge": {
+    "battery_warning": "The app shows a low-battery warning.",
+    "router_rebooted": "Twice, no change.",
+    "last_charged": "I can't remember when I last charged it, maybe two months ago.",
+    "battery_icon": "The camera card in the app shows a red battery icon."
+  },
+  "action_outcomes": {
+    "replace_battery": "After charging or replacing the battery, the device works normally.",
+    "recharge_device": "After a full charge the device works normally again.",
+    "restart_base_station": "No change.",
+    "reboot_router": "No change."
+  },
+  "gt_root_cause": "BATTERY_LOW",
+  "gt_tier": "L1",
+  "gt_key_checks": [
+    "S1",
+    "S3",
+    "S5"
+  ],
+  "difficulty": "medium",
+  "notes": "A single offline peripheral has less than 10% battery. Distractor: Customer blames Wi-Fi; the camera battery is nearly empty."
+}

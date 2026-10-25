@@ -14,6 +14,7 @@ def check_data():
     causes = taxonomy["root_causes"]
     models = set(devices["base_stations"]) | set(devices["peripherals"])
     cases = sorted(config.CASES_DIR.glob("*.json"))
+    assert len(cases) >= 40, f"expected at least 40 dataset cases, found {len(cases)}"
     for p in cases:
         c = json.loads(p.read_text(encoding="utf-8"))
         assert c["gt_root_cause"] in causes, f"{p.name}: unknown root cause"

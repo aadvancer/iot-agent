@@ -1,0 +1,115 @@
+{
+  "case_id": "C022",
+  "complaint": "Events from the garage door sensor haven't come through for two days, although the app shows it as connected. My husband thinks the garage Wi-Fi is bad, so he installed a Wi-Fi extender there, which didn't help. The garage door opens and closes normally, so the sensor itself should be fine.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-200",
+      "fw": "4.5",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": [
+        "E-305"
+      ]
+    },
+    "devices": [
+      {
+        "id": "door_garage",
+        "name": "Garage Door",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -63,
+        "battery": 72,
+        "status": "connected_no_events"
+      },
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -58,
+        "battery": 82,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 74,
+        "status": "online"
+      },
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -69,
+        "battery": 17,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -61,
+        "battery": 48,
+        "status": "online"
+      },
+      {
+        "id": "motion_stairs",
+        "name": "Stairs Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 57,
+        "status": "online"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "04:10:48 cloud time sync ok (drift 1 s)",
+      "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+      "door_garage: E-305 protocol v2 not supported",
+      "23:57:40 remote app session authenticated",
+      "23:58:01 cam_garden heartbeat ok",
+      "23:58:02 win_kitchen heartbeat ok",
+      "23:59:20 local app session opened from the home network"
+    ]
+  },
+  "user_knowledge": {
+    "recent_changes": "The base station updated overnight.",
+    "app_update_badge": "An update is offered for Garage Door.",
+    "wifi_extender": "Installed in the garage, no change.",
+    "sensor_physical": "Door opens and closes normally."
+  },
+  "action_outcomes": {
+    "ota_upgrade": "The device updated to 1.3; events now work again.",
+    "restart_base_station": "No change; alerts still do not arrive.",
+    "reboot_router": "No change."
+  },
+  "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+  "gt_tier": "L1",
+  "gt_key_checks": [
+    "S1",
+    "S3",
+    "S4"
+  ],
+  "difficulty": "medium",
+  "notes": "The peripheral uses protocol v2; an OTA path to compatible protocol v3 exists. Distractor: Wi-Fi extender is irrelevant to a sub-GHz sensor."
+}

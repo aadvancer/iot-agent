@@ -1,0 +1,145 @@
+{
+  "case_id": "C014",
+  "complaint": "Pairing the new garage sensor fails immediately, within a second, with an error. It does not wait for the 120 seconds. I tested the sensor on a friend's system and it paired fine there, so I'm sure it isn't the sensor. I'm on the latest app version. What else can it be?",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-100",
+      "fw": "3.4",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": [
+        "E-201"
+      ]
+    },
+    "devices": [
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "1.8",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -66,
+        "battery": 58,
+        "status": "online"
+      },
+      {
+        "id": "cam_drive",
+        "name": "Driveway Cam",
+        "model": "CAM-S1",
+        "fw": "1.8",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -71,
+        "battery": 80,
+        "status": "online"
+      },
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -55,
+        "battery": 90,
+        "status": "online"
+      },
+      {
+        "id": "door_back",
+        "name": "Back Door",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -60,
+        "battery": 88,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -62,
+        "battery": 71,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -59,
+        "battery": 66,
+        "status": "online"
+      },
+      {
+        "id": "motion_stairs",
+        "name": "Stairs Motion",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 52,
+        "status": "online"
+      },
+      {
+        "id": "old_test",
+        "name": "Old Test Sensor",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 0,
+        "status": "offline"
+      },
+      {
+        "id": "new_door",
+        "name": "New Door Sensor",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": false,
+        "bound_in_app": false,
+        "rssi": null,
+        "battery": 100,
+        "status": "not_paired"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "04:10:48 cloud time sync ok (drift 1 s)",
+      "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+      "pairing rejected: E-201 capacity reached (8/8)",
+      "23:57:40 remote app session authenticated",
+      "23:59:20 local app session opened from the home network"
+    ]
+  },
+  "user_knowledge": {
+    "error_message": "The app showed E-201.",
+    "distance_during_pairing": "next to the base",
+    "sensor_tested_elsewhere": "Yes, paired fine on a friend's system.",
+    "app_version": "Latest from the store."
+  },
+  "action_outcomes": {
+    "remove_unused_device": "After removing the unused test sensor, pairing succeeds.",
+    "restart_base_station": "No change; the same capacity error appears.",
+    "pair_with_other_phone": "The same error appears on the other phone."
+  },
+  "gt_root_cause": "CAPACITY_EXCEEDED",
+  "gt_tier": "L1",
+  "gt_key_checks": [
+    "S1",
+    "S2"
+  ],
+  "difficulty": "easy",
+  "notes": "HB-100 has eight bound slots occupied; one is an unused sensor."
+}

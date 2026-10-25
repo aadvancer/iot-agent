@@ -1,0 +1,112 @@
+{
+  "case_id": "C006",
+  "complaint": "Hi, everything in my security app went grey around 7 this morning: all my cameras and sensors show offline and I get no notifications at all. Yesterday afternoon our internet provider's technician replaced the router, and since then the Wi-Fi on my laptop works fine. I tried opening the app on mobile data and it says the base station is unreachable. I'm travelling next week, so I need this working. I think the base station has died.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-100",
+      "fw": "3.4",
+      "online": false,
+      "uplink_status": "no_internet",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": [
+        "E-503"
+      ]
+    },
+    "devices": [
+      {
+        "id": "cam_main",
+        "name": "Main Camera",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -65,
+        "battery": 72,
+        "status": "offline"
+      },
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -58,
+        "battery": 82,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 74,
+        "status": "online"
+      },
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "1.8",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -69,
+        "battery": 63,
+        "status": "offline"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -61,
+        "battery": 48,
+        "status": "offline"
+      },
+      {
+        "id": "motion_stairs",
+        "name": "Stairs Motion",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 57,
+        "status": "offline"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+      "base station uplink lost: E-503",
+      "all peripherals unavailable"
+    ]
+  },
+  "user_knowledge": {
+    "recent_changes": "the router was replaced yesterday",
+    "base_led": "solid red",
+    "router_replaced": "ISP technician replaced it yesterday afternoon.",
+    "laptop_wifi": "Works fine.",
+    "cable_ports": "The technician plugged things back in; I don't know which port the cable is in.",
+    "hardware_belief": "I think the base station is dead."
+  },
+  "action_outcomes": {
+    "restart_base_station": "Devices remain offline while the router has no internet.",
+    "restart_router_then_base_station": "After power-cycling the router, waiting two minutes and then restarting the base station, the light turns solid blue and every device returns.",
+    "reinstall_app": "No change; the app still cannot reach the base station.",
+    "restart_phone": "No change."
+  },
+  "gt_root_cause": "BS_NETWORK_DOWN",
+  "gt_tier": "L1",
+  "gt_key_checks": [
+    "S1"
+  ],
+  "difficulty": "medium",
+  "notes": "Base station uplink is down; peripheral symptoms are downstream. Distractor: Customer blames dead hardware; the cable is in the wrong router port."
+}

@@ -1,36 +1,148 @@
 {
-  "case_id": "C002",
-  "complaint": "I bought a new door sensor but it just won't pair. I followed the instructions and held the button.",
-  "hidden_state": {
-    "base_station": {"model": "HB-100", "fw": "3.4", "online": true, "uplink_status": "ok",
-                     "storage_used_pct": 55, "loop_recording": true, "error_codes": ["E-201"]},
-    "devices": [
-      {"id": "cam_garden", "name": "Garden Cam", "model": "CAM-S1", "fw": "1.8", "bound_in_base": true, "bound_in_app": true, "rssi": -66, "battery": 58, "status": "online"},
-      {"id": "cam_drive", "name": "Driveway Cam", "model": "CAM-S1", "fw": "1.8", "bound_in_base": true, "bound_in_app": true, "rssi": -71, "battery": 80, "status": "online"},
-      {"id": "door_front", "name": "Front Door", "model": "SEN-D1", "fw": "1.0", "bound_in_base": true, "bound_in_app": true, "rssi": -55, "battery": 90, "status": "online"},
-      {"id": "door_back", "name": "Back Door", "model": "SEN-D1", "fw": "1.0", "bound_in_base": true, "bound_in_app": true, "rssi": -60, "battery": 88, "status": "online"},
-      {"id": "win_kitchen", "name": "Kitchen Window", "model": "SEN-D1", "fw": "1.0", "bound_in_base": true, "bound_in_app": true, "rssi": -62, "battery": 71, "status": "online"},
-      {"id": "motion_hall", "name": "Hallway Motion", "model": "SEN-M1", "fw": "1.1", "bound_in_base": true, "bound_in_app": true, "rssi": -59, "battery": 66, "status": "online"},
-      {"id": "motion_old", "name": "Test Sensor", "model": "SEN-M1", "fw": "1.1", "bound_in_base": true, "bound_in_app": true, "rssi": null, "battery": 0, "status": "offline"},
-      {"id": "motion_stairs", "name": "Stairs Motion", "model": "SEN-M1", "fw": "1.1", "bound_in_base": true, "bound_in_app": true, "rssi": -64, "battery": 52, "status": "online"},
-      {"id": "door_garage", "name": "New Garage Door", "model": "SEN-D1", "fw": "1.0", "bound_in_base": false, "bound_in_app": false, "rssi": null, "battery": 100, "status": "not_paired"}
-    ],
-    "logs": ["pairing request rejected: E-201 capacity reached (8/8)"]
+ "case_id": "C002",
+ "complaint": "I bought a new door sensor last week but it just won't pair. I followed the instructions and held the button. The app shows an error with a code, and I have tried both my phone and my partner's phone with the same result. Our system has grown over the years and, honestly, I don't remember how many devices we have. Do I need to return the sensor?",
+ "hidden_state": {
+  "base_station": {
+   "model": "HB-100",
+   "fw": "3.4",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 55,
+   "loop_recording": true,
+   "error_codes": [
+    "E-201"
+   ]
   },
-  "user_knowledge": {
-    "error_message": "The app showed some error with a code, I think it started with E-2",
-    "distance_during_pairing": "right next to the base station",
-    "led_on_sensor": "it blinked blue",
-    "recent_changes": "none"
-  },
-  "action_outcomes": {
-    "retry_pairing": "Fails again with the same error.",
-    "restart_base_station": "Still cannot pair.",
-    "remove_unused_device": "After removing the old Test Sensor the new door sensor pairs immediately."
-  },
-  "gt_root_cause": "CAPACITY_EXCEEDED",
-  "gt_tier": "L1",
-  "gt_key_checks": ["S1", "S2"],
-  "difficulty": "easy",
-  "notes": "HB-100 has 8/8 slots used, one of them a dead test sensor."
+  "devices": [
+   {
+    "id": "cam_garden",
+    "name": "Garden Cam",
+    "model": "CAM-S1",
+    "fw": "1.8",
+    "bound_in_base": true,
+    "bound_in_app": true,
+    "rssi": -66,
+    "battery": 58,
+    "status": "online"
+   },
+   {
+    "id": "cam_drive",
+    "name": "Driveway Cam",
+    "model": "CAM-S1",
+    "fw": "1.8",
+    "bound_in_base": true,
+    "bound_in_app": true,
+    "rssi": -71,
+    "battery": 80,
+    "status": "online"
+   },
+   {
+    "id": "door_front",
+    "name": "Front Door",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "bound_in_base": true,
+    "bound_in_app": true,
+    "rssi": -55,
+    "battery": 90,
+    "status": "online"
+   },
+   {
+    "id": "door_back",
+    "name": "Back Door",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "bound_in_base": true,
+    "bound_in_app": true,
+    "rssi": -60,
+    "battery": 88,
+    "status": "online"
+   },
+   {
+    "id": "win_kitchen",
+    "name": "Kitchen Window",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "bound_in_base": true,
+    "bound_in_app": true,
+    "rssi": -62,
+    "battery": 71,
+    "status": "online"
+   },
+   {
+    "id": "motion_hall",
+    "name": "Hallway Motion",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "bound_in_base": true,
+    "bound_in_app": true,
+    "rssi": -59,
+    "battery": 66,
+    "status": "online"
+   },
+   {
+    "id": "motion_old",
+    "name": "Test Sensor",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "bound_in_base": true,
+    "bound_in_app": true,
+    "rssi": null,
+    "battery": 0,
+    "status": "offline"
+   },
+   {
+    "id": "motion_stairs",
+    "name": "Stairs Motion",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "bound_in_base": true,
+    "bound_in_app": true,
+    "rssi": -64,
+    "battery": 52,
+    "status": "online"
+   },
+   {
+    "id": "door_garage",
+    "name": "New Garage Door",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "bound_in_base": false,
+    "bound_in_app": false,
+    "rssi": null,
+    "battery": 100,
+    "status": "not_paired"
+   }
+  ],
+  "logs": [
+   "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+   "04:10:48 cloud time sync ok (drift 1 s)",
+   "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+   "pairing request rejected: E-201 capacity reached (8/8)",
+   "23:57:40 remote app session authenticated",
+   "23:59:20 local app session opened from the home network"
+  ]
+ },
+ "user_knowledge": {
+  "error_message": "The app showed some error with a code, I think it started with E-2",
+  "distance_during_pairing": "right next to the base station",
+  "led_on_sensor": "it blinked blue",
+  "recent_changes": "none",
+  "phones_tried": "Mine and my partner's, same error on both.",
+  "device_count": "I don't remember how many devices we have."
+ },
+ "action_outcomes": {
+  "retry_pairing": "Fails again with the same error.",
+  "restart_base_station": "Still cannot pair.",
+  "remove_unused_device": "After removing the old Test Sensor the new door sensor pairs immediately.",
+  "pair_with_other_phone": "The same error appears on the other phone."
+ },
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "gt_key_checks": [
+  "S1",
+  "S2"
+ ],
+ "difficulty": "easy",
+ "notes": "HB-100 has 8/8 slots used, one of them a dead test sensor."
 }

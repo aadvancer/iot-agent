@@ -1,0 +1,125 @@
+{
+  "case_id": "C037",
+  "complaint": "The app lists my lobby sensor, but the base station says it is not bound. I'm confused: the app says one thing and the base station another. I've deleted and re-added it twice. I wonder whether my account is out of sync with my husband's account, since he also uses the app.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-200",
+      "fw": "4.2",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": [
+        "E-207"
+      ]
+    },
+    "devices": [
+      {
+        "id": "motion_lobby",
+        "name": "Lobby Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": false,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 72,
+        "status": "offline"
+      },
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -58,
+        "battery": 82,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 74,
+        "status": "online"
+      },
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -69,
+        "battery": 17,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -61,
+        "battery": 48,
+        "status": "online"
+      },
+      {
+        "id": "motion_stairs",
+        "name": "Stairs Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 57,
+        "status": "online"
+      },
+      {
+        "id": "cam_hall",
+        "name": "Hall Cam",
+        "model": "CAM-I2",
+        "fw": "2.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -60,
+        "battery": null,
+        "status": "online"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "04:10:48 cloud time sync ok (drift 1 s)",
+      "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+      "motion_lobby: E-207 binding table write failed",
+      "motion_lobby is listed in app but absent from base station table",
+      "23:57:40 remote app session authenticated",
+      "23:58:01 cam_garden heartbeat ok",
+      "23:58:02 win_kitchen heartbeat ok",
+      "23:59:20 local app session opened from the home network"
+    ]
+  },
+  "user_knowledge": {
+    "app_status": "The device is still shown in the app.",
+    "second_account": "My husband also uses the app and sees the same entry.",
+    "readd_attempts": "Twice."
+  },
+  "action_outcomes": {
+    "retry_pairing": "Pairing fails again with E-207.",
+    "restart_base_station": "After the restart pairing fails again with the same binding error.",
+    "remove_and_readd_in_app": "Removal succeeds in the app, but re-adding fails with the same binding error."
+  },
+  "gt_root_cause": "BINDING_TABLE_CORRUPT",
+  "gt_tier": "L2",
+  "gt_key_checks": [
+    "S1",
+    "S2"
+  ],
+  "difficulty": "hard",
+  "notes": "The app/base binding records disagree; retrying pairing repeats E-207. Distractor: Two-account sync theory is a red herring; the binding table is inconsistent."
+}

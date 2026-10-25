@@ -27,10 +27,11 @@ TOOL_SCHEMAS = [
         {"keyword": {"type": "string"}}),
     _fn("search_kb", "Search manuals, fault code reference, escalation policy and historical cases.",
         {"query": {"type": "string"}}, ["query"]),
-    _fn("ask_user", "Ask the customer a question about things only they can observe "
-        "(LED colour, location, recent changes).", {"question": {"type": "string"}}, ["question"]),
-    _fn("instruct_user", "Ask the customer to perform one troubleshooting/fix action and report the result.",
-        {"action": {"type": "string"}}, ["action"]),
+    _fn("ask_user", "Suggest one question for the frontline staff member to put to the customer about things only "
+        "the customer can observe (LED colour, location, recent changes); the staff member relays the answer.",
+        {"question": {"type": "string"}}, ["question"]),
+    _fn("instruct_user", "Give the frontline staff member one troubleshooting/fix action to walk the customer "
+        "through; the staff member reports the result.", {"action": {"type": "string"}}, ["action"]),
 ]
 
 

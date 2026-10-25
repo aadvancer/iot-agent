@@ -17,6 +17,7 @@ What your phone app shows you (device name -> status):
 {app_view}
 
 Rules:
+- The "support agent" is a human support staff member relaying questions on behalf of their diagnostic assistant.
 - Answer the support agent's question briefly (1-2 sentences), in plain everyday language.
 - If the answer is not in your facts or app view, say you don't know or can't tell. Never invent technical values (RSSI, firmware numbers, log lines) unless they are listed above.
 - Never guess or name the technical root cause yourself.

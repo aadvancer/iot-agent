@@ -6,7 +6,8 @@ import llm
 from agent.memory import SessionMemory
 from agent.rules import CAUSES, escalation_triggers
 
-OUTPUT_PROMPT = """You are writing the final output of a technical support session for a smart security system.
+OUTPUT_PROMPT = """You are writing the final hand-off for a frontline support staff member (the reader is staff, not the
+customer) at the end of a technical support session for a smart security system.
 Diagnosed root cause: {cause} ({tier}).
 Diagnosis rationale: {rationale}
 Session memory (confirmed facts):
@@ -15,13 +16,14 @@ Session memory (confirmed facts):
 {instruction}
 Return JSON only."""
 
-L1_INSTRUCTION = """The case is resolved at frontline. Return:
-{"repair_steps": ["<short imperative step>", ...], "customer_reply": "<polite reply to the customer, max 80 words>"}"""
+L1_INSTRUCTION = """The case can be closed by the frontline staff member without FAE. Return:
+{"repair_steps": ["<short imperative step for the staff member to carry out or guide the customer through>", ...],
+ "customer_reply": "<reply template the staff member can send to the customer, polite, max 80 words>"}"""
 
-L2_INSTRUCTION = """The case must be escalated to an FAE engineer. Return:
-{"symptom_summary": "<1-2 sentences>", "suspected_root_cause": "<1 sentence>",
+L2_INSTRUCTION = """The case must be escalated by the staff member to an FAE engineer. Return:
+{"symptom_summary": "<1-2 sentences, written for the FAE>", "suspected_root_cause": "<1 sentence>",
  "key_abnormal_indicators": ["<value-level facts, e.g. rssi, fw, error codes>", ...],
- "customer_reply": "<polite reply telling the customer an engineer will follow up, max 60 words>"}"""
+ "customer_reply": "<reply template the staff member can send, telling the customer an engineer will follow up, max 60 words>"}"""
 
 
 def classify_tier(m: SessionMemory, cause: str):

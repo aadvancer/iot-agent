@@ -1,0 +1,142 @@
+{
+  "case_id": "C032",
+  "complaint": "Three sensors stopped responding within seconds of each other yesterday evening. I restarted the base station, hoping it would help, but they all stayed offline. The base station is at the far end of the flat from some of them, so maybe the signal is the problem. The front camera, which is farther away, is still online though.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-200",
+      "fw": "4.2",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": [
+        "E-610"
+      ]
+    },
+    "devices": [
+      {
+        "id": "door_back",
+        "name": "Back Door",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 81,
+        "status": "offline"
+      },
+      {
+        "id": "motion_living",
+        "name": "Living Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 74,
+        "status": "offline"
+      },
+      {
+        "id": "win_bed",
+        "name": "Bedroom Window",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 66,
+        "status": "offline"
+      },
+      {
+        "id": "cam_front",
+        "name": "Front Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -65,
+        "battery": 70,
+        "status": "online"
+      },
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -69,
+        "battery": 17,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -61,
+        "battery": 48,
+        "status": "online"
+      },
+      {
+        "id": "motion_stairs",
+        "name": "Stairs Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 57,
+        "status": "online"
+      },
+      {
+        "id": "cam_hall",
+        "name": "Hall Cam",
+        "model": "CAM-I2",
+        "fw": "2.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -60,
+        "battery": null,
+        "status": "online"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "04:10:48 cloud time sync ok (drift 1 s)",
+      "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+      "21:44:00 door_back lost",
+      "21:44:01 motion_living lost",
+      "21:44:02 win_bed lost",
+      "E-610 radio module self-test warning",
+      "RSSI history for affected sensors: -55 to -66 dBm",
+      "23:57:40 remote app session authenticated",
+      "23:58:01 cam_garden heartbeat ok",
+      "23:58:02 win_kitchen heartbeat ok",
+      "23:59:20 local app session opened from the home network"
+    ]
+  },
+  "user_knowledge": {
+    "base_led": "solid blue",
+    "recent_changes": "none",
+    "restart_tried": "Yes, no change.",
+    "base_location": "At the far end of the flat.",
+    "front_camera": "Still online."
+  },
+  "action_outcomes": {
+    "restart_base_station": "All affected sensors remain offline.",
+    "replace_battery": "No change.",
+    "move_device_closer": "The device stays offline even next to the base station."
+  },
+  "gt_root_cause": "BATCH_LINK_FAILURE",
+  "gt_tier": "L2",
+  "gt_key_checks": [
+    "S1",
+    "S2",
+    "S3"
+  ],
+  "difficulty": "hard",
+  "notes": "Multiple peripherals failed simultaneously with normal RSSI and the base online. Distractor: Signal theory is contradicted by the farther camera staying online."
+}
