@@ -137,7 +137,7 @@ External resources used (not my work):
 | FAISS for knowledge retrieval | ChromaDB + TF-IDF hybrid search | Hybrid search fixed the misses that dense-only retrieval had on fault codes and model names (12/12 vs 10/12 retrieval probes); FAISS is still used for in-session recall |
 | Two baselines (Vanilla LLM, Vanilla RAG) | Four comparison systems + four ablations | ReAct isolates the planner, memory and rule design; rules-only isolates the LLM |
 | 40 cases | 40 core cases + 12 challenge cases, reported separately | The core set turned out to be largely solvable by shortcuts |
-| Usability score (1-5) | Scored by an LLM judge, not by humans | See the limitations in the Results section |
+| Usability score (1-5) | Scored by an LLM judge; checked against 15 blind human ratings | The human check did not confirm the judge (see Limitations) |
 
 Every case carries a complexity layer: a multi-sentence customer narrative that
 often contains a wrong self-diagnosis (for example blaming batteries, a Wi-Fi
@@ -338,6 +338,10 @@ error-free, but it should not be the headline figure:
   100.0% ± 0.0 (challenge). ReAct averages 94.2% ± 1.4 / 96.7% ± 1.4 and
   91.7% / 91.7%. See "Repeated runs" below. The report and the slides use these
   means as the headline numbers.
+- **Usability vs ReAct is not established.** The usability column is the LLM
+  judge's score, and blind human ratings do not confirm it (see Limitations).
+  The human ratings show that both tool-using agents beat Vanilla RAG; they
+  do not separate the topology agent from ReAct.
 
 **Hard cases and stability.** `eval.report` also writes a "Hard cases and
 stability" section and `results/figures/hard_vs_easy.png`. Rule-hard cases are
@@ -497,9 +501,30 @@ The challenge-set differences between variants are one or two cases each.
 - **C045 is no longer a held-out case.** The orphaned-binding KB section, the
   KB search guard and the hint ordering were all added after C045 failed. C045
   now measures whether the fix works, not generalisation.
-- **Usability is scored by an LLM judge** from the same provider as the agent.
-  `python -m eval.human_rating export` writes a blind 15-item sheet, and
-  `... agree` reports how well the human and judge scores agree.
+- **Usability is not established.** The LLM judge's scores (topology agent 3.92
+  vs ReAct 3.05 on the core set) were not confirmed by a blind human check.
+  One rater (the author) scored 15 outputs without seeing the system names:
+  5 cases × the topology agent, ReAct and Vanilla RAG
+  (round 1: `results/human_rating/sheet_v1.csv` and `agreement_v1.md`).
+  - Human scores sit near the ceiling: means 4.4 for the topology agent, 4.6
+    for ReAct and 4.4 for Vanilla RAG.
+  - Human and judge scores match exactly on 33% of the items and are not
+    rank-correlated (Spearman ρ = −0.23).
+  - No usability claim is made. More raters and items would be needed.
+  - **Round 2** (`results/human_rating/rating_sheet.xlsx`, written by
+    `python -m eval.human_rating export`). It shows 21 responses (7 cases ×
+    3 systems) with the three answers to a case side by side as A/B/C, the
+    console facts, anchored 1-5 scores (clarity, actionability, grounding)
+    and a 1-3 rank per case. The two dialogue cases C041 and C050 are
+    included. Results (`python -m eval.human_rating agree` →
+    `agreement.md`):
+    - The topology agent was ranked first in 5/7 cases (mean rank 1.29 vs
+      ReAct 1.71).
+    - It was ranked above Vanilla RAG in 7/7 cases (sign test p = 0.016) and
+      above ReAct in 5/7 (p = 0.45, not significant).
+    - ReAct scored higher on clarity (4.86 vs 4.00).
+    - Vanilla RAG's grounding averaged 2.57.
+    - The judge again disagreed with the human scores (ρ = −0.14).
 - **The simulated customer is an LLM** answering from scripted facts. Real
   customers are vaguer and can contradict themselves.
 - **Only one model family (DeepSeek) is evaluated.**
@@ -519,7 +544,7 @@ The challenge-set differences between variants are one or two cases each.
 | `eval/baselines.py` | `VanillaLLM`, `VanillaRAG`, `ReActAgent`, `RulesOnly` |
 | `eval/run_cases.py`, `eval/metrics.py` | Batch runner. `calculate_metrics()`, `judge_usability()` |
 | `eval/report.py`, `eval/stats.py`, `eval/dataset_stats.py` | Tables and figures. Wilson CI, McNemar test. Dataset statistics |
-| `eval/human_rating.py` | Blind human-rating sheet. Agreement with the LLM judge (`spearman()`, `agreement()`) |
+| `eval/human_rating.py` | Blind rating sheet in Excel (`export()`, `render_output()`, `console_facts()`). Analysis (`read_sheet()`, `summarize_ratings()`, `spearman()`, `agreement()`) |
 | `package_submission.py` | Builds the submission zip without `.env` or `.cache/`, and refuses to package anything that looks like an API key |
 
 ## Visual dashboard

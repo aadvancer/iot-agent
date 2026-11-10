@@ -125,6 +125,31 @@ class HardCaseTests(unittest.TestCase):
         self.assertIsNone(subset_stats([run1], ["C9"]))
 
 
+class HumanRatingSheetTests(unittest.TestCase):
+    def test_render_output_is_readable_and_hides_rule_ids(self):
+        from eval.human_rating import render_output
+
+        text = render_output({"symptom_summary": "Three sensors offline.", "suspected_root_cause": "Batch link failure",
+                              "key_abnormal_indicators": ["E-610"], "customer_reply": "An engineer will call.",
+                              "ticket": {"escalation_rules": [{"rule": "R1_BATCH", "evidence": "3 devices lost"}]}})
+        self.assertIn("FAE ESCALATION TICKET", text)
+        self.assertIn("Escalation reason: 3 devices lost", text)
+        self.assertNotIn("R1_BATCH", text)
+        self.assertIn("1. Restart", render_output({"repair_steps": ["Restart"], "customer_reply": "Hi"}))
+
+    def test_summary_pairwise_and_judge_agreement(self):
+        from eval.human_rating import summarize_ratings
+
+        key = {f"C1/{l}": {"system": s, "judge_score": j} for l, s, j in
+               (("A", "topology", 4), ("B", "react", 3), ("C", "vanilla_rag", 2))}
+        ratings = [{"case_id": "C1", "label": l, "clarity": c, "actionability": c, "grounding": c, "rank": r}
+                   for l, c, r in (("A", 5, 1), ("B", 4, 2), ("C", 3, 3))]
+        systems, pairwise, judge = summarize_ratings(ratings, key)
+        self.assertEqual(systems["topology"]["rank"], 1)
+        self.assertEqual(pairwise, {"react": (1, 1), "vanilla_rag": (1, 1)})
+        self.assertAlmostEqual(judge["spearman"], 1.0)
+
+
 class DatasetStatsTests(unittest.TestCase):
     def test_split_sizes_and_tiers_are_consistent(self):
         cases = load_cases()

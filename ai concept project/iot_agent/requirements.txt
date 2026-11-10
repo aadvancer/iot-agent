@@ -10,3 +10,4 @@ fastembed>=0.5   # local ONNX sentence embeddings (BAAI/bge-small-en-v1.5) for t
 scikit-learn>=1.4
 streamlit>=1.37
 matplotlib>=3.8   # eval/report.py figures
+openpyxl>=3.1   # eval/human_rating.py rating sheet (.xlsx)

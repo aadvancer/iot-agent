@@ -1,0 +1,77 @@
+{
+ "H01": {
+  "system": "topology",
+  "case_id": "C046",
+  "judge_score": 4
+ },
+ "H02": {
+  "system": "vanilla_rag",
+  "case_id": "C046",
+  "judge_score": 4
+ },
+ "H03": {
+  "system": "vanilla_rag",
+  "case_id": "C016",
+  "judge_score": 4
+ },
+ "H04": {
+  "system": "react",
+  "case_id": "C051",
+  "judge_score": 2
+ },
+ "H05": {
+  "system": "topology",
+  "case_id": "C005",
+  "judge_score": 3
+ },
+ "H06": {
+  "system": "react",
+  "case_id": "C005",
+  "judge_score": 4
+ },
+ "H07": {
+  "system": "react",
+  "case_id": "C046",
+  "judge_score": 2
+ },
+ "H08": {
+  "system": "vanilla_rag",
+  "case_id": "C005",
+  "judge_score": 4
+ },
+ "H09": {
+  "system": "topology",
+  "case_id": "C015",
+  "judge_score": 5
+ },
+ "H10": {
+  "system": "vanilla_rag",
+  "case_id": "C015",
+  "judge_score": 4
+ },
+ "H11": {
+  "system": "vanilla_rag",
+  "case_id": "C051",
+  "judge_score": 4
+ },
+ "H12": {
+  "system": "react",
+  "case_id": "C015",
+  "judge_score": 3
+ },
+ "H13": {
+  "system": "topology",
+  "case_id": "C051",
+  "judge_score": 3
+ },
+ "H14": {
+  "system": "topology",
+  "case_id": "C016",
+  "judge_score": 5
+ },
+ "H15": {
+  "system": "react",
+  "case_id": "C016",
+  "judge_score": 3
+ }
+}

@@ -122,8 +122,10 @@ Figure: `results/figures/ablation.png`
 ## 9. Limitations and takeaways (40 s)
 - The data is synthetic, and the labels, rules and policy share one author, so
   rule-based parts are favoured. The next step is real anonymised tickets.
-- Usability is judged by an LLM; a blind human check is prepared
-  (`eval.human_rating`).
+- Usability: in two blind rating rounds both tool-using agents clearly beat
+  Vanilla RAG (7/7 cases, p = 0.016). Ours vs ReAct is mixed: ranked first
+  in 5/7 (n.s.), but ReAct is clearer. The LLM judge does not match the
+  human scores (ρ = −0.14), so no usability claim against ReAct.
 - **Takeaway:**
   - The LLM is irreplaceable on the cases rules cannot solve.
   - The deterministic structure (topology order, typed memory, policy rules)

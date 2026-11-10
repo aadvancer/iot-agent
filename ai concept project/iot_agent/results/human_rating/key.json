@@ -1,77 +1,107 @@
 {
- "H01": {
+ "C051/A": {
   "system": "topology",
-  "case_id": "C046",
-  "judge_score": 4
+  "case_id": "C051",
+  "judge_score": 3
  },
- "H02": {
+ "C051/B": {
   "system": "vanilla_rag",
-  "case_id": "C046",
+  "case_id": "C051",
   "judge_score": 4
  },
- "H03": {
-  "system": "vanilla_rag",
-  "case_id": "C016",
-  "judge_score": 4
- },
- "H04": {
+ "C051/C": {
   "system": "react",
   "case_id": "C051",
   "judge_score": 2
  },
- "H05": {
+ "C016/A": {
   "system": "topology",
-  "case_id": "C005",
+  "case_id": "C016",
+  "judge_score": 5
+ },
+ "C016/B": {
+  "system": "vanilla_rag",
+  "case_id": "C016",
+  "judge_score": 4
+ },
+ "C016/C": {
+  "system": "react",
+  "case_id": "C016",
   "judge_score": 3
  },
- "H06": {
+ "C015/A": {
+  "system": "react",
+  "case_id": "C015",
+  "judge_score": 3
+ },
+ "C015/B": {
+  "system": "topology",
+  "case_id": "C015",
+  "judge_score": 5
+ },
+ "C015/C": {
+  "system": "vanilla_rag",
+  "case_id": "C015",
+  "judge_score": 4
+ },
+ "C005/A": {
   "system": "react",
   "case_id": "C005",
   "judge_score": 4
  },
- "H07": {
+ "C005/B": {
+  "system": "topology",
+  "case_id": "C005",
+  "judge_score": 3
+ },
+ "C005/C": {
+  "system": "vanilla_rag",
+  "case_id": "C005",
+  "judge_score": 4
+ },
+ "C041/A": {
+  "system": "vanilla_rag",
+  "case_id": "C041",
+  "judge_score": 3
+ },
+ "C041/B": {
+  "system": "topology",
+  "case_id": "C041",
+  "judge_score": 4
+ },
+ "C041/C": {
+  "system": "react",
+  "case_id": "C041",
+  "judge_score": 4
+ },
+ "C046/A": {
+  "system": "vanilla_rag",
+  "case_id": "C046",
+  "judge_score": 4
+ },
+ "C046/B": {
   "system": "react",
   "case_id": "C046",
   "judge_score": 2
  },
- "H08": {
-  "system": "vanilla_rag",
-  "case_id": "C005",
-  "judge_score": 4
- },
- "H09": {
+ "C046/C": {
   "system": "topology",
-  "case_id": "C015",
-  "judge_score": 5
- },
- "H10": {
-  "system": "vanilla_rag",
-  "case_id": "C015",
+  "case_id": "C046",
   "judge_score": 4
  },
- "H11": {
-  "system": "vanilla_rag",
-  "case_id": "C051",
-  "judge_score": 4
- },
- "H12": {
+ "C050/A": {
   "system": "react",
-  "case_id": "C015",
-  "judge_score": 3
+  "case_id": "C050",
+  "judge_score": 4
  },
- "H13": {
+ "C050/B": {
   "system": "topology",
-  "case_id": "C051",
+  "case_id": "C050",
   "judge_score": 3
  },
- "H14": {
-  "system": "topology",
-  "case_id": "C016",
-  "judge_score": 5
- },
- "H15": {
-  "system": "react",
-  "case_id": "C016",
-  "judge_score": 3
+ "C050/C": {
+  "system": "vanilla_rag",
+  "case_id": "C050",
+  "judge_score": 4
  }
 }

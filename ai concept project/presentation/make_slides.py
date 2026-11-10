@@ -431,7 +431,8 @@ def slide_data(prs, tpl, n):
                "**+ 4 ablations:** no planner · no rule hints · no structured memory · no rule override\n"
                "**ReAct** has the same tools, budget (15 steps) and action judge as ours", size=16)
     text(s, 17.2, 14.4, 15.3, 3.0, "Metrics: root-cause & tier accuracy, escalation precision/recall, customer "
-         "rounds, tokens, time, usability (LLM judge 1–5); Wilson CI, McNemar test, 3 repeated runs.",
+         "rounds, tokens, time, usability (LLM judge 1–5, checked by blind human ratings); Wilson CI, "
+         "McNemar test, 3 repeated runs.",
          size=15, color=GREY)
     notes(s, """
 There is no public dataset for this, so I built 52 labelled cases: 40 core cases and a 12-case challenge set.
@@ -534,8 +535,8 @@ def slide_conclusion(prs, tpl, n):
     bullets(s, 1.4, 4.2, 15.2, 12.5, [
         (0, "Synthetic data"),
         (1, "labels, rules and policy share one author → rules alone solve 46/52; 95% CI of a perfect run [91%, 100%]"),
-        (0, "Usability judged by an LLM"),
-        (1, "blind human rating sheet prepared"),
+        (0, "Usability vs ReAct not established"),
+        (1, "blind ratings: agents ≫ RAG (7/7, p = 0.016); ours vs ReAct mixed (1st in 5/7, n.s.; less clear)"),
         (0, "Simulated customer"),
         (1, "real customers are vaguer"),
         (0, "Next step: real anonymised tickets"),
@@ -552,7 +553,9 @@ def slide_conclusion(prs, tpl, n):
                "— on a rule-easy benchmark every system looks good.", size=16)
     notes(s, """
 Limitations: the data is synthetic and the rules and labels share one author, so the perfect score should be read
-with care; usability is judged by an LLM; the customer is simulated. Takeaway: for a narrow but structured domain,
+with care; in blind human ratings both tool-using agents clearly beat the RAG baseline, but my agent and ReAct are
+mixed, and the LLM judge did not match the humans, so I make no usability claim against ReAct; the customer is
+simulated. Takeaway: for a narrow but structured domain,
 encode the structure deterministically and let the LLM handle language and questions. That gave a more accurate and
 clearly more stable agent than a general tool-use loop, at a moderate cost. In short: the LLM handles the
 exceptions, the structure handles the routine.""")
@@ -581,7 +584,8 @@ def slide_backup(prs, tpl, n):
     text(s, 1.4, 11.6, 31, 5.5,
          "• Baselines: one run; tool-using agents: mean ± s.d. over 3 runs; McNemar on run 1\n"
          "• A perfect run is still uncertain: 95% Wilson CI [91%, 100%] (40 core), [76%, 100%] (12 challenge)\n"
-         "• Usability (LLM judge, 1–5): ours 3.92 vs ReAct 3.05 (core)\n"
+         "• Usability: blind human ratings, 7 cases side by side — ours ranked 1st in 5/7 (vs ReAct n.s.), ReAct "
+         "clearer (4.86 vs 4.00); LLM judge does not match humans (ρ = −0.14)\n"
          "• Q: Why LangGraph, not openJiuwen? Runs locally; SQLite checkpoints pause the graph while staff relay a reply\n"
          "• Q: Cost? ~17k tokens and ~22 s model time per core case (thinking mode off)", size=16)
     notes(s, "Backup slide: overall accuracy, significance tests, platform choice and cost, for questions.")

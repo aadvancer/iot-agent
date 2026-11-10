@@ -276,7 +276,7 @@ repeated the two tool-using agents three times.
 
 \begin{table}[t]
 \centering\small
-\caption{Main results. Run 1 for all systems; italic rows: mean $\pm$ s.d.\ of root-cause and tier accuracy over three runs of the two tool-using agents. Rounds: questions and actions relayed to the customer per case. Usab.: LLM judge, 1--5.}\label{tab:main}
+\caption{Main results. Run 1 for all systems; italic rows: mean $\pm$ s.d.\ of root-cause and tier accuracy over three runs of the two tool-using agents. Rounds: questions and actions relayed to the customer per case. Usab.: LLM judge, 1--5, not confirmed by blind human ratings (Section~5).}\label{tab:main}
 \setlength{\tabcolsep}{4pt}
 \resizebox{\linewidth}{!}{\begin{tabular}{@{}llcccccccc@{}}
 \toprule
@@ -367,6 +367,17 @@ Topology (ours, 3 runs) & 3/3 & 3/3 & 3/3 & 3/3 & 3/3 & 2/3 \\
 \end{tabular}}
 \end{table}
 
+\textbf{Human check of the usability judge.} I rated the outputs blind to the system in two rounds. Round 1
+used the judge's single 1--5 score on 15 responses (five cases $\times$ our agent, ReAct and Vanilla RAG); the scores
+sat near the ceiling and did not correlate with the judge (Spearman $\rho=-0.23$). Round 2 placed the three responses
+to each of seven cases side by side (the round-1 cases plus the dialogue cases C041 and C050), with anchored 1--5
+scores for clarity, actionability and grounding and a rank within each case. Both tool-using agents were clearly
+preferred to Vanilla RAG, whose grounding averaged 2.57 (our agent ranked above it in 7/7 cases, sign test
+$p=0.016$). Between the two agents the picture is mixed: our agent was ranked first in 5 of 7 cases (above ReAct in
+5/7, $p=0.45$), mainly on the hard cases, but ReAct scored higher on clarity (4.86 vs 4.00), because our tickets are
+longer. The LLM judge again disagreed with the human scores ($\rho=-0.14$). I therefore claim no usability advantage
+over ReAct, and do not use the judge's scores as evidence.
+
 \textbf{Run-to-run errors.} Both of our agent's errors across the repeated runs involve rule R3. In C050 (run 2) the
 agent did not ask whether the camera had been reset and diagnosed BATTERY\_LOW, but the failed charging attempt
 triggered R3 and the tier stayed correct. In C008 (run 3) the
@@ -426,9 +437,9 @@ auditability on top: every L2 ticket cites the policy clause and evidence that t
 policy were written by the same person, so rule-based components are favoured by construction; this is why the
 rules-only baseline already solves 46 of 52 cases (92\% of the core set) and why the override cannot be measured there (every core label's tier equals
 its taxonomy tier). Second, the data is synthetic and the challenge set targets failure modes I already knew, so real
-tickets, which are vaguer and noisier, would very likely give lower accuracy. Third, the usability scores come from
-an LLM judge of the same model family; a blind 15-item human-rating sheet has been prepared to check agreement with
-the judge but is not part of these results. Fourth, the simulated customer answers from a fixed fact list, while real
+tickets, which are vaguer and noisier, would very likely give lower accuracy. Third, usability rests on one rater who is also the author: the blind ratings separate the
+tool-using agents from the complaint-only baseline, but not our agent from ReAct, and the LLM judge did not agree
+with them. Fourth, the simulated customer answers from a fixed fact list, while real
 customers contradict themselves. Finally, the most fragile part of the system is the LLM action judge: R3 trusts its
 verdict, and C008 shows that a single misjudged reply can cause an unneeded escalation.
 
@@ -436,7 +447,8 @@ verdict, and C008 shows that a single misjudged reply can cause an unneeded esca
 staff member before escalating on R3 alone. (ii) Make the agent ask about resets and physical location whenever a
 single device is offline with otherwise normal evidence, so R5 can apply (it fired only once and never changed an
 outcome). (iii) Send only the memory slots that changed since the last step to cut the token cost of long sessions.
-(iv) Evaluate on a small set of real, anonymised tickets and with human ratings.
+(iv) Shorten the FAE ticket, the one aspect where human raters preferred ReAct. (v) Evaluate on a small set of
+real, anonymised tickets with independent raters.
 
 \textbf{Insights.} Overall accuracy was the wrong lens for this project: on a benchmark where rules already solve
 46 of 52 cases, every system looks good. Looking at the cases the rules cannot solve, and at whether a system is
