@@ -1,3 +1,5 @@
 .env
 __pycache__/
 .cache/
+# copy of the course tutorial deck, used only as a local slide template
+ai concept project/presentation/polyu_template.pptx

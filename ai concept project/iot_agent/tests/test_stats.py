@@ -103,6 +103,28 @@ class HumanRatingTests(unittest.TestCase):
         self.assertEqual(s["per_system"]["topology"], (4.5, 3.5))
 
 
+class HardCaseTests(unittest.TestCase):
+    @staticmethod
+    def _r(case_id, pred, gt="A", tier="L1"):
+        return {"case_id": case_id, "pred_root_cause": pred, "gt_root_cause": gt, "pred_tier": tier, "gt_tier": "L1"}
+
+    def test_rule_hard_cases_are_rules_only_errors(self):
+        from eval.report import rule_hard_cases
+
+        rows = {"rules_only": [self._r("C1", "A"), self._r("C2", "B"), self._r("C3", "B")]}
+        self.assertEqual(rule_hard_cases(rows), ["C2", "C3"])
+
+    def test_subset_stats_mean_and_pass_k(self):
+        from eval.report import subset_stats
+
+        run1 = {"C1": self._r("C1", "A"), "C2": self._r("C2", "A")}
+        run2 = {"C1": self._r("C1", "A"), "C2": self._r("C2", "B", tier="L2")}
+        s = subset_stats([run1, run2], ["C1", "C2"])
+        self.assertAlmostEqual(s["cause"], 0.75)
+        self.assertEqual((s["pass_cause"], s["pass_tier"], s["consistent"]), (1, 1, 1))
+        self.assertIsNone(subset_stats([run1], ["C9"]))
+
+
 class DatasetStatsTests(unittest.TestCase):
     def test_split_sizes_and_tiers_are_consistent(self):
         cases = load_cases()

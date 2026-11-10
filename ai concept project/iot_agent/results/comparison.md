@@ -108,6 +108,29 @@ Identical settings (temperature 0); runs 2+ use a separate LLM cache namespace, 
 | ReAct (same tools) | C050: BATTERY_LOW → HW_FAULT_SUSPECTED | C050: L1 → L2 |
 | Topology agent (ours) | none | none |
 
+## Hard cases and stability (rule-hard = cases the rules-only baseline gets wrong; both splits pooled, split shown per case)
+
+Rules only is 0% on this subset by construction. Systems with repeated runs report the mean over runs and pass^k (correct in all k runs).
+
+| System | Runs | Rule-easy (46) cause acc | Rule-easy pass^k (cause) | Rule-hard (6) cause acc | Rule-hard tier acc | Rule-hard pass^k (cause / tier) |
+|---|---|---|---|---|---|---|
+| Vanilla LLM | 1 | 71.7% | 33/46 | 66.7% | 66.7% | 4/6 / 4/6 |
+| Vanilla RAG | 1 | 73.9% | 34/46 | 66.7% | 66.7% | 4/6 / 4/6 |
+| Rules only (no LLM) | 1 | 100.0% | 46/46 | 0.0% | 0.0% | 0/6 / 0/6 |
+| ReAct (same tools) | 3 | 94.9% | 41/46 | 83.3% | 83.3% | 5/6 / 5/6 |
+| Topology agent (ours) | 3 | 100.0% | 46/46 | 94.4% | 100.0% | 5/6 / 6/6 |
+
+Per-case results on the rule-hard cases (correct runs / runs; ✗ shows the wrong prediction):
+
+| Case | Split | Truth | Vanilla LLM | Vanilla RAG | Rules only (no LLM) | ReAct (same tools) | Topology agent (ours) |
+|---|---|---|---|---|---|---|---|
+| C033 | core | UPLINK_BLOCKED_PERSIST | ✓ | ✓ | ✗ BS_NETWORK_DOWN | 3/3 | 3/3 |
+| C034 | core | UPLINK_BLOCKED_PERSIST | ✓ | ✓ | ✗ BS_NETWORK_DOWN | 3/3 | 3/3 |
+| C035 | core | UPLINK_BLOCKED_PERSIST | ✓ | ✓ | ✗ BS_NETWORK_DOWN | 3/3 | 3/3 |
+| C041 | challenge | HW_FAULT_SUSPECTED | ✗ WEAK_SIGNAL | ✗ WEAK_SIGNAL | ✗ WEAK_SIGNAL | 3/3 | 3/3 |
+| C050 | challenge | HW_FAULT_SUSPECTED | ✗ BATTERY_LOW | ✗ BATTERY_LOW | ✗ BATTERY_LOW | 0/3 | 2/3 |
+| C052 | challenge | UPLINK_BLOCKED_PERSIST | ✓ | ✓ | ✗ BS_NETWORK_DOWN | 3/3 | 3/3 |
+
 ## Ablation: Core set (C001-C040)
 
 | Variant | Cases | Root-cause acc | Tier acc | L2 precision | L2 recall | Unneeded / missed escalations | Tier overrides | Customer rounds | Repeated queries blocked / executed | LLM calls | Tokens |

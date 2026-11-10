@@ -8,7 +8,7 @@ H01,C046,"The camera on the garden shed is clearly defective. It keeps freezing 
   ""Close case as resolved at frontline if customer confirms stable connection.""
  ],
  ""customer_reply"": ""Thanks for testing! Since the camera works perfectly at the back door, it's just a weak signal at the shed. Please reposition it to minimize the metal fence obstruction. If it still drops, we recommend the RP-1 repeater to boost the signal. Let us know how it goes!""
-}",,
+}",4,
 H02,C046,"The camera on the garden shed is clearly defective. It keeps freezing and going offline and the picture is choppy. It's only four months old and still under warranty, so I'd like a replacement unit sent out please. I've already restarted it a few times and it makes no difference.",(no questions asked and no actions performed),"{
  ""repair_steps"": [
   ""Check the camera's signal strength (RSSI) in the app."",
@@ -18,7 +18,7 @@ H02,C046,"The camera on the garden shed is clearly defective. It keeps freezing 
   ""After adjustments, monitor the camera for 24-48 hours to see if offline events and choppiness are reduced.""
  ],
  ""customer_reply"": ""Thank you for the details. The symptoms you're describing—intermittent offline, freezing, and choppy picture—are often caused by a weak Wi-Fi signal between the camera and the base station, especially for outdoor cameras like the one on your garden shed. Before considering a replacement, we can try a few steps to improve the connection. Could you please check the signal strength in the app and let us know the RSSI value? If it's below -70 dBm, we may need to move the camera closer, adjust the antenna, or add a range extender. We can also try repositioning the base station or removing any obstacles. Let's start with these steps and see if the stability improves.""
-}",,
+}",5,
 H03,C016,"My cellar motion sensor misses alerts. Twice last week I walked through the cellar to test it and got nothing on my phone. The app sometimes shows it offline for a few minutes. I assume the sensor is faulty because it is an older unit, but the hallway sensor of the same model works perfectly.",(no questions asked and no actions performed),"{
  ""repair_steps"": [
   ""Check the signal strength indicator for the cellar sensor in the app."",
@@ -28,7 +28,7 @@ H03,C016,"My cellar motion sensor misses alerts. Twice last week I walked throug
   ""If the problem continues, consider swapping the sensor with the hallway sensor to confirm whether the issue follows the device or the location.""
  ],
  ""customer_reply"": ""Thank you for the details. Based on the symptoms, the most likely cause is a weak wireless signal between the cellar sensor and the base station. This can cause intermittent offline status and missed alerts. We recommend checking the signal strength in the app and relocating the sensor or base station to improve connectivity. If the issue persists after these steps, please let us know.""
-}",,
+}",4,
 H04,C051,"The back door sensor shows a low battery and has gone offline, so I'll change the battery tonight. While I have you on the line, is there anything else I should check? I haven't looked at the rest of the system today, I've been at work.",(no questions asked and no actions performed),"{
  ""symptom_summary"": ""Three peripherals (Back Door, Living Motion, Bedroom Window) went offline simultaneously while the base station remained online with a healthy uplink. The base station log shows error E-610 (radio module self-test warning)."",
  ""suspected_root_cause"": ""Base station sub-GHz radio module failure causing simultaneous loss of multiple peripherals."",
@@ -40,7 +40,7 @@ H04,C051,"The back door sensor shows a low battery and has gone offline, so I'll
   ""Historical case H-05 matches exact signature (three sensors offline at once + E-610) and required radio module replacement""
  ],
  ""customer_reply"": ""Thank you for your patience. We've identified a potential issue with the base station's radio module that requires further investigation by our engineering team. An engineer will follow up with you shortly to resolve this. No action is needed from you at this time.""
-}",,
+}",5,
 H05,C005,"The back door sensor went offline. Probably the signal, it's a bit far from the base. I got a push notification around 2 pm but didn't think much of it, and only noticed in the evening that the app showed it offline. I'm thinking of buying a signal repeater for that side of the house. The front camera works as normal.",(no questions asked and no actions performed),"{
  ""symptom_summary"": ""Three sensors (Back Door, Living Motion, Bedroom Window) dropped offline simultaneously at 14:02:11-12 while the base station and other devices remained online. Base station log shows E-610 radio module self-test warning."",
  ""suspected_root_cause"": ""Base station sub-GHz radio module fault (E-610), matching historical case H-05."",
@@ -100,7 +100,7 @@ H05,C005,"The back door sensor went offline. Probably the signal, it's a bit far
   ],
   ""steps_performed"": []
  }
-}",,
+}",5,
 H06,C005,"The back door sensor went offline. Probably the signal, it's a bit far from the base. I got a push notification around 2 pm but didn't think much of it, and only noticed in the evening that the app showed it offline. I'm thinking of buying a signal repeater for that side of the house. The front camera works as normal.",(no questions asked and no actions performed),"{
  ""symptom_summary"": ""Three sensors (Back Door, Living Motion, Bedroom Window) went offline simultaneously at 14:02:11-12, while the base station remained online with a good uplink. Customer only noticed the back door sensor offline and assumed a signal issue."",
  ""suspected_root_cause"": ""Base station sub-GHz radio module failure indicated by E-610 self-test warning and simultaneous loss of multiple sensors with normal RSSI history."",
@@ -113,7 +113,7 @@ H06,C005,"The back door sensor went offline. Probably the signal, it's a bit far
   ""Other devices (cameras, other sensors) remained online""
  ],
  ""customer_reply"": ""Thank you for your patience. Our diagnostics show that the issue is not with your sensor's signal strength, but with the base station's radio module. This requires attention from our engineering team. We have escalated your case and an engineer will contact you within 24 hours to arrange a repair or replacement. No action is needed from you at this time.""
-}",,
+}",5,
 H07,C046,"The camera on the garden shed is clearly defective. It keeps freezing and going offline and the picture is choppy. It's only four months old and still under warranty, so I'd like a replacement unit sent out please. I've already restarted it a few times and it makes no difference.",(no questions asked and no actions performed),"{
  ""repair_steps"": [
   ""Advise customer that the issue is weak signal, not a hardware fault."",
@@ -122,7 +122,7 @@ H07,C046,"The camera on the garden shed is clearly defective. It keeps freezing 
   ""After installation, verify RSSI improves to above -80 dBm and monitor for 24 hours.""
  ],
  ""customer_reply"": ""Thank you for your patience. Our diagnostics show your shed camera is working correctly, but the Wi-Fi signal is too weak at that location, causing the freezing and disconnections. We recommend adding an RP-1 signal repeater to boost the signal. This is a simple fix and should resolve the issue. Would you like assistance with ordering one?""
-}",,
+}",4,
 H08,C005,"The back door sensor went offline. Probably the signal, it's a bit far from the base. I got a push notification around 2 pm but didn't think much of it, and only noticed in the evening that the app showed it offline. I'm thinking of buying a signal repeater for that side of the house. The front camera works as normal.",(no questions asked and no actions performed),"{
  ""repair_steps"": [
   ""Move the back door sensor closer to the base station temporarily to test if it reconnects."",
@@ -132,7 +132,7 @@ H08,C005,"The back door sensor went offline. Probably the signal, it's a bit far
   ""If the problem persists after these steps, contact support for further diagnosis.""
  ],
  ""customer_reply"": ""Thank you for the details. Based on the information you provided, the issue is likely due to a weak signal between the back door sensor and the base station. Since only this sensor is affected and it is located farther away, we recommend improving the signal strength. You can try moving the sensor closer to the base station temporarily to confirm, or consider installing a signal repeater (such as the RP-1) to extend coverage to that area. If the problem persists after improving the signal, please contact us again for further assistance.""
-}",,
+}",4,
 H09,C015,"The camera in my detached garage keeps dropping off. It is offline maybe five times a day for 10 to 30 minutes and then comes back by itself, and notifications from it are delayed. I replaced the camera battery and updated the app, but nothing changes. The camera is brand new, bought in the spring, so it shouldn't be faulty.","- Asked: The Garage Cam is in a detached garage. Can you ask the customer: how far is the garage from the base station, and are there walls/metal (e.g., a metal garage door, foil insulation) between them? Also, has the camera's position changed recently? -> Customer: The garage is about 20 metres from the house, across the garden, and the signal has to go through the garage's brick wall. I'm not sure about metal in the door or insulation — I can't tell that. The camera hasn't been moved recently; nothing has changed.
 - Customer performed: Walk the customer through improving the Garage Cam's signal: first try moving the camera closer to the house/base station (or repositioning it so the signal path avoids the brick wall as much as possible). If that isn't practical, recommend installing the official RP-1 repeater between the base station and the garage. Ask the customer to confirm whether the camera stays online after repositioning (or after adding the repeater). -> Reported: I moved the base station closer to the garage, and since then the Garage Cam has stayed online. I'll keep an eye on it and let you know if it drops again.","{
  ""repair_steps"": [
@@ -142,7 +142,7 @@ H09,C015,"The camera in my detached garage keeps dropping off. It is offline may
   ""Document the case with root cause WEAK_SIGNAL and resolution 'moved base station closer'.""
  ],
  ""customer_reply"": ""Thank you for your patience. We've identified that the Garage Cam's signal was too weak due to distance and the brick wall. Moving the base station closer has resolved the issue. Please monitor the camera over the next couple of days. If it drops again, we recommend installing an RP-1 repeater to boost the signal. Let us know if you need further assistance.""
-}",,
+}",3,
 H10,C015,"The camera in my detached garage keeps dropping off. It is offline maybe five times a day for 10 to 30 minutes and then comes back by itself, and notifications from it are delayed. I replaced the camera battery and updated the app, but nothing changes. The camera is brand new, bought in the spring, so it shouldn't be faulty.",(no questions asked and no actions performed),"{
  ""repair_steps"": [
   ""Check the camera's signal strength in the app (RSSI). If it is below -70 dBm, the signal is weak."",
@@ -151,7 +151,7 @@ H10,C015,"The camera in my detached garage keeps dropping off. It is offline may
   ""After improving the signal, monitor the camera for 24-48 hours to confirm stability.""
  ],
  ""customer_reply"": ""Thank you for the details. Based on the symptoms, the camera is likely experiencing a weak Wi-Fi signal in the detached garage. This can cause intermittent disconnections and delayed notifications. We recommend improving the signal strength by moving the camera closer to the base station or installing a Wi-Fi repeater/extender between the garage and the base station. If the issue persists after improving the signal, please contact us again for further assistance.""
-}",,
+}",5,
 H11,C051,"The back door sensor shows a low battery and has gone offline, so I'll change the battery tonight. While I have you on the line, is there anything else I should check? I haven't looked at the rest of the system today, I've been at work.",(no questions asked and no actions performed),"{
  ""repair_steps"": [
   ""Replace the battery in the back door sensor with a fresh one of the correct type."",
@@ -161,7 +161,7 @@ H11,C051,"The back door sensor shows a low battery and has gone offline, so I'll
   ""If the sensor remains offline after re-pairing, contact support for further assistance.""
  ],
  ""customer_reply"": ""Thank you for the information. Since the back door sensor is showing a low battery and has gone offline, replacing the battery is the correct first step. After replacing the battery, please check if the sensor comes back online in the app. If it does not, you may need to re-pair the sensor or check its signal strength. Is there anything else I can help you with?""
-}",,
+}",4,
 H12,C015,"The camera in my detached garage keeps dropping off. It is offline maybe five times a day for 10 to 30 minutes and then comes back by itself, and notifications from it are delayed. I replaced the camera battery and updated the app, but nothing changes. The camera is brand new, bought in the spring, so it shouldn't be faulty.",(no questions asked and no actions performed),"{
  ""repair_steps"": [
   ""Advise the customer to install an RP-1 repeater between the base station and the garage camera to boost the signal."",
@@ -170,7 +170,7 @@ H12,C015,"The camera in my detached garage keeps dropping off. It is offline may
   ""Confirm the camera remains online for 24 hours without intermittent disconnections and that notifications are no longer delayed.""
  ],
  ""customer_reply"": ""We found the issue: your garage camera's wireless signal is too weak (RSSI -86 dBm), causing the dropouts and delayed notifications. This is due to distance/obstacles between the garage and base station. To fix it, we recommend installing our RP-1 signal repeater. Place it midway between the base station and garage, with clear line of sight. Once installed, the camera should stay online reliably. Would you like help ordering the repeater?""
-}",,
+}",5,
 H13,C051,"The back door sensor shows a low battery and has gone offline, so I'll change the battery tonight. While I have you on the line, is there anything else I should check? I haven't looked at the rest of the system today, I've been at work.",(no questions asked and no actions performed),"{
  ""symptom_summary"": ""Three sensors (Back Door, Living Motion, Bedroom Window) went offline simultaneously at 21:14:02-03 while the base station remained online with normal uplink and RSSI history. Base station log shows E-610 radio module self-test warning."",
  ""suspected_root_cause"": ""Base station sub-GHz radio module failure (E-610) causing simultaneous loss of multiple peripherals."",
@@ -230,7 +230,7 @@ H13,C051,"The back door sensor shows a low battery and has gone offline, so I'll
   ],
   ""steps_performed"": []
  }
-}",,
+}",5,
 H14,C016,"My cellar motion sensor misses alerts. Twice last week I walked through the cellar to test it and got nothing on my phone. The app sometimes shows it offline for a few minutes. I assume the sensor is faulty because it is an older unit, but the hallway sensor of the same model works perfectly.","- Customer performed: Ask the customer to relocate the Cellar Motion sensor closer to the base station (or move the base station to a more central location), avoiding concrete walls/metal obstructions between them. If relocation isn't practical, recommend installing the official RP-1 repeater. Then have them test by walking through the cellar and confirm whether alerts now arrive reliably. -> Reported: I moved the base station to a more central spot so it's closer to the cellar, and the Cellar Motion sensor has stayed online since. I'll walk through the cellar now to check that the alerts come through reliably.
 - Asked: After moving the base station to a more central spot, did the customer's walk-through test in the cellar now trigger alerts on their phone reliably? (And has the Cellar Motion sensor stayed online without dropping?) -> Customer: Yes — I walked through the cellar and the alerts came through on my phone each time. The Cellar Motion sensor has stayed online since the move, no drops.","{
  ""repair_steps"": [
@@ -240,7 +240,7 @@ H14,C016,"My cellar motion sensor misses alerts. Twice last week I walked throug
   ""Close the case as resolved at frontline with root cause WEAK_SIGNAL.""
  ],
  ""customer_reply"": ""Thank you for your patience. We've resolved the issue by improving the wireless signal to your Cellar Motion sensor. Please keep the base station in its new central location. If you notice any further disconnections, we recommend adding an RP-1 repeater to boost the signal. Your system should now be working reliably. Have a great day!""
-}",,
+}",5,
 H15,C016,"My cellar motion sensor misses alerts. Twice last week I walked through the cellar to test it and got nothing on my phone. The app sometimes shows it offline for a few minutes. I assume the sensor is faulty because it is an older unit, but the hallway sensor of the same model works perfectly.",(no questions asked and no actions performed),"{
  ""repair_steps"": [
   ""Advise customer to move the cellar motion sensor closer to the base station or to a location with better RF line-of-sight."",
@@ -249,4 +249,4 @@ H15,C016,"My cellar motion sensor misses alerts. Twice last week I walked throug
   ""If signal remains weak, recommend relocating the base station to a more central location.""
  ],
  ""customer_reply"": ""We found your cellar sensor has a weak wireless signal (RSSI -83 dBm) compared to the hallway sensor (-64 dBm), causing intermittent disconnections. The sensor itself is fine. To improve reliability, try moving it closer to the base station or removing obstructions. If that's not possible, a range extender may help. Let us know if you need further assistance.""
-}",,
+}",4,

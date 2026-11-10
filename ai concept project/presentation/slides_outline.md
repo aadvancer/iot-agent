@@ -7,7 +7,9 @@ Figures are in `iot_agent/results/figures/` and `presentation/architecture.png`.
 ---
 
 ## 1. Title (10 s)
-**A Topology-Aware Support Copilot for Gateway-Centric Smart Security Systems**
+**AI Agent for Smart Security IoT Systems** (exact proposal title; the course
+does not allow changing it). The approach can be introduced orally as "a
+topology-aware support copilot".
 Name, student ID, COMP5511 Final Project.
 
 ## 2. Problem and motivation (45 s)
@@ -62,23 +64,31 @@ makes the rules concrete. Algorithm 1 goes in the report.
 
 Figure: `results/figures/dataset.png` (small).
 
-## 6. Main results (60 s)
-Table, core / challenge:
+## 6. Results: where rules fail (60 s)
+Figure: `results/figures/hard_vs_easy.png`. Rules alone (no LLM) already
+solve 46/52 cases, so overall accuracy says little. Instead, show the 6
+rule-hard cases (the ones rules-only gets wrong) and pass³ (correct in all
+3 runs).
 
-| System | Root cause | Tier | Tokens/case |
-|---|---|---|---|
-| Vanilla LLM | 85% / 25% | 88% / 50% | 0.9k |
-| Vanilla RAG | 85% / 33% | 88% / 58% | 1.3k |
-| Rules only | 92% / 75% | 92% / 75% | 0 |
-| ReAct (same tools) | 92% / 92% | 98% / 92% | 15k / 13k |
-| **Topology agent** | **100% / 100%** | **100% / 100%** | 17k / 25k |
+| System | Rule-easy (46): mean / pass³ | Rule-hard (6): cause mean / tier mean |
+|---|---|---|
+| Vanilla LLM / RAG | 72-74% / 1 run | 67% / 67% |
+| Rules only | 100% / 46 of 46 | **0% / 0%** |
+| ReAct (3 runs) | 94.9% / 41 of 46 | 83.3% / 83.3% |
+| **Ours (3 runs)** | **100% / 46 of 46** | **94.4% / 100%** |
 
-- vs complaint-only baselines: significant (McNemar p ≤ 0.031 on both sets).
-- vs ReAct: higher, but **not significant** on a single run (p = 0.25).
-  Be upfront about this.
-- Over 3 repeated runs: topology 100% core root-cause accuracy (ReAct 94.2% ± 1.4%);
-  ReAct changed its answer on 5 core cases between runs, topology on 0.
-- Usability judge (1-5): 3.92 vs 3.05 for ReAct.
+- **Hard cases need the LLM.** Rules solve 0/6; every LLM system solves at
+  least 4/6.
+- **Two kinds of hard case.**
+  - Fixes already tried, stated in the complaint (C033-C035, C052): any LLM
+    reads this.
+  - Stale console (C041, C050): only agents that ask the customer succeed.
+    ReAct is right in 3 of 6 runs, ours in 5 of 6.
+- **Easy cases need the structure.** ReAct is correct in all 3 runs on 41/46;
+  ours on 46/46.
+- Overall table, McNemar tests and CIs are on the backup slide.
+- Be honest: 6 cases are too few for significance tests; on hard-case root
+  cause, pass³ ties at 5/6.
 
 ## 7. Example: why tools + dialogue matter (C041, 45 s)
 - **Complaint:** "Garage camera offline, the signal must be weak, can I buy a
@@ -114,9 +124,12 @@ Figure: `results/figures/ablation.png`
   rule-based parts are favoured. The next step is real anonymised tickets.
 - Usability is judged by an LLM; a blind human check is prepared
   (`eval.human_rating`).
-- **Takeaway:** domain structure (topology order, typed memory, policy rules)
-  makes an LLM agent more accurate, more stable across runs, and auditable for
-  escalation decisions, at about 15% more tokens than ReAct on the core set.
+- **Takeaway:**
+  - The LLM is irreplaceable on the cases rules cannot solve.
+  - The deterministic structure (topology order, typed memory, policy rules)
+    makes the LLM reliable on everything else.
+  - Evaluate on the rule-hard subset and with pass^k, not with average
+    accuracy.
 
 ---
 
@@ -124,9 +137,11 @@ Figure: `results/figures/ablation.png`
 - **Why not just ReAct?** It has the same tools, but on a single run the
   accuracy gap is not significant. The benefits that hold up are run-to-run
   stability, tier accuracy and fewer missed escalations.
-- **Isn't 100% suspicious?** Yes: the data is synthetic and written by the
-  same author as the rules, and the 95% CI is [91%, 100%]. That is why the
-  challenge set and the statistics are reported.
+- **Isn't 100% suspicious?** Yes, and the slides do not claim 100% as the
+  headline. The data is synthetic and written by the same author as the
+  rules: rules alone already solve 46/52 cases, and a perfect run on 40
+  cases has a 95% CI of [91%, 100%]. That is why the deck reports 3-run
+  means, confidence intervals and the shortcut-breaking challenge set.
 - **Why LangGraph instead of openJiuwen (from the proposal)?** It runs locally
   and its SQLite checkpointer supports pausing while staff relay a customer
   reply.

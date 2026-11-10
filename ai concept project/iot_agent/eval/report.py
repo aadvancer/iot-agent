@@ -10,6 +10,9 @@ Each split also gets a "Statistical check" table (95% Wilson CIs and exact McNem
 tests vs the topology agent, see eval/stats.py), a "Repeated runs" table when
 results/repeats/<system>/run<N> exist (eval.run_cases --run N), a "Cost breakdown"
 table and an "Error analysis" table that lists every wrong prediction per system.
+A "Hard cases and stability" section compares rule-easy and rule-hard cases (those the
+rules-only baseline gets wrong) with pass^k over repeated runs, and writes
+figures/hard_vs_easy.png.
 """
 import csv
 import json
@@ -409,6 +412,120 @@ def write_figures(summary, rows_by_system, suffix=""):
     plt.close(fig)
 
 
+def _runs_of(system, rows_by_system, repeats):
+    """All runs of a system as {case_id: row} dicts; run 1 first."""
+    runs = repeats.get(system) or {1: rows_by_system[system]}
+    return [{r["case_id"]: r for r in rows} for _, rows in sorted(runs.items())]
+
+
+def rule_hard_cases(rows_by_system):
+    """Cases the rules-only baseline (no LLM) gets wrong: where deterministic rules are not enough."""
+    rules = rows_by_system.get("rules_only", [])
+    return sorted(r["case_id"] for r in rules if not _cause_ok(r))
+
+
+def subset_stats(runs, case_ids):
+    """Mean root-cause / tier accuracy over runs, and pass^k (correct in every one of the k runs)."""
+    case_ids = [c for c in case_ids if all(c in run for run in runs)]
+    n = len(case_ids)
+    if not n:
+        return None
+    cause = [sum(_cause_ok(run[c]) for c in case_ids) / n for run in runs]
+    tier = [sum(_tier_ok(run[c]) for c in case_ids) / n for run in runs]
+    return {
+        "n": n, "runs": len(runs),
+        "cause": mean(cause), "tier": mean(tier),
+        "pass_cause": sum(all(_cause_ok(run[c]) for run in runs) for c in case_ids),
+        "pass_tier": sum(all(_tier_ok(run[c]) for run in runs) for c in case_ids),
+        "consistent": sum(len({run[c]["pred_root_cause"] for run in runs}) == 1 for c in case_ids),
+    }
+
+
+def hard_easy_table(rows_by_system, repeats, hard):
+    """Rule-easy vs rule-hard accuracy per system; pass^k shows run-to-run reliability."""
+    all_ids = sorted({r["case_id"] for rows in rows_by_system.values() for r in rows})
+    easy = [c for c in all_ids if c not in hard]
+    lines = [f"| System | Runs | Rule-easy ({len(easy)}) cause acc | Rule-easy pass^k (cause) "
+             f"| Rule-hard ({len(hard)}) cause acc | Rule-hard tier acc | Rule-hard pass^k (cause / tier) |",
+             "|---|---|---|---|---|---|---|"]
+    for system in rows_by_system:
+        runs = _runs_of(system, rows_by_system, repeats)
+        e, h = subset_stats(runs, easy), subset_stats(runs, hard)
+        if not e or not h:
+            continue
+        lines.append(
+            f"| {SYSTEMS[system]} | {e['runs']} | {e['cause']:.1%} | {e['pass_cause']}/{e['n']} | "
+            f"{h['cause']:.1%} | {h['tier']:.1%} | {h['pass_cause']}/{h['n']} / {h['pass_tier']}/{h['n']} |")
+    return lines
+
+
+def hard_case_grid(rows_by_system, repeats, hard):
+    """Per-case results on the rule-hard cases: correct runs / total runs for every system."""
+    cases = {p.stem: json.loads(p.read_text(encoding="utf-8")) for p in config.CASES_DIR.glob("C*.json")}
+    systems = list(rows_by_system)
+    lines = ["| Case | Split | Truth | " + " | ".join(SYSTEMS[s] for s in systems) + " |",
+             "|---|---|---|" + "---|" * len(systems)]
+    runs = {s: _runs_of(s, rows_by_system, repeats) for s in systems}
+    for c in hard:
+        cells = []
+        for s in systems:
+            done = [run[c] for run in runs[s] if c in run]
+            ok = sum(_cause_ok(r) for r in done)
+            cells.append(f"{ok}/{len(done)}" if len(done) > 1 else ("✓" if ok else f"✗ {done[0]['pred_root_cause']}"))
+        lines.append(f"| {c} | {cases.get(c, {}).get('split', 'core')} | {cases.get(c, {}).get('gt_root_cause', '')} | "
+                     + " | ".join(cells) + " |")
+    return lines
+
+
+def write_hard_figure(rows_by_system, repeats, hard):
+    all_ids = sorted({r["case_id"] for rows in rows_by_system.values() for r in rows})
+    easy = [c for c in all_ids if c not in hard]
+    names, easy_acc, hard_acc, easy_pass, hard_pass = [], [], [], [], []
+    for system in rows_by_system:
+        runs = _runs_of(system, rows_by_system, repeats)
+        e, h = subset_stats(runs, easy), subset_stats(runs, hard)
+        if not e or not h:
+            continue
+        names.append(SYSTEMS[system].replace(" (", "\n("))
+        easy_acc.append(e["cause"])
+        hard_acc.append(h["cause"])
+        easy_pass.append(e["pass_cause"] / e["n"])
+        hard_pass.append(h["pass_cause"] / h["n"])
+    fig, axes = plt.subplots(1, 2, figsize=(12, 3.9))
+    x = range(len(names))
+    for ax, (a, b, title) in zip(axes, [(easy_acc, hard_acc, "Root-cause accuracy (mean over runs)"),
+                                       (easy_pass, hard_pass, "pass$^k$: correct in every run")]):
+        ax.bar([i - 0.2 for i in x], a, 0.4, label=f"rule-easy ({len(easy)} cases)", color="#9aa5b1")
+        ax.bar([i + 0.2 for i in x], b, 0.4, label=f"rule-hard ({len(hard)} cases)", color="#d1495b")
+        for i, (va, vb) in enumerate(zip(a, b)):
+            ax.annotate(f"{va:.0%}", (i - 0.2, va), ha="center", va="bottom", fontsize=10)
+            ax.annotate(f"{vb:.0%}", (i + 0.2, vb), ha="center", va="bottom", fontsize=10, weight="bold")
+        ax.set_xticks(list(x), names, fontsize=10)
+        ax.tick_params(axis="y", labelsize=9)
+        ax.set_ylim(0, 1.2)
+        ax.set_title(title, fontsize=13)
+        ax.legend(fontsize=10, loc="upper left", ncol=2, frameon=False)
+    fig.tight_layout()
+    fig.savefig(config.RESULTS_DIR / "figures" / "hard_vs_easy.png", dpi=160)
+    plt.close(fig)
+
+
+def hard_case_section(rows_by_system):
+    """Where rules fail: the cases the rules-only baseline gets wrong, pooled over both splits
+    (too few to split), with every case's split shown."""
+    hard = rule_hard_cases(rows_by_system)
+    if not hard or len(rows_by_system) < 2:
+        return []
+    repeats = load_repeats()
+    write_hard_figure(rows_by_system, repeats, hard)
+    return ["", "## Hard cases and stability (rule-hard = cases the rules-only baseline gets wrong; "
+                "both splits pooled, split shown per case)", "",
+            "Rules only is 0% on this subset by construction. Systems with repeated runs report the mean over "
+            "runs and pass^k (correct in all k runs).", ""] + hard_easy_table(rows_by_system, repeats, hard) + \
+           ["", "Per-case results on the rule-hard cases (correct runs / runs; ✗ shows the wrong prediction):", ""] + \
+           hard_case_grid(rows_by_system, repeats, hard)
+
+
 def main():
     rows_by_system = load_rows()
     if not rows_by_system:
@@ -427,6 +544,10 @@ def main():
         rows_by_split[split] = split_rows
         write_figures(summary, split_rows, "" if split == "core" else f"_{split}")
     write_tables(summaries, rows_by_split)
+    hard = hard_case_section(rows_by_system)
+    if hard:
+        with (config.RESULTS_DIR / "comparison.md").open("a", encoding="utf-8") as f:
+            f.write("\n".join(hard) + "\n")
 
     variants = load_rows(ABLATIONS)
     if len(variants) > 1:

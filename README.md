@@ -50,7 +50,17 @@ Material for the slides and report is in
   `make_architecture.py`;
 - `pseudocode.md`: the two algorithms, also as LaTeX;
 - `slides_outline.md`: the slide plan with all numbers taken from
-  `results/comparison.md`.
+  `results/comparison.md`;
+- `AI_Agent_IoT_presentation.pptx`: the presentation deck on the PolyU
+  tutorial template, with speaker notes. Rebuild it with `python
+  make_slides.py`, which reads `polyu_template.pptx`.
+
+The final report is in
+[`ai concept project/report`](./ai%20concept%20project/report):
+- `report.tex` is the source and `report.pdf` the compiled report; rebuild
+  the PDF with `latexmk -pdf report.tex`.
+- `report.docx` is the Word version, generated from the same source by
+  `python make_docx.py` (needs pandoc).
 
 The topology-aware batch and interactive agent workflows are orchestrated with
 LangGraph. Evidence collection and escalation rules remain deterministic;
@@ -314,6 +324,46 @@ Challenge set (C041-C052, author-written; not an independent benchmark):
 | Rules only (no LLM) | 75% | 75% | 100% | 50% | 0.00 | 1.92 | 0 | 0.0 |
 | ReAct (same tools) | 92% | 92% | 100% | 83% | 0.50 | 3.08 | 12573 | 17.1 |
 | Topology agent (ours) | 100% | 100% | 100% | 100% | 1.08 | 3.75 | 24513 | 27.5 |
+
+**How to read these numbers.** Run 1 of the topology agent happens to be
+error-free, but it should not be the headline figure:
+- **Rules alone are strong.** The rules-only baseline, with no LLM, already
+  solves 46 of the 52 cases (37/40 core, 9/12 challenge). The benchmark is easy
+  for any system that reads the console. Systems differ only on the few cases
+  where the console is stale and the customer must be asked.
+- **The samples are small.** A perfect run has a 95% Wilson interval of
+  [91%, 100%] on the 40 core cases and [76%, 100%] on the 12 challenge cases.
+- **Report the mean over runs.** Over three runs the topology agent averages
+  100.0% ± 0.0 / 99.2% ± 1.4 (core root cause / tier) and 97.2% ± 4.8 /
+  100.0% ± 0.0 (challenge). ReAct averages 94.2% ± 1.4 / 96.7% ± 1.4 and
+  91.7% / 91.7%. See "Repeated runs" below. The report and the slides use these
+  means as the headline numbers.
+
+**Hard cases and stability.** `eval.report` also writes a "Hard cases and
+stability" section and `results/figures/hard_vs_easy.png`. Rule-hard cases are
+the 6 cases the rules-only baseline gets wrong (C033-C035, C041, C050, C052;
+both splits pooled because the subset is so small). pass^k means correct in
+all k runs.
+
+| System | Rule-easy (46) cause acc / pass^k | Rule-hard (6) cause / tier acc | Rule-hard pass^k (cause / tier) |
+|---|---|---|---|
+| Vanilla LLM | 71.7% / 33 of 46 | 66.7% / 66.7% | 4/6 / 4/6 |
+| Vanilla RAG | 73.9% / 34 of 46 | 66.7% / 66.7% | 4/6 / 4/6 |
+| Rules only (no LLM) | 100.0% / 46 of 46 | 0.0% / 0.0% | 0/6 / 0/6 |
+| ReAct (3 runs) | 94.9% / 41 of 46 | 83.3% / 83.3% | 5/6 / 5/6 |
+| Topology agent (3 runs) | 100.0% / 46 of 46 | 94.4% / 100.0% | 5/6 / 6/6 |
+
+- **The LLM is irreplaceable on the hard cases.** Rules solve none of them;
+  every LLM system solves at least four. There are two kinds:
+  - In C033-C035 and C052 the complaint says the standard fixes were already
+    tried, which any LLM can read.
+  - C041 and C050 have stale console data, so only agents that ask the
+    customer succeed: ReAct in 3 of 6 runs, the topology agent in 5 of 6.
+- **The structure makes the LLM reliable on the easy cases.** ReAct is correct
+  in all three runs on 41 of the 46 rule-easy cases, the topology agent on
+  all 46.
+- **Caveat.** Six cases are too few for a significance test, and on hard-case
+  root cause the two agents tie at pass^3 = 5/6.
 
 What fails on the challenge set:
 - The complaint-only baselines follow the customer's wrong self-diagnosis.
