@@ -1,0 +1,166 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C049",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Base station storage was at 99% with loop recording disabled, triggering error E-402 and halting new event recordings after the 3rd. Live view and uplink were unaffected (base station online, uplink ok), ruling out the customer's broadband theory. Enabling Loop Recording immediately restored new clips in the event list, confirming the root cause and resolving the issue at L1.",
+ "output": {
+  "repair_steps": [
+   "Confirm Loop Recording is enabled in Base Station Settings > Storage.",
+   "Advise customer to export important clips and format storage if they want to keep existing recordings.",
+   "Verify new events are recording and error E-402 is cleared.",
+   "Close the case as resolved at L1."
+  ],
+  "customer_reply": "We found the base station storage was full and loop recording was off, causing error E-402. I've enabled loop recording, so new clips are now saving. If you want to keep existing clips, export them and format storage. Let us know if you need further help!"
+ },
+ "rule_hints": [
+  {
+   "cause": "STORAGE_FULL",
+   "tier": "L1",
+   "evidence": "storage 99%, loop recording off"
+  }
+ ],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-402 storage full loop recording fix procedure"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer to Base Station Settings > Storage and enable Loop Recording (or, if they want to keep existing clips, export them first then format storage). Confirm whether new events begin recording afterward.",
+    "target_cause": "STORAGE_FULL"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "STORAGE_FULL",
+    "rationale": "Base station storage was at 99% with loop recording disabled, triggering error E-402 and halting new event recordings after the 3rd. Live view and uplink were unaffected (base station online, uplink ok), ruling out the customer's broadband theory. Enabling Loop Recording immediately restored new clips in the event list, confirming the root cause and resolving the issue at L1."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 99,
+    "loop_recording": false,
+    "error_codes": [
+     "E-402"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-402 storage full loop recording fix procedure"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-402 Storage full",
+      "text": "Base station storage at or above 98 percent with loop recording disabled. Frontline action: enable loop recording or format storage."
+     },
+     {
+      "source": "manual_base_station#Local storage",
+      "text": "Event clips are stored on the base station's internal eMMC (HB-100: 16 GB, HB-200: 32 GB). When loop recording is disabled and storage reaches 98 percent, new events are not recorded and error E-402 is shown. Enable loop recording in Base Station Settings > Storage, or format the storage after exporting clips."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer to Base Station Settings > Storage and enable Loop Recording (or, if they want to keep existing clips, export them first then format storage). Confirm whether new events begin recording afterward."
+   },
+   "result": {
+    "outcome": "I found the Loop Recording setting and switched it on. Within a few minutes new clips started showing up in the event list again."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: pending",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 99,
+   "loop_recording": false,
+   "error_codes": [
+    "E-402"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": null,
+  "abnormal_devices": [],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "Walk the customer to Base Station Settings > Storage and enable Loop Recording (or, if they want to keep existing clips, export them first then format storage). Confirm whether new events begin recording afterward.",
+    "target_cause": "STORAGE_FULL",
+    "outcome": "I found the Loop Recording setting and switched it on. Within a few minutes new clips started showing up in the event list again.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-402 Storage full] Base station storage at or above 98 percent with loop recording disabled. Frontline action: enable loop recording or format storage.",
+   "[manual_base_station#Local storage] Event clips are stored on the base station's internal eMMC (HB-100: 16 GB, HB-200: 32 GB). When loop recording is disabled and storage reaches 98 percent, new events are not recorded and error E-402 is shown. Enable loop recording in Base Station Settings > Storage, or format the storage after exporting clips.",
+   "[manual_base_station#LED status indicators] Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+  ]
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 17.8,
+ "llm_calls": 7,
+ "tokens": 13363,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "Our camera recordings stopped about two weeks ago. Live view works fine, but there are no new clips in the event list after the 3rd. I think the internet must be dropping at night, our broadband has been flaky. Should I call my internet provider about it?",
+ "user_turns": 1,
+ "console_calls": 1,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable: it explains the cause (storage full, loop recording off), states what was done (loop recording enabled, new clips saving), and gives a concrete next step (export and format if keeping old clips). It avoids overclaiming—E-402 clearing is listed as a verification step rather than asserted as completed, and the customer's own report confirms new clips resumed. Minor deduction because the response includes internal repair steps and a 'close as resolved' instruction that aren't customer-facing, and the E-402 cleared claim is not explicitly confirmed in the session record."
+}

@@ -1,0 +1,382 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C040",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Only the Entry Motion sensor is offline while all 6 other devices are online, ruling out a base-station or batch fault. The device shows strong RSSI (-60 dBm), 75% battery, and compatible firmware (v3), yet remains offline even next to the base station after a reset. The customer dropped it on tiles while changing the battery, and the escalation policy explicitly requires L2 escalation when a device fails next to the base station after a reset — consistent with physical/hardware damage.",
+ "output": {
+  "symptom_summary": "Entry Motion sensor (SEN-M1) remains offline despite being bound, having strong RSSI (-60 dBm), 75% battery, and compatible firmware (v3). It fails to reconnect even when placed next to the base station after a reset.",
+  "suspected_root_cause": "Hardware fault suspected due to physical damage from a drop, as all other devices are online and the sensor fails next to the base station after reset.",
+  "key_abnormal_indicators": [
+   "Only Entry Motion sensor offline; all other 6 devices online",
+   "RSSI: -60 dBm (strong signal)",
+   "Battery: 75%",
+   "Firmware: v3 (compatible with base station protocols v2, v3)",
+   "Device fails next to base station after reset",
+   "Customer reported dropping the sensor on tiles while changing battery"
+  ],
+  "customer_reply": "We've identified a potential hardware issue with your Entry Motion sensor. Our engineering team will review the case and contact you within 1-2 business days to arrange a replacement if needed. No further action is required from you at this time.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": []
+   },
+   "affected_devices": [
+    {
+     "id": "motion_entry",
+     "name": "Entry Motion",
+     "model": "SEN-M1",
+     "fw": "1.4",
+     "rssi": -60,
+     "battery": 75,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_entry"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_entry"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_entry"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor fails next to base station after reset dropped physical damage HW fault escalation"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "HW_FAULT_SUSPECTED",
+    "rationale": "Only the Entry Motion sensor is offline while all 6 other devices are online, ruling out a base-station or batch fault. The device shows strong RSSI (-60 dBm), 75% battery, and compatible firmware (v3), yet remains offline even next to the base station after a reset. The customer dropped it on tiles while changing the battery, and the escalation policy explicitly requires L2 escalation when a device fails next to the base station after a reset — consistent with physical/hardware damage."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_entry",
+      "name": "Entry Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_entry"
+   },
+   "result": {
+    "id": "motion_entry",
+    "name": "Entry Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_entry"
+   },
+   "result": {
+    "device_id": "motion_entry",
+    "device_fw": "1.4",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_entry"
+   },
+   "result": {
+    "lines": [
+     "motion_entry remains offline after peripheral reset",
+     "motion_entry RSSI -60 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor fails next to base station after reset dropped physical damage HW fault escalation"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "escalation_policy#Escalate to FAE (L2)",
+      "text": "Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset."
+     },
+     {
+      "source": "fault_codes#E-610 Radio module error",
+      "text": "Logged by the base station when its sub-GHz radio fails self-test or multiple peripherals drop simultaneously. Always escalate to FAE."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "motion_entry",
+     "name": "Entry Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "motion_entry"
+  ],
+  "device_details": {
+   "motion_entry": {
+    "id": "motion_entry",
+    "name": "Entry Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "motion_entry": {
+    "device_id": "motion_entry",
+    "device_fw": "1.4",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "motion_entry": [
+    "motion_entry remains offline after peripheral reset",
+    "motion_entry RSSI -60 dBm"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[historical_cases#H-02 Cannot add ninth sensor] HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline.",
+   "[escalation_policy#Escalate to FAE (L2)] Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset.",
+   "[fault_codes#E-610 Radio module error] Logged by the base station when its sub-GHz radio fails self-test or multiple peripherals drop simultaneously. Always escalate to FAE."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 28.8,
+ "llm_calls": 8,
+ "tokens": 24700,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "The entry sensor still fails next to the base station after a reset; the other sensors work. It worked for a year, then died after I dropped it on the tiles while changing the battery. Could it be signal? The entry is three walls away from the base in normal use, but I tested it right next to the base.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it avoids claiming any checks or fixes were performed (steps_performed is empty). However, actionability is limited: it defers to engineering with no concrete next steps, and it presents diagnostic details (RSSI, battery, firmware, reset behavior) as if verified even though the session record shows no questions asked and no actions performed. The hardware-fault conclusion is plausible but not supported by any completed diagnostics in the record."
+}

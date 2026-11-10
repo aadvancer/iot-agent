@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C008",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "All devices are offline in the app, the base station LED is blinking red, and no live view is available for any camera. The customer also mentions a thunderstorm and that the neighbor's broadband is down, indicating a network outage affecting the base station's connection.",
+ "output": {
+  "repair_steps": [
+   "Check if the base station is connected to the router via Ethernet cable or Wi-Fi.",
+   "Power cycle the base station, router, and modem.",
+   "Verify internet connectivity by connecting another device to the same network.",
+   "If internet is down, contact the internet service provider to resolve the outage.",
+   "Once internet is restored, check if the base station LED turns green and devices come back online in the app."
+  ],
+  "customer_reply": "It sounds like your base station has lost its internet connection, which is why all devices are showing offline and the LED is red. Since your neighbor also reports broadband issues after the storm, the problem is likely with your internet service. Please check your router and modem, and contact your internet service provider if the outage persists."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.6,
+ "llm_calls": 1,
+ "tokens": 884,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Every camera and sensor has shown offline since this morning, although they were all fine last night. The base station has a red light. I rebooted my phone and reinstalled the app because I thought that was the problem, but nothing changed. We had a thunderstorm last night and my neighbour says the broadband is down on our street too.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with a logical troubleshooting sequence and a plausible explanation tied to the reported storm and neighborhood outage. It avoids claiming any checks or fixes were completed, since none were performed. It loses a point only because the customer had already rebooted/reinstalled and reported a likely broadband outage, so some steps (e.g., verifying internet, contacting ISP) could have been prioritized more directly rather than starting with base-station connection checks."
+}

@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C004",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The kitchen camera is the oldest device and is offline while other devices remain fine. The camera is likely a battery-powered CAM-S1, and after long use the battery may be depleted. The customer tried power cycling and router restart, which would not help a battery issue. The knowledge snippet indicates battery cameras go offline below 3% battery.",
+ "output": {
+  "repair_steps": [
+   "Charge the kitchen camera using the supplied USB-C cable for at least 6 hours.",
+   "After charging, check the camera status in the app.",
+   "If the camera is still offline, try moving it closer to the base station temporarily to rule out signal issues.",
+   "If the camera remains offline after charging and moving closer, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. Since your other devices are working, the issue is isolated to the kitchen camera. As it is the oldest device, it may be a battery-powered model. Please charge the camera using the supplied USB-C cable for at least 6 hours and check if it comes back online. If it remains offline after charging, we will investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.4,
+ "llm_seconds": 6.3,
+ "llm_calls": 1,
+ "tokens": 1275,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "My kitchen camera disappeared this morning. It says offline. I already unplugged it and plugged it back in, tried a different power socket, and even restarted my Wi-Fi router because I assumed that is what the camera uses. The garden camera and the door sensor are fine, which is why I'm confused. The kitchen camera is the oldest one I own.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable steps, but it assumes the camera is battery-powered and asks the customer to charge it without confirming the model or that it uses USB-C. The session record shows no questions were asked and no actions were performed, so the claim that the issue is 'isolated to the kitchen camera' is only partially supported by the customer's own report that other devices work. The response does not claim any checks or fixes were completed, which is good, but the actionability is weakened by the unverified assumption about the power source."
+}

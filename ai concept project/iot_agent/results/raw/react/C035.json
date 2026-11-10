@@ -1,0 +1,259 @@
+{
+ "system": "react",
+ "case_id": "C035",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station is online locally with all 7 devices online and live view working, but E-503 \"cloud reporting failed repeatedly\" is active and events never reach the cloud, so remote notifications fail. The customer already rebooted the mesh nodes, disabled firewall features, and power-cycled the base station, yet E-503 persists — matching the KB escalation pattern for a cloud channel or certificate issue that frontline cannot resolve.",
+ "output": {
+  "symptom_summary": "Base station is online locally with all 7 devices online and live view working, but remote notifications fail. E-503 'cloud reporting failed repeatedly' is active and events never reach the cloud.",
+  "suspected_root_cause": "Cloud channel or certificate issue on the base station or backend, as E-503 persists after local network troubleshooting and base station power-cycle.",
+  "key_abnormal_indicators": [
+   "error_codes: [\"E-503\"]",
+   "uplink_status: ok",
+   "online: true",
+   "fw: 4.2",
+   "model: HB-200",
+   "bound_count: 7",
+   "all devices status: online"
+  ],
+  "customer_reply": "Thank you for your patience. We've identified that your base station is having trouble communicating with our cloud service, which is why remote notifications aren't working. This requires further investigation by our engineering team. We have escalated your case and an engineer will contact you within 24-48 hours. No further action is needed from you at this time."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 uplink blocked events not reaching cloud"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "Is the base station connected to the new mesh system by Ethernet cable or Wi-Fi? And have you power-cycled the base station itself (unplug power, wait 30 seconds, plug back in) since installing the mesh system?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Power-cycle the base station: unplug its power adapter, wait 30 seconds, then plug it back in. Wait about 2 minutes for it to fully reconnect, then check whether remote notifications resume."
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_local",
+      "name": "Local Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "E-503 cloud reporting failed repeatedly"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 uplink blocked events not reaching cloud"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "manual_base_station#Network uplink",
+      "text": "The base station connects to the home router by Ethernet (recommended) or 2.4 GHz Wi-Fi. If all cameras and sensors show offline in the app at the same time, first check whether the base station itself is online. Power-cycle the router, wait 2 minutes, then power-cycle the base station. The base station requires outbound TCP 443 and 8883 to the cloud."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Is the base station connected to the new mesh system by Ethernet cable or Wi-Fi? And have you power-cycled the base station itself (unplug power, wait 30 seconds, plug back in) since installing the mesh system?"
+   },
+   "result": {
+    "answer": "I'm not sure how the base station is connected — I didn't set that part up myself, so I can't tell you if it's Ethernet or Wi-Fi. And no, I haven't power-cycled the base station itself; I only rebooted the mesh nodes."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Power-cycle the base station: unplug its power adapter, wait 30 seconds, then plug it back in. Wait about 2 minutes for it to fully reconnect, then check whether remote notifications resume."
+   },
+   "result": {
+    "outcome": "I unplugged the base station's power adapter, waited 30 seconds, plugged it back in, and gave it a couple of minutes. Nothing changed — the remote notifications still aren't coming through."
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "E-503 cloud reporting failed repeatedly"
+    ]
+   }
+  },
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 2,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 21.3,
+ "llm_calls": 9,
+ "tokens": 18247,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "My cameras work locally, but remote notifications have stopped. We just got a new mesh Wi-Fi system and I wonder if it blocks something. I've disabled the firewall features in the mesh app and rebooted all the nodes. Our old router is in a drawer if I should plug it back in.",
+ "user_turns": 2,
+ "console_calls": 5,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable in that it explains the issue and sets expectations for escalation. It avoids claiming unsupported fixes and correctly notes the power-cycle was already performed. However, it does not address the customer's mesh Wi-Fi concern or the Ethernet/Wi-Fi connection question, and it does not ask for the still-unknown connection detail, which limits actionability slightly."
+}

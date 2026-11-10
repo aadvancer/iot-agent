@@ -1,0 +1,248 @@
+{
+ "system": "react",
+ "case_id": "C029",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station auto-updated to firmware 4.5, which only supports protocol v3, while the den camera (CAM-I2) is on firmware 1.2 speaking protocol v2. check_firmware_compat shows no OTA path exists for this hardware revision, and the knowledge base confirms CAM-I2 rev A with fw 1.2 cannot be upgraded to v3. This matches historical case H-03, which was correctly escalated to FAE for a compatibility firmware.",
+ "output": {
+  "symptom_summary": "Den camera (CAM-I2) went offline after base station auto-updated to firmware 4.5. Customer cannot find OTA update in app; neighbor's same model works.",
+  "suspected_root_cause": "Protocol conflict: base station now only supports protocol v3, but den camera firmware 1.2 uses v2 and has no OTA path for this hardware revision.",
+  "key_abnormal_indicators": [
+   "Base station firmware 4.5, supported_protocols: [\"v3\"]",
+   "Den camera firmware 1.2, protocol v2, status offline",
+   "Error code E-305 on base station",
+   "check_firmware_compat: compatible=false, ota_available_to=null",
+   "Hall camera same model CAM-I2 firmware 2.0 online (protocol v3)",
+   "Knowledge base: CAM-I2 rev A with fw 1.2 cannot be upgraded to v3"
+  ],
+  "customer_reply": "We've identified a compatibility issue between your base station's recent update and the den camera's firmware. This requires our engineering team to provide a special firmware. An engineer will contact you within 1-2 business days. No action needed from you."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_den"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_den"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_hall"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_den"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported OTA unavailable older camera revision"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_den",
+      "name": "Den Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_den"
+   },
+   "result": {
+    "id": "cam_den",
+    "name": "Den Cam",
+    "model": "CAM-I2",
+    "fw": "1.2",
+    "rssi": -62,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_den"
+   },
+   "result": {
+    "device_id": "cam_den",
+    "device_fw": "1.2",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_hall"
+   },
+   "result": {
+    "id": "cam_hall",
+    "name": "Hall Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -60,
+    "battery": null,
+    "status": "online"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_den"
+   },
+   "result": {
+    "lines": [
+     "cam_den: E-305 protocol v2 not supported",
+     "cam_den: OTA unavailable for an older camera revision"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported OTA unavailable older camera revision"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 13.8,
+ "llm_seconds": 13.8,
+ "llm_calls": 5,
+ "tokens": 11430,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "The den camera remains offline after the base station updated last night. I cannot find a firmware update for it in the app. Support told me last time to just update the camera, but there is no button. My neighbour has the same camera model and hers still works, so I suspect my unit is broken.",
+ "user_turns": 0,
+ "console_calls": 6
+}

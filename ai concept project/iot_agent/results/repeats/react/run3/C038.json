@@ -1,0 +1,277 @@
+{
+ "system": "react",
+ "case_id": "C038",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The study camera (CAM-I2, fw 2.0, protocol v3) is identical to the working Hall Cam and is firmware-compatible with the base station, yet remains offline despite a factory reset, being placed next to the base station (RSSI -60 dBm), a different outlet, and a different cable. No error codes are logged and all other devices are online, ruling out network, pairing, firmware, and signal causes, leaving a hardware fault as the likely cause.",
+ "output": {
+  "symptom_summary": "Study Cam (CAM-I2, fw 2.0) remains offline after factory reset, placed next to base station (RSSI -60 dBm), different outlet and cable. LED goes solid then dark. No error codes logged; all other devices online.",
+  "suspected_root_cause": "Hardware fault in the Study Cam, as all other potential causes (network, pairing, firmware, signal) have been ruled out.",
+  "key_abnormal_indicators": [
+   "RSSI -60 dBm (good signal, next to base station)",
+   "Firmware 2.0, protocol v3 (compatible with base station)",
+   "No error codes logged",
+   "Identical working Hall Cam (CAM-I2, fw 2.0) online",
+   "Factory reset performed, LED solid then dark",
+   "Different outlet and cable tried"
+  ],
+  "customer_reply": "Thank you for your patience. Our technical team has reviewed the diagnostics and determined that your Study Cam likely has a hardware fault. An engineer will contact you within 1-2 business days to arrange a replacement or repair. No further action is needed from you at this time."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_study"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_study"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_study"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_hall"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "camera offline after factory reset next to base station LED solid then dark"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 LED solid then dark reset hardware fault"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_study",
+      "name": "Study Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_study"
+   },
+   "result": {
+    "id": "cam_study",
+    "name": "Study Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_study"
+   },
+   "result": {
+    "lines": [
+     "cam_study remains offline after peripheral reset",
+     "cam_study RSSI -60 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_study"
+   },
+   "result": {
+    "device_id": "cam_study",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_hall"
+   },
+   "result": {
+    "id": "cam_hall",
+    "name": "Hall Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -60,
+    "battery": null,
+    "status": "online"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "camera offline after factory reset next to base station LED solid then dark"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 LED solid then dark reset hardware fault"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 17.9,
+ "llm_seconds": 17.9,
+ "llm_calls": 7,
+ "tokens": 17017,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "My study camera is still broken even beside the base station after resetting the camera. I carried it into the same room as the base station, plugged it in and held the reset button for 10 seconds as the manual says; the LED goes solid and then dark again. I also tried a different power outlet and a different cable. Everything else in the system works.",
+ "user_turns": 0,
+ "console_calls": 6
+}

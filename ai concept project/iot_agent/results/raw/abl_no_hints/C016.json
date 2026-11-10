@@ -1,0 +1,409 @@
+{
+ "system": "abl_no_hints",
+ "case_id": "C016",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The cellar motion sensor (SEN-D1) shows RSSI -83 dBm, below the -80 dBm threshold that causes intermittent disconnections and missed alerts. It is located behind thick concrete walls with the base station two floors up, while all other devices are online and the base station is healthy. Moving the sensor closer to the base station made it stay online and trigger alerts reliably, confirming weak signal as the root cause.",
+ "output": {
+  "repair_steps": [
+   "Guide the customer to permanently relocate the cellar motion sensor (SEN-D1) to a location with better signal, such as upstairs or closer to the base station, ensuring RSSI is above -80 dBm.",
+   "If relocation is not feasible, recommend installing the official RP-1 repeater between the base station and the cellar to boost signal strength.",
+   "After the fix, verify the sensor's RSSI in Device Settings > Device Info and confirm it stays online and triggers alerts reliably over a period of time."
+  ],
+  "customer_reply": "We found the cellar sensor's signal was too weak due to distance and thick walls. Moving it closer to the base station resolved the issue. For a permanent fix, please relocate the sensor to a spot with better signal, or we can install an RP-1 repeater to boost coverage. Let us know if you need further assistance."
+ },
+ "rule_hints": [
+  {
+   "cause": "WEAK_SIGNAL",
+   "tier": "L1",
+   "evidence": "motion_cellar rssi -83 dBm"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_cellar"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_cellar"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "The cellar motion sensor shows a weak signal (-83 dBm). Can you ask the customer: is the cellar sensor located far from the base station, behind thick walls/floor, or near metal objects (boiler, pipes, freezer)? Also, has anything changed recently in the cellar (new shelving, appliances, or was the sensor moved)?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "weak signal motion sensor intermittent offline fix relocate RSSI"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer through improving the cellar sensor's signal: (1) temporarily move the cellar motion sensor closer to the base station (e.g., upstairs) and test whether it triggers alerts reliably; if that works, the permanent fix is to relocate the sensor/base station or install the official RP-1 repeater between the base station and the cellar. Ask the customer to report whether the sensor works reliably when moved closer.",
+    "target_cause": "WEAK_SIGNAL"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "WEAK_SIGNAL",
+    "rationale": "The cellar motion sensor (SEN-D1) shows RSSI -83 dBm, below the -80 dBm threshold that causes intermittent disconnections and missed alerts. It is located behind thick concrete walls with the base station two floors up, while all other devices are online and the base station is healthy. Moving the sensor closer to the base station made it stay online and trigger alerts reliably, confirming weak signal as the root cause."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_cellar",
+      "name": "Cellar Motion",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "intermittent"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_cellar"
+   },
+   "result": {
+    "id": "motion_cellar",
+    "name": "Cellar Motion",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -83,
+    "battery": 67,
+    "status": "intermittent"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "motion_cellar heartbeat lost repeatedly (RSSI -83 dBm)",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_cellar"
+   },
+   "result": {
+    "device_id": "motion_cellar",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "The cellar motion sensor shows a weak signal (-83 dBm). Can you ask the customer: is the cellar sensor located far from the base station, behind thick walls/floor, or near metal objects (boiler, pipes, freezer)? Also, has anything changed recently in the cellar (new shelving, appliances, or was the sensor moved)?"
+   },
+   "result": {
+    "answer": "The cellar sensor is behind thick concrete walls, and the base station is up on the second floor. Nothing has changed recently in the cellar — no new shelving or appliances, and the sensor hasn't been moved."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "weak signal motion sensor intermittent offline fix relocate RSSI"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Wireless range and signal strength",
+      "text": "Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer through improving the cellar sensor's signal: (1) temporarily move the cellar motion sensor closer to the base station (e.g., upstairs) and test whether it triggers alerts reliably; if that works, the permanent fix is to relocate the sensor/base station or install the official RP-1 repeater between the base station and the cellar. Ask the customer to report whether the sensor works reliably when moved closer."
+   },
+   "result": {
+    "outcome": "I moved the sensor upstairs closer to the base station and tested it — it stayed online and triggered alerts reliably. So it seems to work fine when it's nearer the base station."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "motion_cellar",
+     "name": "Cellar Motion",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "intermittent"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "motion_cellar"
+  ],
+  "device_details": {
+   "motion_cellar": {
+    "id": "motion_cellar",
+    "name": "Cellar Motion",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -83,
+    "battery": 67,
+    "status": "intermittent"
+   }
+  },
+  "firmware_compat": {
+   "motion_cellar": {
+    "device_id": "motion_cellar",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "motion_cellar heartbeat lost repeatedly (RSSI -83 dBm)",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "The cellar motion sensor shows a weak signal (-83 dBm). Can you ask the customer: is the cellar sensor located far from the base station, behind thick walls/floor, or near metal objects (boiler, pipes, freezer)? Also, has anything changed recently in the cellar (new shelving, appliances, or was the sensor moved)?",
+    "answer": "The cellar sensor is behind thick concrete walls, and the base station is up on the second floor. Nothing has changed recently in the cellar — no new shelving or appliances, and the sensor hasn't been moved."
+   }
+  ],
+  "fix_attempts": [
+   {
+    "action": "Walk the customer through improving the cellar sensor's signal: (1) temporarily move the cellar motion sensor closer to the base station (e.g., upstairs) and test whether it triggers alerts reliably; if that works, the permanent fix is to relocate the sensor/base station or install the official RP-1 repeater between the base station and the cellar. Ask the customer to report whether the sensor works reliably when moved closer.",
+    "target_cause": "WEAK_SIGNAL",
+    "outcome": "I moved the sensor upstairs closer to the base station and tested it — it stayed online and triggered alerts reliably. So it seems to work fine when it's nearer the base station.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[manual_peripherals#Wireless range and signal strength] Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater.",
+   "[historical_cases#H-05 Three sensors offline at once] Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly.",
+   "[historical_cases#H-01 Garage camera keeps dropping] Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 23.2,
+ "llm_calls": 8,
+ "tokens": 19377,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "My cellar motion sensor misses alerts. Twice last week I walked through the cellar to test it and got nothing on my phone. The app sometimes shows it offline for a few minutes. I assume the sensor is faulty because it is an older unit, but the hallway sensor of the same model works perfectly.",
+ "user_turns": 2,
+ "console_calls": 5,
+ "usability_score": 5,
+ "usability_reason": "The response is clear, polite, and actionable, offering concrete relocation and repeater options plus a verification step. It accurately reflects the session record: the weak signal (-83 dBm) and thick-wall/distance cause were identified, and the customer confirmed the sensor worked reliably when moved closer. It does not claim any unperformed checks or fixes as completed."
+}

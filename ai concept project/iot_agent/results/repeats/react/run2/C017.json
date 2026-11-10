@@ -1,0 +1,214 @@
+{
+ "system": "react",
+ "case_id": "C017",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The shed door sensor shows RSSI -88 dBm, below the -80 dBm threshold that causes intermittent disconnections and delayed notifications. The customer reports the problem began after installing a new metal shed, which strongly attenuates the sub-GHz radio signal, and relocating the sensor within the door frame did not help. Only this single device is affected; firmware is compatible and battery is healthy, confirming signal attenuation as the root cause.",
+ "output": {
+  "repair_steps": [
+   "Advise customer to move the shed door sensor to a location with better line-of-sight to the base station, ideally outside the metal shed or near a non-metal opening.",
+   "If moving the sensor is not possible, recommend installing the official RP-1 repeater between the base station and the shed to boost the signal.",
+   "Alternatively, suggest relocating the base station closer to the shed or to a position with fewer obstructions (e.g., near a window facing the shed).",
+   "After any change, ask customer to check the RSSI in Device Settings > Device Info; it should be above -80 dBm (ideally above -70 dBm).",
+   "If RSSI remains below -80 dBm after trying these steps, escalate to L2 for further investigation."
+  ],
+  "customer_reply": "Thanks for your patience. The issue is due to weak signal from the metal shed interfering with the sensor's connection. To fix it, try moving the sensor to a spot with a clearer path to the base station, or consider adding a signal repeater. If you need help with placement, let us know. We're here to help!"
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_shed"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_shed"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "RSSI threshold weak signal intermittent sensor metal shed"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_shed"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_shed",
+      "name": "Shed Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "intermittent"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_shed"
+   },
+   "result": {
+    "id": "door_shed",
+    "name": "Shed Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -88,
+    "battery": 67,
+    "status": "intermittent"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_shed"
+   },
+   "result": {
+    "lines": [
+     "door_shed heartbeat lost repeatedly (RSSI -88 dBm)"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "RSSI threshold weak signal intermittent sensor metal shed"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Wireless range and signal strength",
+      "text": "Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_shed"
+   },
+   "result": {
+    "device_id": "door_shed",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 14.4,
+ "llm_seconds": 14.4,
+ "llm_calls": 5,
+ "tokens": 10579,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The shed door sensor keeps going offline and coming back. Honestly it only started after we put up the new metal shed in October. The app notifies me about it at random times, including at night. I tried moving the sensor to the other side of the door frame, but that made no difference.",
+ "user_turns": 0,
+ "console_calls": 5
+}

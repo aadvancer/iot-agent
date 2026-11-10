@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C010",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes a new device that cannot be added and pairing times out after 120 seconds, which matches the PAIR_TIMEOUT label. The customer mentions a previous sensor paired fine, but no other symptoms suggest network, capacity, or hardware issues.",
+ "output": {
+  "repair_steps": [
+   "Ensure the sensor is in pairing mode (LED blinking).",
+   "Move the sensor closer to the base station during pairing.",
+   "Check the base station's device capacity and remove unused devices if full.",
+   "Power cycle the base station and sensor, then retry pairing.",
+   "If pairing still fails, factory reset the sensor and attempt pairing again."
+  ],
+  "customer_reply": "Thank you for the details. Since the pairing process is timing out, let's try a few steps to resolve this. Please ensure the sensor is in pairing mode and within range of the base station. Also, check if the base station has available capacity for new devices. If the issue persists, we may need to reset the sensor and try again."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.7,
+ "llm_calls": 1,
+ "tokens": 865,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "The new hallway sensor times out every time I try to add it. The app says pairing expired. I'm renting this flat, so I don't want to drill anything yet. I just wanted to put the sensor on the shelf near the router first and test it. Last month a different sensor paired without any problem, so I don't understand what changed.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable troubleshooting steps, but it does not acknowledge the customer's specific context (renting, shelf placement, prior successful pairing) and does not claim any checks or fixes were completed, which is appropriate given no actions were performed. Clarity and actionability are decent, but the lack of tailoring to the customer's situation and no confirmation of what was actually tried limits the score."
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C013",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer cannot add a new device and receives a capacity reached error, which matches the CAPACITY_EXCEEDED label. The app shows only six devices, but the system may have hidden or previously paired devices consuming capacity. No other symptoms suggest network, pairing timeout, or hardware issues.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to the device list.",
+   "Look for any devices that are offline, unused, or no longer needed.",
+   "Remove those devices from the system to free up capacity.",
+   "Attempt to add the new door sensor again.",
+   "If the issue persists, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. It sounds like your system has reached its device limit, even though you only see six devices on the home screen. This can happen if there are previously paired devices that are no longer active or hidden from view. I recommend checking the device list in the app for any offline or unused devices and removing them to free up capacity. If you need further assistance, please contact our support team."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.2,
+ "llm_calls": 1,
+ "tokens": 870,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "Since the weekend I can't add another door sensor. The app shows capacity reached, but I only see about six devices on the home screen. I've reset my phone's Bluetooth and tried a different phone as well, and nothing changes. I don't see why the system would be full.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides actionable steps (check device list, remove unused devices, retry pairing, contact support). However, it asserts the system has reached its device limit and that hidden/inactive devices may exist without any session record showing checks were performed or confirmed. The customer already tried multiple phones and Bluetooth resets, which the response does not acknowledge. Clarity is good but the unsupported diagnostic claim and lack of engagement with the customer's troubleshooting reduce usability."
+}

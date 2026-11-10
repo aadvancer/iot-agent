@@ -1,0 +1,320 @@
+{
+ "system": "rules_only",
+ "case_id": "C019",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "door_side battery 6%",
+ "output": {
+  "repair_steps": [
+   "Charge the camera fully (about 6 h), enable power-saving mode if events are frequent."
+  ],
+  "customer_reply": "We have identified the likely cause and will guide you through the fix."
+ },
+ "rule_hints": [
+  {
+   "cause": "BATTERY_LOW",
+   "tier": "L1",
+   "evidence": "door_side battery 6%"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_side"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_side"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_side",
+      "name": "Side Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_side"
+   },
+   "result": {
+    "id": "door_side",
+    "name": "Side Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -62,
+    "battery": 6,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "door_side battery level 6%",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_side"
+   },
+   "result": {
+    "device_id": "door_side",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_side",
+     "name": "Side Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "door_side"
+  ],
+  "device_details": {
+   "door_side": {
+    "id": "door_side",
+    "name": "Side Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -62,
+    "battery": 6,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "door_side": {
+    "device_id": "door_side",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "door_side battery level 6%",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 0.0,
+ "llm_calls": 0,
+ "tokens": 0,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The side-door sensor shows offline and the app sends me an alert every few hours. I opened the door to test it and nothing happened. We had the house repainted last week and the painter may have bumped the sensor, so I think it is misaligned. I haven't touched it since.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 1,
+ "usability_reason": "The response is vague and unactionable: it claims a likely cause was identified without any diagnostic steps or evidence, and the only repair step (charging the camera) is unrelated to the reported side-door sensor misalignment/offline issue. No questions were asked and no actions were performed, so the claim of identifying a cause is unsupported. It also fails to address the customer's misalignment hypothesis or provide troubleshooting for the sensor."
+}

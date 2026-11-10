@@ -1,0 +1,122 @@
+{
+  "case_id": "C048",
+  "complaint": "My new window sensor won't pair. I think we've hit the maximum number of devices, my neighbour had the same problem with the same base station. Do I need to buy the bigger base station? I've tried three times from the living room sofa and it fails every time.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-100",
+      "fw": "3.4",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": []
+    },
+    "devices": [
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -55,
+        "battery": 90,
+        "status": "online"
+      },
+      {
+        "id": "door_back",
+        "name": "Back Door",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -60,
+        "battery": 86,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -62,
+        "battery": 71,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -59,
+        "battery": 66,
+        "status": "online"
+      },
+      {
+        "id": "motion_stairs",
+        "name": "Stairs Motion",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 52,
+        "status": "online"
+      },
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "1.8",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -66,
+        "battery": 58,
+        "status": "online"
+      },
+      {
+        "id": "win_new",
+        "name": "New Window",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": false,
+        "bound_in_app": false,
+        "rssi": null,
+        "battery": 100,
+        "status": "not_paired"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "19:02:10 pairing window opened",
+      "19:04:10 pairing window expired: no join request received",
+      "19:05:40 pairing window opened",
+      "19:07:40 pairing window expired: no join request received",
+      "04:10:48 cloud time sync ok (drift 1 s)"
+    ]
+  },
+  "user_knowledge": {
+    "distance_during_pairing": "The base station is upstairs in the office; I was downstairs on the sofa.",
+    "sensor_button": "I pressed the button once; the LED flashed once and went off.",
+    "error_message": "The app says 'pairing timed out'."
+  },
+  "action_outcomes": {
+    "retry_pairing_close_hold_sync": "Holding the button for 3 seconds right next to the base station, the LED blinks blue and the sensor pairs straight away.",
+    "restart_base_station": "Still times out.",
+    "remove_unused_device": "I use all of my devices."
+  },
+  "gt_root_cause": "PAIR_TIMEOUT",
+  "gt_tier": "L1",
+  "gt_key_checks": [
+    "S1",
+    "S2"
+  ],
+  "difficulty": "hard",
+  "split": "challenge",
+  "requires_interaction": false,
+  "notes": "The customer is sure the base is full, but 7/8 slots are used and the log shows join requests never arrived: the sensor was far away and the SYNC button not held."
+}

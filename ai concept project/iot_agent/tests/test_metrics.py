@@ -1,6 +1,6 @@
 import unittest
 
-from eval.metrics import calculate_metrics
+from eval.metrics import _session_record, calculate_metrics
 
 
 class CalculateMetricsTests(unittest.TestCase):
@@ -58,6 +58,20 @@ class CalculateMetricsTests(unittest.TestCase):
     def test_empty_results_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "empty result set"):
             calculate_metrics([])
+
+
+class SessionRecordTests(unittest.TestCase):
+    def test_record_lists_customer_questions_and_performed_actions_only(self):
+        row = {"trace": [
+            {"tool": "get_base_status", "args": {}, "result": {"online": True}},
+            {"tool": "ask_user", "args": {"question": "LED colour?"}, "result": {"answer": "Blue"}},
+            {"tool": "instruct_user", "args": {"action": "Move the base"}, "result": {"outcome": "Works now"}},
+        ]}
+        self.assertEqual(_session_record(row), "- Asked: LED colour? -> Customer: Blue\n"
+                                               "- Customer performed: Move the base -> Reported: Works now")
+
+    def test_record_says_when_no_customer_steps_happened(self):
+        self.assertIn("no questions asked", _session_record({"trace": []}))
 
 
 if __name__ == "__main__":

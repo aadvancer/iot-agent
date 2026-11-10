@@ -1,0 +1,320 @@
+{
+ "system": "rules_only",
+ "case_id": "C018",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "cam_porch battery 7%",
+ "output": {
+  "repair_steps": [
+   "Charge the camera fully (about 6 h), enable power-saving mode if events are frequent."
+  ],
+  "customer_reply": "We have identified the likely cause and will guide you through the fix."
+ },
+ "rule_hints": [
+  {
+   "cause": "BATTERY_LOW",
+   "tier": "L1",
+   "evidence": "cam_porch battery 7%"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_porch"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_porch"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_porch",
+      "name": "Porch Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_porch"
+   },
+   "result": {
+    "id": "cam_porch",
+    "name": "Porch Cam",
+    "model": "CAM-S1",
+    "fw": "2.1",
+    "rssi": -62,
+    "battery": 7,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "cam_porch battery level 7%",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_porch"
+   },
+   "result": {
+    "device_id": "cam_porch",
+    "device_fw": "2.1",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_porch",
+     "name": "Porch Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_porch"
+  ],
+  "device_details": {
+   "cam_porch": {
+    "id": "cam_porch",
+    "name": "Porch Cam",
+    "model": "CAM-S1",
+    "fw": "2.1",
+    "rssi": -62,
+    "battery": 7,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "cam_porch": {
+    "device_id": "cam_porch",
+    "device_fw": "2.1",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "cam_porch battery level 7%",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 0.0,
+ "llm_calls": 0,
+ "tokens": 0,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The porch camera won't start live view; it just spins and then says camera unavailable. It started a couple of days ago. I thought it was the Wi-Fi because our router was updated recently, so I rebooted the router twice, but nothing changed. The other cameras are fine.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and gives one actionable step (charging the camera), but it is largely generic and does not address the reported live-view failure or the router change. It claims a likely cause was identified without any diagnostic questions or completed checks in the session record, and the power-saving suggestion is not clearly tied to the symptom. Clarity is moderate but actionability and support for claims are weak."
+}

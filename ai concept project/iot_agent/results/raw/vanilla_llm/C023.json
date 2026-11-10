@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C023",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The issue started after a system update, and the camera's event uploads stopped while live view still works. This suggests a protocol mismatch between the camera and base station after the update, which is characteristic of PROTOCOL_CONFLICT. The neighbor's system works, ruling out a widespread outage.",
+ "output": {
+  "symptom_summary": "Yard camera stopped uploading motion clips after a system update, but live view still works. Storage has plenty of space.",
+  "suspected_root_cause": "Protocol conflict between camera and base station following a firmware update, causing event uploads to fail.",
+  "key_abnormal_indicators": [
+   "Event uploads stopped after system update",
+   "Live view still functional",
+   "Storage not full",
+   "Neighbor's system unaffected"
+  ],
+  "customer_reply": "Thank you for the details. Based on the information provided, the issue appears to be related to a protocol conflict after the recent system update. We will guide you through resolving this."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.4,
+ "llm_calls": 1,
+ "tokens": 843,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "The yard camera used to upload a clip every time somebody walked past. Since a night when the system updated itself, the clips stopped, although live view still works. I checked the storage page and there is plenty of space, so that is not it. My neighbour with the same system has no problem.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 2,
+ "usability_reason": "The response politely summarizes the symptoms and avoids claiming unperformed checks, but it is not actionable: it offers no concrete troubleshooting steps, asks no diagnostic questions, and asserts a specific root cause (protocol conflict) without any supporting evidence from the session record. It merely promises future guidance."
+}

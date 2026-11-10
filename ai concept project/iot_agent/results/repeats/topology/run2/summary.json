@@ -1,0 +1,23 @@
+{
+ "system": "topology",
+ "core": {
+  "case_count": 40,
+  "diagnosis_success_rate": 1.0,
+  "average_interaction_rounds": 1.175,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 1.0,
+  "support_usability_score": null,
+  "usability_scored_cases": 0,
+  "average_tokens": 19267.775
+ },
+ "challenge": {
+  "case_count": 12,
+  "diagnosis_success_rate": 0.9166666666666666,
+  "average_interaction_rounds": 1.0833333333333333,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 1.0,
+  "support_usability_score": null,
+  "usability_scored_cases": 0,
+  "average_tokens": 22527.416666666668
+ }
+}

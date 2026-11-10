@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C042",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The garage motion sensor stopped triggering after the base station's automatic update. The app shows an update badge on the sensor, indicating its firmware is outdated. The knowledge base states that base station firmware 4.5 removes support for legacy v2 protocol, and peripherals on v2 must be upgraded to v3. The historical case H-07 matches: a motion sensor stopped reporting after base update with E-305, and OTA firmware update resolved it. The sensor's light still blinks, so it has power and detects motion, but events are not being processed due to firmware incompatibility.",
+ "output": {
+  "repair_steps": [
+   "Open the mobile app and navigate to the garage motion sensor's device settings.",
+   "Look for a firmware update option or an update badge on the device.",
+   "If an update is available, tap 'Update' and wait for the process to complete.",
+   "After the update, test the sensor by walking past it to see if it triggers an event in the app.",
+   "If the update fails or no update is available, remove the sensor from the app, factory reset the sensor by holding the SYNC button for 15 seconds until the LED flashes white, then re-pair it with the base station."
+  ],
+  "customer_reply": "Thank you for the details. It appears that after the recent base station update, your garage motion sensor needs a firmware update to work with the new base station version. The quickest way is to update the sensor's firmware through the app. Please follow these steps: open the app, go to the device settings for the garage motion sensor, and check for a firmware update. If an update is available, tap 'Update' and wait for it to complete. Once updated, the sensor should start triggering events again. If you don't see an update option, try removing and re-adding the sensor, but first try the update. Let me know if you need further assistance."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.1,
+ "llm_seconds": 8.7,
+ "llm_calls": 1,
+ "tokens": 1313,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "Since the automatic update the night before last, my garage motion sensor doesn't trigger anything. Its light still blinks when I walk past and the app shows a little update badge on it, so I suppose it just needs an update? Please tell me the quickest way to get it working again.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable steps. However, it asserts a root cause ('after the recent base station update, your garage motion sensor needs a firmware update') that is not supported by the session record, which shows no questions asked and no actions performed. It also implies the update will fix the issue without verification. Steps are reasonable but the unsupported diagnostic claim lowers the score."
+}

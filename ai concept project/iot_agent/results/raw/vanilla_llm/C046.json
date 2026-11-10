@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C046",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera intermittently goes offline, freezes, and has choppy video, which are classic symptoms of weak Wi-Fi signal. The user has restarted the device without improvement, and no other devices are reported affected. This points to a signal issue rather than a hardware fault.",
+ "output": {
+  "repair_steps": [
+   "Check the Wi-Fi signal strength for the garden shed camera in the app.",
+   "If signal is weak, move the camera closer to the router or base station to test.",
+   "Ensure no physical obstructions or interference sources (e.g., thick walls, metal objects, other electronics) are between the camera and the router/base station.",
+   "If possible, reposition the router or base station to improve coverage to the shed.",
+   "If the issue persists with a strong signal, proceed with warranty replacement."
+  ],
+  "customer_reply": "Thank you for the details. The symptoms you're describing—intermittent offline, freezing, and choppy video—are often caused by a weak Wi-Fi signal between the camera and your router or base station. Since the camera is only four months old and restarting hasn't helped, we'd like to first check the signal strength and possibly improve it. Could you please check the signal indicator in the app for this camera? If it's low, try moving the camera closer to the router or base station temporarily to see if the issue persists. If the problem continues even with a strong signal, we can then consider a replacement under warranty."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.7,
+ "llm_calls": 1,
+ "tokens": 948,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The camera on the garden shed is clearly defective. It keeps freezing and going offline and the picture is choppy. It's only four months old and still under warranty, so I'd like a replacement unit sent out please. I've already restarted it a few times and it makes no difference.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, providing concrete troubleshooting steps and a path to warranty replacement. It avoids claiming any checks or fixes were completed, instead asking the customer to verify signal strength. Minor deduction because it does not directly address the customer's replacement request upfront and the steps are somewhat generic, but overall usability is high."
+}

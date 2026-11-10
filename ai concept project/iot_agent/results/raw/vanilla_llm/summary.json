@@ -1,0 +1,23 @@
+{
+ "system": "vanilla_llm",
+ "core": {
+  "case_count": 40,
+  "diagnosis_success_rate": 0.85,
+  "average_interaction_rounds": 0.0,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 0.875,
+  "support_usability_score": 3.275,
+  "usability_scored_cases": 40,
+  "average_tokens": 883.825
+ },
+ "challenge": {
+  "case_count": 12,
+  "diagnosis_success_rate": 0.25,
+  "average_interaction_rounds": 0.0,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 0.5,
+  "support_usability_score": 3.4166666666666665,
+  "usability_scored_cases": 12,
+  "average_tokens": 876.4166666666666
+ }
+}

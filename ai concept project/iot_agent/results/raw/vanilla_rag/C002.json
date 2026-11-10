@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C002",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer cannot pair a new door sensor and receives an error code. The historical case H-02 shows that E-201 occurs when the base station has reached its device limit (8 devices). The customer mentions the system has grown over the years and they don't remember how many devices they have, suggesting the limit may have been reached. The manual snippet about orphaned binding also mentions E-201, but that is a binding-table inconsistency requiring L2 escalation. However, the customer's complaint does not mention removing a device or having fewer devices in the app than the limit, so the simpler explanation is capacity exceeded. Since the error code is not explicitly stated in the complaint, but the symptoms align with E-201, we choose CAPACITY_EXCEEDED as the most likely root cause.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to the device list.",
+   "Count the number of devices currently connected to the base station.",
+   "If the count is at the maximum (usually 8), identify a device that is no longer in use.",
+   "Remove the unused device from the app by following the removal procedure.",
+   "Once a slot is free, put the new door sensor into pairing mode and attempt to pair again.",
+   "If pairing still fails, note the exact error code and contact support for further troubleshooting."
+  ],
+  "customer_reply": "Thank you for contacting support. Based on the information you provided, it appears that your base station may have reached its maximum number of connected devices. This is a common issue when adding a new device to a system that has been in use for a long time. To resolve this, please check the number of devices currently connected to your base station in the app. If you have reached the limit (typically 8 devices), you will need to remove an unused device before pairing the new sensor. If you are unsure how to do this, please refer to the user manual or contact us again for further assistance."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 8.3,
+ "llm_seconds": 8.2,
+ "llm_calls": 1,
+ "tokens": 1419,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "I bought a new door sensor last week but it just won't pair. I followed the instructions and held the button. The app shows an error with a code, and I have tried both my phone and my partner's phone with the same result. Our system has grown over the years and, honestly, I don't remember how many devices we have. Do I need to return the sensor?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, providing step-by-step guidance and a fallback to contact support. It avoids claiming any checks or fixes were completed, instead asking the customer to verify device count themselves. Minor deduction because the device limit is stated as 'typically 8' without confirmation, but it is framed as a possibility rather than a confirmed diagnosis."
+}

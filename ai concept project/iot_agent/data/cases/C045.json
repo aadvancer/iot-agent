@@ -1,0 +1,147 @@
+{
+  "case_id": "C045",
+  "complaint": "I can't add my new garage door sensor, the app says the system is full. That makes no sense: I only have 7 devices in the app and the manual says this base station supports 8. I already removed the old hallway sensor from the app last year, so there should be a free slot.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-100",
+      "fw": "3.4",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": [
+        "E-201"
+      ]
+    },
+    "devices": [
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -55,
+        "battery": 90,
+        "status": "online"
+      },
+      {
+        "id": "door_back",
+        "name": "Back Door",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -60,
+        "battery": 86,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -62,
+        "battery": 71,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -59,
+        "battery": 66,
+        "status": "online"
+      },
+      {
+        "id": "motion_stairs",
+        "name": "Stairs Motion",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -64,
+        "battery": 52,
+        "status": "online"
+      },
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "1.8",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -66,
+        "battery": 58,
+        "status": "online"
+      },
+      {
+        "id": "cam_porch",
+        "name": "Porch Cam",
+        "model": "CAM-S1",
+        "fw": "1.8",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -63,
+        "battery": 61,
+        "status": "online"
+      },
+      {
+        "id": "motion_old",
+        "name": "Sensor 7",
+        "model": "SEN-M1",
+        "fw": "1.1",
+        "bound_in_base": true,
+        "bound_in_app": false,
+        "rssi": null,
+        "battery": null,
+        "status": "offline"
+      },
+      {
+        "id": "door_garage",
+        "name": "New Garage Door",
+        "model": "SEN-D1",
+        "fw": "1.0",
+        "bound_in_base": false,
+        "bound_in_app": false,
+        "rssi": null,
+        "battery": 100,
+        "status": "not_paired"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "pairing request rejected: E-201 capacity reached (8/8)",
+      "binding slot 7 (motion_old) has no matching account record",
+      "04:10:48 cloud time sync ok (drift 1 s)",
+      "23:57:40 remote app session authenticated"
+    ]
+  },
+  "user_knowledge": {
+    "devices_in_app": "7",
+    "removed_device": "I deleted the old hallway motion sensor from the app last spring and threw it away.",
+    "error_message": "Something like 'device limit reached'.",
+    "distance_during_pairing": "right next to the base station"
+  },
+  "action_outcomes": {
+    "remove_unused_device": "I can't find anything to remove; the app only lists my 7 devices and I use all of them.",
+    "restart_base_station": "Still says the limit is reached.",
+    "retry_pairing": "Same error.",
+    "re_add_removed_device": "I don't have that old sensor any more."
+  },
+  "gt_root_cause": "BINDING_TABLE_CORRUPT",
+  "gt_tier": "L2",
+  "gt_key_checks": [
+    "S1",
+    "S2"
+  ],
+  "difficulty": "hard",
+  "split": "challenge",
+  "requires_interaction": false,
+  "notes": "The base table is full (8/8) while the app lists 7 devices: slot 7 is a ghost binding of a sensor the customer deleted in the app. It looks like CAPACITY_EXCEEDED, but the standard 'remove an unused device' fix is impossible from the app, so FAE tooling is needed. The app/base mismatch is visible on the console (no dialogue required)."
+}

@@ -1,0 +1,199 @@
+{
+ "system": "rules_only",
+ "case_id": "C049",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "storage 99%, loop recording off",
+ "output": {
+  "repair_steps": [
+   "Enable loop recording or format storage after backing up clips."
+  ],
+  "customer_reply": "We have identified the likely cause and will guide you through the fix."
+ },
+ "rule_hints": [
+  {
+   "cause": "STORAGE_FULL",
+   "tier": "L1",
+   "evidence": "storage 99%, loop recording off"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 99,
+    "loop_recording": false,
+    "error_codes": [
+     "E-402"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 5,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 99,
+   "loop_recording": false,
+   "error_codes": [
+    "E-402"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 5,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_front",
+     "name": "Front Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 0.0,
+ "llm_calls": 0,
+ "tokens": 0,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "Our camera recordings stopped about two weeks ago. Live view works fine, but there are no new clips in the event list after the 3rd. I think the internet must be dropping at night, our broadband has been flaky. Should I call my internet provider about it?",
+ "user_turns": 0,
+ "console_calls": 2,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and gives one actionable step (enable loop recording or format storage after backup), but it is vague and unsupported: it claims a likely cause was 'identified' without any diagnostic questions or actions in the session record, and it does not address the customer's internet/broadband question or explain why live view works but recordings stopped. Clarity and actionability are limited by the lack of context and unverified claim."
+}

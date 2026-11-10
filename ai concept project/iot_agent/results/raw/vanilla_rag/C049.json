@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C049",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer reports that live view works but no new clips are recorded after a specific date. This matches the symptom of storage full: when local storage reaches capacity and loop recording is disabled, new events are not recorded. The knowledge snippet indicates that error E-402 is shown, but the customer may not have noticed it. Other causes like network issues would affect live view or device connectivity, which are not reported.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to Base Station Settings > Storage.",
+   "Check the storage usage percentage.",
+   "If storage is near full, enable loop recording to overwrite oldest clips.",
+   "Alternatively, export important clips and format the storage.",
+   "Verify that new events are recorded after making changes."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, it appears that your base station's local storage may be full, which prevents new recordings. Please check the base station settings for storage status and enable loop recording or free up space. If the issue persists, we can investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.1,
+ "llm_seconds": 6.6,
+ "llm_calls": 1,
+ "tokens": 1114,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "Our camera recordings stopped about two weeks ago. Live view works fine, but there are no new clips in the event list after the 3rd. I think the internet must be dropping at night, our broadband has been flaky. Should I call my internet provider about it?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable storage-related steps. However, it speculates that storage may be full without any diagnostic evidence from the session (no questions asked, no actions performed), and it does not address the customer's internet-provider question. It avoids claiming checks were completed, but the root-cause assumption is unsupported by the record."
+}

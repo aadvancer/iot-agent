@@ -1,0 +1,181 @@
+{
+ "system": "react",
+ "case_id": "C033",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Base station is online locally with all 7 devices online and local live view working, but it shows a persistent E-503 (cloud reporting failed) error. The customer already performed the frontline remediation (router restart, base station restart, DNS set to automatic) and the error persists, matching the KB escalation path for a cloud channel/certificate issue.",
+ "output": {
+  "symptom_summary": "Customer reports no push notifications or remote clip access since Tuesday, despite local live view working on home Wi-Fi. Base station shows persistent E-503 cloud reporting failed error.",
+  "suspected_root_cause": "Cloud channel or certificate issue on the base station, as E-503 persists after frontline remediation and base station is online locally.",
+  "key_abnormal_indicators": [
+   "error_codes: [\"E-503\"]",
+   "uplink_status: ok",
+   "online: true",
+   "all 7 devices online locally",
+   "local live view works",
+   "customer performed router restart, base station restart, DNS set to automatic"
+  ],
+  "customer_reply": "Thank you for your patience. We've identified that your base station is having trouble communicating with our cloud service, which is why you're not receiving notifications or remote access. I've escalated your case to our advanced engineering team. They will investigate and follow up with you shortly. No further action is needed from you at this time."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 uplink blocked events not reaching cloud push notifications"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_local",
+      "name": "Local Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "E-503 cloud reporting failed repeatedly"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 uplink blocked events not reaching cloud push notifications"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 10.8,
+ "llm_seconds": 10.8,
+ "llm_calls": 4,
+ "tokens": 7990,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "Local live view works fine on my home Wi-Fi, but I haven't received a single push notification since Tuesday, and when I'm out I can't see any clips. I rebooted the router, then the base station, and even set my router's DNS to automatic like the help article said. Still nothing. I've been on hold with my ISP and they insist the internet is fine.",
+ "user_turns": 0,
+ "console_calls": 3
+}

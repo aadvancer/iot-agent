@@ -1,0 +1,37 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C012",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer is adding a new sensor and receives an error code. Historical case H-02 shows E-201 occurs when the base station has reached its device limit (8 devices). The manual also mentions E-201 can be caused by orphaned bindings, but that is a binding-table inconsistency requiring L2. Since the customer has had the system for years and added devices over time, it is likely the base station is at capacity. The error code is not specified in the complaint, but E-201 is the most common capacity error. The customer's sensor is likely not defective; the base station cannot accept more devices.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to device list.",
+   "Identify any device that is no longer in use or can be temporarily removed.",
+   "Remove that device from the app.",
+   "Put the base station into pairing mode via the app (Add Device).",
+   "Hold the SYNC button on the new sensor for 3 seconds until LED blinks blue, keeping it within 1 metre of the base station.",
+   "Wait for pairing to complete within 120 seconds.",
+   "If pairing still fails with E-201, check if the app shows fewer than 8 devices but the base station still reports capacity full; this may indicate an orphaned binding, which requires escalation to L2."
+  ],
+  "customer_reply": "Thank you for the details. The error you're seeing typically means the base station has reached its maximum number of connected devices. This is not a fault with the new sensor. To resolve, you can remove an unused device from the app and then try pairing again. If you need to keep all devices, you may need to consider a second base station or contact support for further options."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 8.2,
+ "llm_seconds": 8.1,
+ "llm_calls": 1,
+ "tokens": 1424,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "I want to add a sensor to the garage door, but the app refuses to register it. The screen shows an error with a code and I'm not sure what it means. I held the button on the sensor until it blinked, exactly like in the video. I've had this system for a few years and added things bit by bit. Is the new sensor dead on arrival?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and provides concrete step-by-step actions. It explains the likely cause (device limit) and offers escalation guidance. However, it asserts the error 'typically means' a capacity limit without any diagnostic questions or actions shown in the session record, and the customer was never asked to confirm device count or error code details, so the root-cause claim is somewhat unsupported. It avoids claiming checks were completed, which is good."
+}

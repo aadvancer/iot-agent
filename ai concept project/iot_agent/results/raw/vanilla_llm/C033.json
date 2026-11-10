@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C033",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Local live view works, indicating base station and cameras are functional on LAN. However, no push notifications and no remote clip access suggest cloud connectivity is blocked. Rebooting router and base station, and setting DNS to automatic did not resolve, pointing to persistent uplink blockage.",
+ "output": {
+  "symptom_summary": "No push notifications since Tuesday, cannot view clips remotely, but local live view works on home Wi-Fi.",
+  "suspected_root_cause": "Persistent blockage of uplink traffic from base station to cloud, possibly due to router/ISP firewall or DNS issues.",
+  "key_abnormal_indicators": [
+   "Local live view works, indicating LAN functionality is intact.",
+   "No push notifications and no remote clip access, suggesting cloud connectivity failure.",
+   "Rebooting router and base station, and setting DNS to automatic did not resolve the issue.",
+   "ISP claims internet is fine, but cloud traffic may still be blocked."
+  ],
+  "customer_reply": "Thank you for the details. Since local live view works but remote access and notifications fail, the issue is likely with the connection between your base station and our cloud service. We will guide you through checking your network settings and base station configuration to restore cloud connectivity."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.9,
+ "llm_calls": 1,
+ "tokens": 980,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "Local live view works fine on my home Wi-Fi, but I haven't received a single push notification since Tuesday, and when I'm out I can't see any clips. I rebooted the router, then the base station, and even set my router's DNS to automatic like the help article said. Still nothing. I've been on hold with my ISP and they insist the internet is fine.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it correctly summarizes the symptoms and avoids claiming unperformed checks. However, actionability is weak: it only promises future guidance ('We will guide you through...') without providing any concrete steps, and the root-cause label is speculative rather than supported by verified diagnostics. It also doesn't acknowledge the customer's already-performed troubleshooting beyond restating it."
+}

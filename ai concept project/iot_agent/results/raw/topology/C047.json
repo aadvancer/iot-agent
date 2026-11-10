@@ -1,0 +1,442 @@
+{
+ "system": "topology_agent",
+ "case_id": "C047",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station auto-updated to firmware 4.5, which dropped protocol v2 support, leaving the SEN-M1 motion sensor (fw 1.1, protocol v2) unable to report events (E-305 in logs, status \"connected_no_events\"). The OTA upgrade to 1.4 (protocol v3) succeeded after replacing the low battery, and alerts resumed — confirming an L1 firmware mismatch, not a battery fault.",
+ "output": {
+  "repair_steps": [
+   "Confirm the Living Motion sensor now shows firmware 1.4 and status 'online' in the app.",
+   "Verify that motion events from the Living Motion sensor are appearing in the event history.",
+   "Close the case as resolved at frontline (L1) with root cause PERIPHERAL_FW_OUTDATED."
+  ],
+  "customer_reply": "Your Living Motion sensor is now updated and working again. The issue was caused by a firmware mismatch after the base station update, which we've resolved by updating the sensor. You should now receive motion alerts as usual. If you have any further questions, feel free to reach out. Thank you for your patience!"
+ },
+ "rule_hints": [
+  {
+   "cause": "PERIPHERAL_FW_OUTDATED",
+   "tier": "L1",
+   "evidence": "motion_living protocol v2 unsupported, OTA to 1.4 available"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_living"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported OTA upgrade peripheral firmware fix"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "OTA upgrade battery below 30 percent requirement SEN-M1"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "OTA upgrade battery below 30 percent fails SEN-M1 low battery workaround"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Explain to the customer that the sensor stopped reporting because the base station's firmware update changed the radio protocol, and the sensor needs a firmware update to match. The update requires battery above 30%, so first have them replace the batteries in the Living Motion sensor. Once fresh batteries are in, trigger the OTA firmware upgrade for the sensor from the app (device settings → firmware update). Report whether the upgrade succeeds and alerts resume.",
+    "target_cause": "PERIPHERAL_FW_OUTDATED"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "PERIPHERAL_FW_OUTDATED",
+    "rationale": "The base station auto-updated to firmware 4.5, which dropped protocol v2 support, leaving the SEN-M1 motion sensor (fw 1.1, protocol v2) unable to report events (E-305 in logs, status \"connected_no_events\"). The OTA upgrade to 1.4 (protocol v3) succeeded after replacing the low battery, and alerts resumed — confirming an L1 firmware mismatch, not a battery fault."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_living",
+      "name": "Living Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "connected_no_events"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   },
+   "result": {
+    "id": "motion_living",
+    "name": "Living Motion",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": -60,
+    "battery": 12,
+    "status": "connected_no_events"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "base station firmware updated 4.2 -> 4.5 at 02:58",
+     "motion_living: E-305 protocol v2 not supported",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "23:57:40 remote app session authenticated"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_living"
+   },
+   "result": {
+    "device_id": "motion_living",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "1.4"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported OTA upgrade peripheral firmware fix"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "OTA upgrade battery below 30 percent requirement SEN-M1"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "historical_cases#H-07 Missing motion alerts after base update",
+      "text": "SEN-M1 on firmware 1.1 stopped reporting after base update to 4.5 with E-305. OTA to 1.4 succeeded and alerts resumed. Resolved at frontline. Note: initially escalated unnecessarily - an example of avoidable FAE workload."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "OTA upgrade battery below 30 percent fails SEN-M1 low battery workaround"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Explain to the customer that the sensor stopped reporting because the base station's firmware update changed the radio protocol, and the sensor needs a firmware update to match. The update requires battery above 30%, so first have them replace the batteries in the Living Motion sensor. Once fresh batteries are in, trigger the OTA firmware upgrade for the sensor from the app (device settings → firmware update). Report whether the upgrade succeeds and alerts resume."
+   },
+   "result": {
+    "outcome": "I put fresh batteries in the Living Motion sensor and it now shows 100%, then I ran the firmware update from the app. It took about three minutes and now the alerts are working again."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.5",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-305"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "motion_living",
+     "name": "Living Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "connected_no_events"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_front",
+     "name": "Front Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "motion_living"
+  ],
+  "device_details": {
+   "motion_living": {
+    "id": "motion_living",
+    "name": "Living Motion",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": -60,
+    "battery": 12,
+    "status": "connected_no_events"
+   }
+  },
+  "firmware_compat": {
+   "motion_living": {
+    "device_id": "motion_living",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "1.4"
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "base station firmware updated 4.2 -> 4.5 at 02:58",
+    "motion_living: E-305 protocol v2 not supported",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "23:57:40 remote app session authenticated"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "Explain to the customer that the sensor stopped reporting because the base station's firmware update changed the radio protocol, and the sensor needs a firmware update to match. The update requires battery above 30%, so first have them replace the batteries in the Living Motion sensor. Once fresh batteries are in, trigger the OTA firmware upgrade for the sensor from the app (device settings → firmware update). Report whether the upgrade succeeds and alerts resume.",
+    "target_cause": "PERIPHERAL_FW_OUTDATED",
+    "outcome": "I put fresh batteries in the Living Motion sensor and it now shows 100%, then I ran the firmware update from the app. It took about three minutes and now the alerts are working again.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-305 Protocol / firmware mismatch] The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict.",
+   "[manual_peripherals#Peripheral firmware and OTA] Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3.",
+   "[historical_cases#H-03 Indoor camera lost after night update] After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly.",
+   "[historical_cases#H-07 Missing motion alerts after base update] SEN-M1 on firmware 1.1 stopped reporting after base update to 4.5 with E-305. OTA to 1.4 succeeded and alerts resumed. Resolved at frontline. Note: initially escalated unnecessarily - an example of avoidable FAE workload.",
+   "[escalation_policy#Close at frontline (L1)] Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 27.0,
+ "llm_calls": 8,
+ "tokens": 23744,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "The living room motion sensor stopped sending alerts since yesterday. The app shows that its battery is getting low (12%), so I guess that's the reason? I'll buy batteries, but wanted to check first because its light still blinks when I walk past it.",
+ "user_turns": 1,
+ "console_calls": 5,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, and it accurately reflects the completed fix (battery replacement and firmware update) without claiming unverified checks. However, the repair_steps ask to confirm firmware 1.4 and online status and verify event history, which are reasonable follow-ups but not shown as completed in the session record; the customer_reply appropriately avoids overclaiming. Minor deduction because the response could more explicitly tie the resolution to the customer's reported success and avoid implying all verification is done."
+}

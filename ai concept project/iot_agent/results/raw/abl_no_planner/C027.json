@@ -1,0 +1,362 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C027",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [
+  {
+   "rule": "R2_PROTOCOL",
+   "evidence": "cam_guest incompatible and OTA unavailable"
+  }
+ ],
+ "rationale": "The base station (HB-200, fw 4.5) supports only protocol v3, while cam_guest (CAM-I2, fw 1.2) speaks protocol v2, and check_firmware_compat reports compatible=false with no OTA path (ota_available_to=null). The base station logs E-305, and this exactly matches historical case H-03 (CAM-I2 lost after HB-200 auto-update to 4.5, OTA not offered for this hardware revision). Per escalation policy, a protocol mismatch with no OTA path is an L2 escalation — no frontline fix exists.",
+ "output": {
+  "symptom_summary": "Guest Room Cam (CAM-I2, fw 1.2) is offline and base station logs E-305. The device is bound but cannot communicate with the HB-200 base station (fw 4.5).",
+  "suspected_root_cause": "Protocol conflict: CAM-I2 uses protocol v2 while HB-200 only supports v3, and no OTA path is available for this hardware revision.",
+  "key_abnormal_indicators": [
+   "Base station error code E-305",
+   "cam_guest status: offline",
+   "cam_guest firmware: 1.2",
+   "cam_guest protocol: v2",
+   "base station supported protocols: [v3]",
+   "firmware compatibility: compatible=false",
+   "ota_available_to: null",
+   "historical case H-03 match"
+  ],
+  "customer_reply": "We've identified a compatibility issue between your Guest Room Cam and the base station. Our engineering team will investigate and provide a solution. You will be contacted shortly. No further action is needed from you at this time.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "error_codes": [
+     "E-305"
+    ]
+   },
+   "affected_devices": [
+    {
+     "id": "cam_guest",
+     "name": "Guest Room Cam",
+     "model": "CAM-I2",
+     "fw": "1.2",
+     "rssi": -62,
+     "battery": null,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [
+    {
+     "rule": "R2_PROTOCOL",
+     "evidence": "cam_guest incompatible and OTA unavailable"
+    }
+   ],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "PROTOCOL_CONFLICT",
+   "tier": "L2",
+   "evidence": "cam_guest protocol v2 unsupported, no OTA path"
+  }
+ ],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_guest"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_guest"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "PROTOCOL_CONFLICT E-305 device protocol v2 unsupported no OTA path escalation"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "PROTOCOL_CONFLICT",
+    "rationale": "The base station (HB-200, fw 4.5) supports only protocol v3, while cam_guest (CAM-I2, fw 1.2) speaks protocol v2, and check_firmware_compat reports compatible=false with no OTA path (ota_available_to=null). The base station logs E-305, and this exactly matches historical case H-03 (CAM-I2 lost after HB-200 auto-update to 4.5, OTA not offered for this hardware revision). Per escalation policy, a protocol mismatch with no OTA path is an L2 escalation — no frontline fix exists."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_guest",
+      "name": "Guest Room Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_guest"
+   },
+   "result": {
+    "id": "cam_guest",
+    "name": "Guest Room Cam",
+    "model": "CAM-I2",
+    "fw": "1.2",
+    "rssi": -62,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_guest"
+   },
+   "result": {
+    "device_id": "cam_guest",
+    "device_fw": "1.2",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "PROTOCOL_CONFLICT E-305 device protocol v2 unsupported no OTA path escalation"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "escalation_policy#Escalate to FAE (L2)",
+      "text": "Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.5",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-305"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_guest",
+     "name": "Guest Room Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_guest"
+  ],
+  "device_details": {
+   "cam_guest": {
+    "id": "cam_guest",
+    "name": "Guest Room Cam",
+    "model": "CAM-I2",
+    "fw": "1.2",
+    "rssi": -62,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "cam_guest": {
+    "device_id": "cam_guest",
+    "device_fw": "1.2",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": null
+   }
+  },
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-305 Protocol / firmware mismatch] The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict.",
+   "[historical_cases#H-03 Indoor camera lost after night update] After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly.",
+   "[escalation_policy#Escalate to FAE (L2)] Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 20.0,
+ "llm_calls": 7,
+ "tokens": 20890,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "The guest room camera went offline overnight and won't come back. It is a wired indoor camera and has power; the LED is orange. A friend who works in IT told me to factory reset the base station, but I'd rather not lose all my settings. I looked in the app for a camera update and it says none is available.",
+ "user_turns": 0,
+ "console_calls": 4,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and clearly summarizes a suspected protocol incompatibility, but it is largely unactionable: it tells the customer no action is needed and that engineering will investigate, without any troubleshooting steps or timeline. It also presents diagnostic details (E-305 logs, protocol v2 vs v3, firmware compatibility, historical case match) as established facts even though the session record shows no questions asked and no actions performed, so these checks are not supported by the record. The root-cause label may be plausible, but it is asserted rather than demonstrated."
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C044",
+ "pred_root_cause": "BATCH_LINK_FAILURE",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Two sensors went offline simultaneously while the base station is likely online (customer only mentions sensors, not base station). This matches the pattern of several devices offline at the same time with base station online, which is a batch link failure. Historical case H-05 shows similar simultaneous offline sensors requiring escalation.",
+ "output": {
+  "symptom_summary": "Two sensors (back door and back window) went offline overnight simultaneously.",
+  "suspected_root_cause": "Batch link failure affecting multiple sensors while base station remains online.",
+  "key_abnormal_indicators": [
+   "Multiple sensors offline at the same time",
+   "Base station likely online (no mention of base station offline)",
+   "Historical case H-05 shows similar simultaneous offline sensors with E-610 log"
+  ],
+  "customer_reply": "Thank you for the details. Since multiple sensors went offline at the same time while your base station appears to be online, this suggests a possible issue with the wireless link between the base station and those sensors. This type of issue typically requires advanced diagnostics and may need a replacement of the radio module. I have escalated your case to our Level 2 support team for further investigation. They will contact you shortly."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.9,
+ "llm_seconds": 5.9,
+ "llm_calls": 1,
+ "tokens": 1172,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "Two of my sensors went offline overnight, the back door and the back window. Two at once seems like something bigger is wrong with the system. Should I be worried that the base station is failing? It's quite new and I don't want to lose the warranty period.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clear, and it gives a concrete next step (escalation to Level 2). However, actionability for the customer is limited since no troubleshooting steps were offered, and it makes unsupported claims: it asserts the base station 'appears to be online' and references a 'historical case H-05' with an E-610 log, none of which appear in the session record (no questions asked, no actions performed). It also speculates about a radio module replacement without any diagnostic evidence. The root-cause label is plausible but not substantiated by the record."
+}

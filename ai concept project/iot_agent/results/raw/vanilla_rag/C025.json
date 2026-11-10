@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C025",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer reports that event clips are not being saved for the last three weeks, which matches the symptom of storage full: new events are not recorded. The knowledge snippet indicates that when storage reaches 98% and loop recording is disabled, new events are not recorded and error E-402 is shown. The customer did not mention seeing an error, but the absence of recordings over a period is consistent with storage being full. Other root causes like network down or device offline would affect live view or device status, which are not mentioned. The customer's concern about hacking is not supported by the information; no password-change emails and no mention of unauthorized access. Therefore, STORAGE_FULL is the most likely root cause.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to Base Station Settings > Storage.",
+   "Check the storage usage. If it is near 98% or full, proceed to next step.",
+   "If loop recording is disabled, enable it to allow overwriting of oldest clips.",
+   "Alternatively, export any important clips and then format the storage to free up space.",
+   "After enabling loop recording or formatting, verify that new events are being recorded by triggering a test event."
+  ],
+  "customer_reply": "We understand your concern about missing event clips. Based on the information provided, it appears that your base station's storage may be full, which prevents new events from being recorded. This is a common issue when loop recording is disabled. We recommend checking the storage status in the app and enabling loop recording or formatting the storage after exporting any important clips. If the issue persists, please contact support for further assistance."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.9,
+ "llm_seconds": 6.8,
+ "llm_calls": 1,
+ "tokens": 1333,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "The system stopped saving event clips. A break-in attempt happened at a neighbour's house, so I wanted to check my camera footage and there is nothing for the last three weeks! Did somebody delete my recordings? Is my account hacked? I haven't received any password-change emails.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable steps, and it avoids asserting that any checks or fixes were completed. However, it speculates that storage is full without any diagnostic evidence from the session (no questions asked, no actions performed), and it does not address the customer's explicit concerns about deletion or account hacking. Usability is moderate: actionable but built on an unverified assumption."
+}

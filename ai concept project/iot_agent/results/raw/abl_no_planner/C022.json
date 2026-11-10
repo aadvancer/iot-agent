@@ -1,0 +1,348 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C022",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The Garage Door sensor (SEN-D1) was on firmware 1.0 speaking the legacy v2 radio protocol, while the HB-200 base station (fw 4.5) only supports v3, producing the E-305 fault and a \"connected but no events\" state. The standard L1 fix — an OTA upgrade to 1.3 — completed successfully and events resumed, confirming the root cause.",
+ "output": {
+  "repair_steps": [
+   "Confirm the Garage Door sensor (SEN-D1) is now on firmware 1.3 and events are being received.",
+   "Verify the E-305 fault has cleared from the base station error codes.",
+   "Ask the customer to test the Garage Door sensor by opening and closing the garage door to ensure events appear in the app.",
+   "If events are working, close the case as resolved."
+  ],
+  "customer_reply": "We've updated the firmware on your Garage Door sensor to resolve the connection issue. The sensor is now communicating properly with the base station, and events should appear in your app as expected. Please test by opening and closing the garage door. If you notice any further issues, don't hesitate to reach out. Thank you for your patience!"
+ },
+ "rule_hints": [
+  {
+   "cause": "PERIPHERAL_FW_OUTDATED",
+   "tier": "L1",
+   "evidence": "door_garage protocol v2 unsupported, OTA to 1.3 available"
+  }
+ ],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "PERIPHERAL_FW_OUTDATED E-305 OTA upgrade sensor protocol v2 to v3"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the support console, trigger an OTA firmware upgrade for the Garage Door sensor (SEN-D1, currently fw 1.0 → 1.3). Confirm the sensor is within normal signal range and battery is above 30% (both are already verified). Wait for the upgrade to complete and check whether events resume.",
+    "target_cause": "PERIPHERAL_FW_OUTDATED"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "PERIPHERAL_FW_OUTDATED",
+    "rationale": "The Garage Door sensor (SEN-D1) was on firmware 1.0 speaking the legacy v2 radio protocol, while the HB-200 base station (fw 4.5) only supports v3, producing the E-305 fault and a \"connected but no events\" state. The standard L1 fix — an OTA upgrade to 1.3 — completed successfully and events resumed, confirming the root cause."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_garage",
+      "name": "Garage Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "connected_no_events"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_garage"
+   },
+   "result": {
+    "id": "door_garage",
+    "name": "Garage Door",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "rssi": -63,
+    "battery": 72,
+    "status": "connected_no_events"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_garage"
+   },
+   "result": {
+    "device_id": "door_garage",
+    "device_fw": "1.0",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "1.3"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "PERIPHERAL_FW_OUTDATED E-305 OTA upgrade sensor protocol v2 to v3"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "manual_base_station#Firmware update",
+      "text": "Base station firmware updates are pushed automatically at night. HB-200 firmware 4.5 removes support for the legacy v2 radio protocol. Peripherals still running v2 firmware must be upgraded to v3 firmware before or after the base station update, otherwise they disconnect."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the support console, trigger an OTA firmware upgrade for the Garage Door sensor (SEN-D1, currently fw 1.0 → 1.3). Confirm the sensor is within normal signal range and battery is above 30% (both are already verified). Wait for the upgrade to complete and check whether events resume."
+   },
+   "result": {
+    "outcome": "I ran the update for the Garage Door sensor, and it finished — it's now on 1.3 and events are coming through again."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.5",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-305"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_garage",
+     "name": "Garage Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "connected_no_events"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "door_garage"
+  ],
+  "device_details": {
+   "door_garage": {
+    "id": "door_garage",
+    "name": "Garage Door",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "rssi": -63,
+    "battery": 72,
+    "status": "connected_no_events"
+   }
+  },
+  "firmware_compat": {
+   "door_garage": {
+    "device_id": "door_garage",
+    "device_fw": "1.0",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "1.3"
+   }
+  },
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "In the support console, trigger an OTA firmware upgrade for the Garage Door sensor (SEN-D1, currently fw 1.0 → 1.3). Confirm the sensor is within normal signal range and battery is above 30% (both are already verified). Wait for the upgrade to complete and check whether events resume.",
+    "target_cause": "PERIPHERAL_FW_OUTDATED",
+    "outcome": "I ran the update for the Garage Door sensor, and it finished — it's now on 1.3 and events are coming through again.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-305 Protocol / firmware mismatch] The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict.",
+   "[manual_peripherals#Peripheral firmware and OTA] Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3.",
+   "[manual_base_station#Firmware update] Base station firmware updates are pushed automatically at night. HB-200 firmware 4.5 removes support for the legacy v2 radio protocol. Peripherals still running v2 firmware must be upgraded to v3 firmware before or after the base station update, otherwise they disconnect."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 26.5,
+ "llm_calls": 10,
+ "tokens": 26323,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "Events from the garage door sensor haven't come through for two days, although the app shows it as connected. My husband thinks the garage Wi-Fi is bad, so he installed a Wi-Fi extender there, which didn't help. The garage door opens and closes normally, so the sensor itself should be fine.",
+ "user_turns": 1,
+ "console_calls": 4,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable: asks the customer to test the sensor and confirms the firmware update that was actually performed and reported as successful. Minor issue: the response asserts the sensor is 'now communicating properly' and events 'should appear' as expected, which is a reasonable inference from the reported success but slightly ahead of the customer's own test; also references an E-305 fault not mentioned in the session record. Overall strong usability with only minor unsupported/overreaching claims."
+}

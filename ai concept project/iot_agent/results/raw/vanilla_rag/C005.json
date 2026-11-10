@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C005",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The back door sensor is a single device that went offline, while the front camera works normally. The customer suspects distance from the base station, and the historical case H-01 shows a similar single-device intermittent issue resolved with a repeater. No error codes or multiple device failures are reported.",
+ "output": {
+  "repair_steps": [
+   "Move the back door sensor closer to the base station temporarily to test if it reconnects.",
+   "If it reconnects when closer, the issue is signal range; install a signal repeater (e.g., RP-1) between the sensor and base station.",
+   "After installing the repeater, check the sensor status in the app to ensure it is online and events are being received.",
+   "If the sensor remains offline even when close to the base station, perform a factory reset on the sensor and re-pair it.",
+   "If the problem persists after these steps, contact support for further diagnosis."
+  ],
+  "customer_reply": "Thank you for the details. Based on the information you provided, the issue is likely due to a weak signal between the back door sensor and the base station. Since only this sensor is affected and it is located farther away, we recommend improving the signal strength. You can try moving the sensor closer to the base station temporarily to confirm, or consider installing a signal repeater (such as the RP-1) to extend coverage to that area. If the problem persists after improving the signal, please contact us again for further assistance."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.9,
+ "llm_seconds": 6.9,
+ "llm_calls": 1,
+ "tokens": 1311,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "The back door sensor went offline. Probably the signal, it's a bit far from the base. I got a push notification around 2 pm but didn't think much of it, and only noticed in the evening that the app showed it offline. I'm thinking of buying a signal repeater for that side of the house. The front camera works as normal.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering a logical troubleshooting sequence (test closer, repeater, verify in app, reset/re-pair, escalate). It appropriately frames the signal-range hypothesis as likely rather than confirmed, and does not claim any checks or fixes were completed—consistent with the session record showing no actions performed. Minor deduction only because the customer's own repeater idea is echoed without added diagnostic value, but overall usability is high."
+}

@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C010",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer reports that pairing times out every time, with the app saying 'pairing expired'. This matches the PAIR_TIMEOUT label, which is an L1 issue. The knowledge snippet indicates pairing times out after 120 seconds and requires the peripheral to be within 1 metre of the base station. The customer mentions placing the sensor near the router, not necessarily near the base station, which could cause the timeout. No other symptoms suggest capacity, signal, battery, or other issues.",
+ "output": {
+  "repair_steps": [
+   "Place the sensor within 1 metre of the base station.",
+   "Open the app and put the base station into pairing mode (Add Device).",
+   "Hold the SYNC button on the sensor for 3 seconds until its LED blinks blue.",
+   "Wait for the app to confirm pairing within 120 seconds.",
+   "If pairing fails, retry the process once more.",
+   "If it still fails, contact support with the exact error message and the time of the attempt."
+  ],
+  "customer_reply": "Thank you for the details. The pairing timeout usually happens when the sensor is too far from the base station during setup. Please try pairing again with the sensor within 1 metre of the base station, and ensure the base station is in pairing mode before holding the SYNC button on the sensor for 3 seconds until its LED blinks blue. If the issue persists, let us know and we can investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.4,
+ "llm_seconds": 5.3,
+ "llm_calls": 1,
+ "tokens": 1309,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "The new hallway sensor times out every time I try to add it. The app says pairing expired. I'm renting this flat, so I don't want to drill anything yet. I just wanted to put the sensor on the shelf near the router first and test it. Last month a different sensor paired without any problem, so I don't understand what changed.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable steps, but it assumes the sensor was too far from the base station without any session evidence, and it does not acknowledge the customer's stated context (renting, shelf placement near router, prior successful pairing). No checks or fixes are claimed as completed, but the root-cause assertion is unsupported by the record."
+}

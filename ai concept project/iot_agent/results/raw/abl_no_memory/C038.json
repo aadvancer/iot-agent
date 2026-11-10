@@ -1,0 +1,433 @@
+{
+ "system": "abl_no_memory",
+ "case_id": "C038",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station is healthy (online, uplink OK, no error codes) and all 6 other devices are online, isolating the fault to cam_study alone. Its signal is strong (RSSI -60 dBm), battery is 75%, firmware 2.0/protocol v3 is compatible with the base, and it is correctly bound in both base and app. The customer already performed the standard factory reset while the camera sat next to the base station (plus alternate outlet/cable), yet it still goes solid-then-dark and stays offline — matching escalation policy item (5), a device failing next to the base station after factory reset.",
+ "output": {
+  "symptom_summary": "Study Cam (CAM-I2) remains offline after a factory reset performed next to the base station, despite strong RSSI (-60 dBm), sufficient battery (75%), compatible firmware (2.0/protocol v3), and correct binding. All other 6 devices and the base station are online and healthy.",
+  "suspected_root_cause": "Hardware fault suspected in the Study Cam (CAM-I2) itself, as all other potential causes have been ruled out.",
+  "key_abnormal_indicators": [
+   "cam_study status: offline",
+   "cam_study RSSI: -60 dBm (strong)",
+   "cam_study battery: 75%",
+   "cam_study firmware: 2.0 (compatible with base protocol v3)",
+   "base station error codes: none",
+   "all other 6 devices online",
+   "factory reset performed next to base station did not resolve"
+  ],
+  "customer_reply": "Thank you for your patience. We've identified that your Study Cam needs further investigation by our engineering team. They will contact you within 1-2 business days to resolve this. No further action is needed from you at this time.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": []
+   },
+   "affected_devices": [
+    {
+     "id": "cam_study",
+     "name": "Study Cam",
+     "model": "CAM-I2",
+     "fw": "2.0",
+     "rssi": -60,
+     "battery": 75,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_study"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_study"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 reset LED solid then dark offline hardware fault"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 offline after factory reset next to base station hardware fault escalation"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "HW_FAULT_SUSPECTED",
+    "rationale": "The base station is healthy (online, uplink OK, no error codes) and all 6 other devices are online, isolating the fault to cam_study alone. Its signal is strong (RSSI -60 dBm), battery is 75%, firmware 2.0/protocol v3 is compatible with the base, and it is correctly bound in both base and app. The customer already performed the standard factory reset while the camera sat next to the base station (plus alternate outlet/cable), yet it still goes solid-then-dark and stays offline — matching escalation policy item (5), a device failing next to the base station after factory reset."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_study",
+      "name": "Study Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_study"
+   },
+   "result": {
+    "id": "cam_study",
+    "name": "Study Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "cam_study remains offline after peripheral reset",
+     "cam_study RSSI -60 dBm",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_study"
+   },
+   "result": {
+    "device_id": "cam_study",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 reset LED solid then dark offline hardware fault"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 offline after factory reset next to base station hardware fault escalation"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "escalation_policy#Escalate to FAE (L2)",
+      "text": "Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#Restart and reset",
+      "text": "A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_study",
+     "name": "Study Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_study"
+  ],
+  "device_details": {
+   "cam_study": {
+    "id": "cam_study",
+    "name": "Study Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "cam_study": {
+    "device_id": "cam_study",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "cam_study remains offline after peripheral reset",
+    "cam_study RSSI -60 dBm",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[historical_cases#H-04 Whole house offline] All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline.",
+   "[historical_cases#H-03 Indoor camera lost after night update] After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly.",
+   "[manual_base_station#LED status indicators] Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent).",
+   "[escalation_policy#Escalate to FAE (L2)] Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset.",
+   "[manual_base_station#Restart and reset] A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval."
+  ]
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 20.3,
+ "llm_calls": 4,
+ "tokens": 11847,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "My study camera is still broken even beside the base station after resetting the camera. I carried it into the same room as the base station, plugged it in and held the reset button for 10 seconds as the manual says; the LED goes solid and then dark again. I also tried a different power outlet and a different cable. Everything else in the system works.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 3,
+ "usability_reason": "The customer-facing reply is clear and polite, and it gives a concrete next step (engineering contact within 1-2 business days). However, actionability is limited because no troubleshooting or diagnostic steps are offered, and the response asserts specific diagnostic values (RSSI -60 dBm, battery 75%, firmware compatibility, binding correctness, all other devices healthy) that were not shown as checked in the session record—the record states no questions were asked and no actions performed. The escalation itself is reasonable, but the response overstates completed verification."
+}

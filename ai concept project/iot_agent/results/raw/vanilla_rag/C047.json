@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C047",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The living room motion sensor stopped sending alerts since yesterday, and the app shows battery at 12%. Low battery is a known cause for missed events and offline status. The sensor's light still blinks when motion is detected, indicating it is powered but may not have enough charge to transmit alerts reliably.",
+ "output": {
+  "repair_steps": [
+   "Replace the batteries in the living room motion sensor with new ones.",
+   "After replacement, verify the battery level in the app shows a healthy percentage (e.g., above 20%).",
+   "Test the sensor by triggering motion and confirming that alerts are received in the app.",
+   "If alerts still do not come through, check the sensor's connection status in the app and ensure it is online.",
+   "If the problem continues, contact support for further troubleshooting."
+  ],
+  "customer_reply": "Thank you for the details. Based on the information you provided, the most likely cause is the low battery level (12%). Please replace the batteries with fresh ones and check if alerts resume. If the issue persists after battery replacement, let us know and we will investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.1,
+ "llm_seconds": 6.0,
+ "llm_calls": 1,
+ "tokens": 1214,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "The living room motion sensor stopped sending alerts since yesterday. The app shows that its battery is getting low (12%), so I guess that's the reason? I'll buy batteries, but wanted to check first because its light still blinks when I walk past it.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with concrete steps (replace batteries, verify level, test motion, check connection, escalate). It appropriately frames the low battery as the likely cause rather than a confirmed fix, and does not claim any checks or fixes were completed. Minor deduction because the customer's observation that the light still blinks (suggesting some power) is not addressed, and no diagnostic questions were asked, but overall usability is strong."
+}

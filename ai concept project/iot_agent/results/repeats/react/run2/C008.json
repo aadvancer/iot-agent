@@ -1,0 +1,184 @@
+{
+ "system": "react",
+ "case_id": "C008",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station console shows online:false, uplink_status:no_internet, and E-503 (cloud reporting failed), while the customer confirms a solid red LED and that home broadband is down across the street after a thunderstorm. All devices appear offline in the app because the app relies on cloud connectivity through the base station's internet uplink, not because of any device fault. This is an external network outage resolved by restoring internet service.",
+ "output": {
+  "repair_steps": [
+   "Advise customer that the issue is due to a broadband outage in their area, not a fault with the security system.",
+   "Instruct customer to wait for their internet service provider to restore broadband service.",
+   "Once broadband is restored, if the base station LED remains red, guide customer to power cycle the base station and router (unplug for 30 seconds, then plug back in).",
+   "After restart, verify base station LED turns green and devices appear online in the app."
+  ],
+  "customer_reply": "Thanks for your patience. Our diagnostics show your base station lost its internet connection due to the broadband outage in your area, which is why all devices appear offline in the app. Once your internet service is restored, please restart your router and base station (unplug for 30 seconds, then plug back in). The base station light should turn green and your devices will come back online. If issues persist after that, let us know."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "base station red light all devices offline no internet E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "Is the base station's LED blinking red (or solid red), and is your home broadband/router also showing no internet connection right now?"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_main",
+      "name": "Main Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "base station uplink lost: E-503"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "base station red light all devices offline no internet E-503"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Is the base station's LED blinking red (or solid red), and is your home broadband/router also showing no internet connection right now?"
+   },
+   "result": {
+    "answer": "The base station light is solid red, not blinking. And yes, our home internet seems to be down — the Wi-Fi shows connected on my phone but websites won't load, and my neighbour lost internet too."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 17.3,
+ "llm_seconds": 17.2,
+ "llm_calls": 6,
+ "tokens": 11472,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Every camera and sensor has shown offline since this morning, although they were all fine last night. The base station has a red light. I rebooted my phone and reinstalled the app because I thought that was the problem, but nothing changed. We had a thunderstorm last night and my neighbour says the broadband is down on our street too.",
+ "user_turns": 1,
+ "console_calls": 3
+}

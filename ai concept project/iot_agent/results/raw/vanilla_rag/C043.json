@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C043",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer reports the garden camera is offline and mentions its battery was low last week. According to the manual, battery cameras go offline below 3% battery. The customer charged it but it's still not working, which could indicate the battery is not holding charge or was not charged properly. However, based on the information provided, the most likely root cause is battery low, as the camera was low on battery and is now offline. No other symptoms suggest network issues, pairing problems, or other causes.",
+ "output": {
+  "repair_steps": [
+   "Charge the camera using the supplied USB-C cable for at least 6 hours.",
+   "Ensure the charging cable is securely connected and the power source is working.",
+   "After charging, check if the camera appears online in the app.",
+   "If the camera still does not come online, try a different USB-C cable and power adapter.",
+   "If the issue persists, contact support for a possible battery replacement."
+  ],
+  "customer_reply": "I understand your garden camera is offline and you suspect the battery. Since the battery was low last week and the camera is still offline, it's possible the battery is depleted or not holding a charge. Please try charging the camera with the supplied USB-C cable for at least 6 hours, ensuring the charging indicator is on. If it still doesn't come online, we may need to consider a replacement battery. Could you also check if the camera shows any LED lights when charging?"
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 7.0,
+ "llm_seconds": 6.9,
+ "llm_calls": 1,
+ "tokens": 1303,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "The garden camera is offline again. Its battery was low last week and I thought charging it would fix it, but it's still not working. Can you just send me a new battery for it? I didn't really check the rest of the system, I only use that camera.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with step-by-step troubleshooting and a reasonable path toward battery replacement. It avoids claiming any checks or fixes were completed, since no actions were performed in the session. It could be slightly improved by acknowledging the customer's request for a new battery more directly and explaining why troubleshooting is needed first, but overall usability is strong."
+}

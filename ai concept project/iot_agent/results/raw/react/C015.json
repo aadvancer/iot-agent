@@ -1,0 +1,215 @@
+{
+ "system": "react",
+ "case_id": "C015",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The garage camera's RSSI is -86 dBm, below the -80 dBm threshold that causes intermittent disconnections, delayed notifications and choppy live view. All other devices are online, the base station is healthy, firmware is compatible (v3 supported), and battery is fine (67%), isolating the issue to weak radio signal from the detached garage. This matches historical case H-01, resolved by installing an RP-1 repeater.",
+ "output": {
+  "repair_steps": [
+   "Advise the customer to install an RP-1 repeater between the base station and the garage camera to boost the signal.",
+   "Guide the customer to place the repeater at a midpoint with clear line of sight to both the base station and the garage camera, avoiding metal objects and thick walls.",
+   "After installation, verify the garage camera's RSSI improves to above -80 dBm (ideally above -70 dBm) in Device Settings > Device Info.",
+   "Confirm the camera remains online for 24 hours without intermittent disconnections and that notifications are no longer delayed."
+  ],
+  "customer_reply": "We found the issue: your garage camera's wireless signal is too weak (RSSI -86 dBm), causing the dropouts and delayed notifications. This is due to distance/obstacles between the garage and base station. To fix it, we recommend installing our RP-1 signal repeater. Place it midway between the base station and garage, with clear line of sight. Once installed, the camera should stay online reliably. Would you like help ordering the repeater?"
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_garage"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "RSSI signal strength threshold intermittent offline camera"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_garage",
+      "name": "Garage Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "intermittent"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   },
+   "result": {
+    "id": "cam_garage",
+    "name": "Garage Cam",
+    "model": "CAM-S1",
+    "fw": "2.1",
+    "rssi": -86,
+    "battery": 67,
+    "status": "intermittent"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_garage"
+   },
+   "result": {
+    "lines": [
+     "cam_garage heartbeat lost repeatedly (RSSI -86 dBm)"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_garage"
+   },
+   "result": {
+    "device_id": "cam_garage",
+    "device_fw": "2.1",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "RSSI signal strength threshold intermittent offline camera"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Wireless range and signal strength",
+      "text": "Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater."
+     },
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 14.1,
+ "llm_calls": 5,
+ "tokens": 10704,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The camera in my detached garage keeps dropping off. It is offline maybe five times a day for 10 to 30 minutes and then comes back by itself, and notifications from it are delayed. I replaced the camera battery and updated the app, but nothing changes. The camera is brand new, bought in the spring, so it shouldn't be faulty.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and offers actionable steps (install repeater, placement guidance, RSSI verification). However, it claims a specific diagnosis (RSSI -86 dBm) and states 'we found the issue' even though the session record shows no questions asked and no actions performed—so the diagnostic check is not supported. It also asserts the camera 'should stay online reliably' as a fix not yet verified. Actionability is decent but the unsupported diagnostic claim and unverified fix reduce usability."
+}

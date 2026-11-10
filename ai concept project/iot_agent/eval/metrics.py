@@ -47,6 +47,19 @@ def calculate_metrics(rows):
     }
 
 
+def _session_record(row):
+    """Customer-facing steps from the trace, so the judge can verify claims of completed fixes."""
+    lines = []
+    for event in row.get("trace", []):
+        if event.get("tool") == "ask_user":
+            lines.append(f"- Asked: {event['args'].get('question', '')} -> "
+                         f"Customer: {event.get('result', {}).get('answer', '')}")
+        elif event.get("tool") == "instruct_user":
+            lines.append(f"- Customer performed: {event['args'].get('action', '')} -> "
+                         f"Reported: {event.get('result', {}).get('outcome', '')}")
+    return "\n".join(lines) or "(no questions asked and no actions performed)"
+
+
 def judge_usability(row):
     """Obtain an explicitly model-judged 1-5 usability score for one case."""
     import config
@@ -54,10 +67,14 @@ def judge_usability(row):
 
     prompt = f"""Rate the usability of this technical-support response on a 1-5 scale.
 Judge only clarity, politeness, actionability, and whether the response avoids
-claiming checks or fixes that are not shown as completed. Do not reward a correct
+claiming checks or fixes that are not shown as completed. A claim is supported
+if it appears in the session record below (what the customer was asked, which
+actions they performed and what they reported). Do not reward a correct
 root-cause label by itself. Return JSON: {{"score": integer, "reason": string}}.
 
 Customer complaint: {row.get('complaint', '')}
+Session record (customer questions and actions actually performed):
+{_session_record(row)}
 Support response: {row.get('output', {})}"""
     result = llm.chat_json(
         [{"role": "user", "content": prompt}],

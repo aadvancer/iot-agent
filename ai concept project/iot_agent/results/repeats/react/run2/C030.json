@@ -1,0 +1,281 @@
+{
+ "system": "react",
+ "case_id": "C030",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Three sensors dropped within one second of each other (14:02:00–14:02:02) while the base station stayed online and other devices remained connected. Their batteries are healthy (66–81%) and RSSI history was normal (-55 to -66 dBm), ruling out battery/signal causes. The base station logged E-610 \"radio module self-test warning,\" which the fault-code reference ties to a sub-GHz radio failure with simultaneous peripheral drops and mandates FAE escalation.",
+ "output": {
+  "symptom_summary": "Three sensors (Back Door, Living Motion, Bedroom Window) went offline simultaneously within one second (14:02:00–14:02:02) while the base station and other devices remained online. Batteries are healthy (66–81%) and RSSI history was normal (-55 to -66 dBm).",
+  "suspected_root_cause": "Base station sub-GHz radio module fault (E-610 self-test warning) causing simultaneous peripheral drops.",
+  "key_abnormal_indicators": [
+   "E-610 radio module self-test warning in base station logs",
+   "Three sensors dropped within 1 second (14:02:00–14:02:02)",
+   "Affected sensors: door_back (SEN-D1, fw 1.3, battery 81%), motion_living (SEN-M1, fw 1.4, battery 74%), win_bed (SEN-D1, fw 1.3, battery 66%)",
+   "RSSI history for affected sensors: -55 to -66 dBm (normal)",
+   "Base station online, uplink OK, other devices (including other sensors and cameras) remain online"
+  ],
+  "customer_reply": "Thank you for the details. Our diagnostics show this is not a battery issue—your sensors have healthy batteries and normal signal history. The base station logged a radio module error, so I've escalated your case to our engineering team. They will follow up with you shortly to resolve this."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_bed"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-610"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-610 radio module self-test warning"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-610"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_living",
+      "name": "Living Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_bed",
+      "name": "Bedroom Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   },
+   "result": {
+    "id": "door_back",
+    "name": "Back Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 81,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   },
+   "result": {
+    "id": "motion_living",
+    "name": "Living Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": null,
+    "battery": 74,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_bed"
+   },
+   "result": {
+    "id": "win_bed",
+    "name": "Bedroom Window",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 66,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-610"
+   },
+   "result": {
+    "lines": [
+     "E-610 radio module self-test warning"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "14:02:00 door_back lost",
+     "14:02:01 motion_living lost",
+     "14:02:02 win_bed lost",
+     "E-610 radio module self-test warning",
+     "RSSI history for affected sensors: -55 to -66 dBm",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-610 radio module self-test warning"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-610 Radio module error",
+      "text": "Logged by the base station when its sub-GHz radio fails self-test or multiple peripherals drop simultaneously. Always escalate to FAE."
+     },
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 16.7,
+ "llm_seconds": 16.6,
+ "llm_calls": 5,
+ "tokens": 12171,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "Three of my sensors went offline at the same time this afternoon. I got three offline notifications within a few seconds of each other. The front camera is still fine. I assumed the batteries had run low because they are the originals from 18 months ago, so I'm about to order a bunch of new ones. Is that the right call?",
+ "user_turns": 0,
+ "console_calls": 7
+}

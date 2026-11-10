@@ -1,0 +1,406 @@
+{
+ "system": "rules_only",
+ "case_id": "C044",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "door_back battery 3%; win_back battery 5%",
+ "output": {
+  "repair_steps": [
+   "Charge the camera fully (about 6 h), enable power-saving mode if events are frequent."
+  ],
+  "customer_reply": "We have identified the likely cause and will guide you through the fix."
+ },
+ "rule_hints": [
+  {
+   "cause": "BATTERY_LOW",
+   "tier": "L1",
+   "evidence": "door_back battery 3%"
+  },
+  {
+   "cause": "BATTERY_LOW",
+   "tier": "L1",
+   "evidence": "win_back battery 5%"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_back"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_back"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "win_back"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_back",
+      "name": "Back Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   },
+   "result": {
+    "id": "door_back",
+    "name": "Back Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 3,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_back"
+   },
+   "result": {
+    "id": "win_back",
+    "name": "Back Window",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 5,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "Thursday 08:12 door_back low battery warning (7%)",
+     "Thursday 08:15 win_back low battery warning (9%)",
+     "02:14:51 door_back lost",
+     "05:47:09 win_back lost",
+     "rssi history (7 days) door_back -58 to -61 dBm, win_back -60 to -63 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_back"
+   },
+   "result": {
+    "device_id": "door_back",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "win_back"
+   },
+   "result": {
+    "device_id": "win_back",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_back",
+     "name": "Back Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "win_back",
+     "name": "Back Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_front",
+     "name": "Front Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "door_back",
+   "win_back"
+  ],
+  "device_details": {
+   "door_back": {
+    "id": "door_back",
+    "name": "Back Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 3,
+    "status": "offline"
+   },
+   "win_back": {
+    "id": "win_back",
+    "name": "Back Window",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 5,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "door_back": {
+    "device_id": "door_back",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   },
+   "win_back": {
+    "device_id": "win_back",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "Thursday 08:12 door_back low battery warning (7%)",
+    "Thursday 08:15 win_back low battery warning (9%)",
+    "02:14:51 door_back lost",
+    "05:47:09 win_back lost",
+    "rssi history (7 days) door_back -58 to -61 dBm, win_back -60 to -63 dBm"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 0.0,
+ "llm_calls": 0,
+ "tokens": 0,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "Two of my sensors went offline overnight, the back door and the back window. Two at once seems like something bigger is wrong with the system. Should I be worried that the base station is failing? It's quite new and I don't want to lose the warranty period.",
+ "user_turns": 0,
+ "console_calls": 7,
+ "usability_score": 1,
+ "usability_reason": "The response is unclear and largely non-actionable for the customer's actual concern. It gives an irrelevant camera-charging step for offline door/window sensors, does not address whether the base station is failing or warranty concerns, and claims 'We have identified the likely cause' without any supporting session record of questions asked, actions performed, or diagnostics completed. It also does not explain the fix or confirm any checks."
+}

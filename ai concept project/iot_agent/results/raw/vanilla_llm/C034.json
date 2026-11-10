@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C034",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Base station is online locally, but events are not reaching the cloud, and the timeline is empty. This matches UPLINK_BLOCKED_PERSIST, where the base station is online locally but events never reach the cloud. The password change and re-login did not resolve the issue, indicating a persistent uplink block.",
+ "output": {
+  "symptom_summary": "Base station online locally, but no events in cloud and app timeline empty since yesterday evening.",
+  "suspected_root_cause": "Uplink from base station to cloud is blocked or failing persistently.",
+  "key_abnormal_indicators": [
+   "Base station online locally",
+   "No events in cloud",
+   "App timeline empty",
+   "Password change and re-login did not resolve"
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the issue appears to be with the connection between your base station and the cloud service. We will guide you through steps to restore cloud connectivity."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.4,
+ "llm_calls": 1,
+ "tokens": 852,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "The base station is online, but none of today's events appeared in the cloud, and the app timeline has been empty since yesterday evening. I changed my account password last week; could that be the problem? I already logged out and in again and removed and re-added the account on my phone.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it avoids claiming any checks or fixes were completed. However, actionability is limited: it only says the team will guide the customer through steps without providing any concrete troubleshooting steps. It also references the password change/re-login as not resolving the issue, which is consistent with the customer's report, but the session record shows no questions asked or actions performed by support, so the response is largely a restatement plus a promise of future guidance."
+}

@@ -22,11 +22,23 @@ class DatasetTests(unittest.TestCase):
             for path in sorted(CASES_DIR.glob("C*.json"))
         ]
 
-    def test_dataset_has_forty_unique_labeled_cases(self):
-        self.assertEqual(len(self.cases), 40)
+    def test_dataset_has_core_and_challenge_splits(self):
         ids = [case["case_id"] for case in self.cases]
-        self.assertEqual(len(set(ids)), 40)
-        self.assertEqual(ids, [f"C{i:03d}" for i in range(1, 41)])
+        self.assertEqual(ids, [f"C{i:03d}" for i in range(1, 53)])
+        splits = {case["case_id"]: case.get("split", "core") for case in self.cases}
+        self.assertEqual([i for i, s in splits.items() if s == "core"],
+                         [f"C{i:03d}" for i in range(1, 41)])
+        self.assertEqual([i for i, s in splits.items() if s == "challenge"],
+                         [f"C{i:03d}" for i in range(41, 53)])
+
+    def test_challenge_cases_declare_whether_dialogue_is_required(self):
+        challenge = [case for case in self.cases if case.get("split") == "challenge"]
+        for case in challenge:
+            with self.subTest(case=case["case_id"]):
+                self.assertIsInstance(case["requires_interaction"], bool)
+                self.assertTrue(case["notes"])
+        self.assertTrue(any(case["requires_interaction"] for case in challenge))
+        self.assertTrue(any(not case["requires_interaction"] for case in challenge))
 
     def test_each_case_matches_the_taxonomy_and_has_simulation_fields(self):
         for case in self.cases:
@@ -93,7 +105,10 @@ class DatasetTests(unittest.TestCase):
                     if cause == "PERIPHERAL_FW_OUTDATED":
                         self.assertTrue(any(incompatible))
                     else:
-                        self.assertTrue(all(path is None for path in incompatible))
+                        # taxonomy: no OTA path, or the available OTA fails
+                        ota_outcome = case["action_outcomes"].get("ota_upgrade", "").lower()
+                        self.assertTrue(all(path is None for path in incompatible)
+                                        or "fail" in ota_outcome)
                 elif cause == "STORAGE_FULL":
                     self.assertGreaterEqual(base["storage_used_pct"], 98)
                     self.assertFalse(base["loop_recording"])
@@ -127,6 +142,15 @@ class DatasetTests(unittest.TestCase):
                 self.assertGreaterEqual(len(case["user_knowledge"]), 3)
                 self.assertGreaterEqual(len(case["action_outcomes"]), 3)
 
+    def test_customer_app_view_hides_deleted_devices(self):
+        from env.user_simulator import UserSimulator
+
+        case = next(c for c in self.cases if c["case_id"] == "C045")
+        system = UserSimulator(case).system
+        self.assertNotIn('"Sensor 7"', system)          # ghost binding, deleted in the app
+        self.assertIn('"New Garage Door"', system)      # being paired by the customer
+        self.assertIn('"Front Door"', system)
+
     def test_distractors_do_not_change_rule_evidence(self):
         from agent import planner
         from agent.memory import SessionMemory
@@ -146,10 +170,12 @@ class DatasetTests(unittest.TestCase):
                 abnormal = {d["id"] for d in case["hidden_state"]["devices"]
                             if d["status"] != "online"}
                 self.assertLessEqual(set(memory.devices), abnormal)
-                if case["gt_root_cause"] not in needs_dialogue:
+                # challenge cases flagged requires_interaction deliberately carry stale console readings
+                if (case["gt_root_cause"] not in needs_dialogue
+                        and not case.get("requires_interaction", False)):
                     hints = {hint["cause"] for hint in match_causes(memory)}
                     self.assertIn(case["gt_root_cause"], hints)
-                if case["gt_tier"] == "L1":
+                if case["gt_tier"] == "L1" and not case.get("requires_interaction", False):
                     self.assertEqual(escalation_triggers(memory, case["gt_root_cause"]), [])
 
 

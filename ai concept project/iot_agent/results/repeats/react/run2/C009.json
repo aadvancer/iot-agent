@@ -1,0 +1,496 @@
+{
+ "system": "react",
+ "case_id": "C009",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The new SEN-D1 sensor fails to pair (120s timeout, no error code) despite correct procedure: within 1m of the base station, LED blinking blue, 100% battery, compatible protocol v2, and available capacity (5/16). A sensor factory reset did not resolve it, while all other SEN-D1 sensors (firmware 1.3) remain online and functional, isolating the fault to the new unit's hardware.",
+ "output": {
+  "symptom_summary": "New SEN-D1 sensor (firmware 1.0) fails to pair with HB-200 base station (firmware 4.2) after multiple attempts, timing out after 120 seconds with no error code. Sensor is within 1m, battery 100%, LED blinks blue, and base station has capacity (5/16).",
+  "suspected_root_cause": "Hardware fault in the new SEN-D1 sensor, as it fails to pair even after factory reset while other SEN-D1 sensors (firmware 1.3) remain online and functional.",
+  "key_abnormal_indicators": [
+   "New sensor firmware: 1.0 (working sensors: 1.3)",
+   "Pairing timeout: 120s, no error code",
+   "Sensor battery: 100%",
+   "Sensor LED: blinking blue (pairing mode)",
+   "Distance to base station: <1m",
+   "Base station capacity: 5/16 used",
+   "Base station firmware: 4.2 (supports protocol v2)",
+   "Sensor factory reset: performed, no change",
+   "Other SEN-D1 sensors: online and functional"
+  ],
+  "customer_reply": "Thank you for your patience. Our engineering team will investigate the issue with your new sensor and contact you within 1-2 business days. Please keep the sensor and base station powered on. We apologize for the inconvenience."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "sensor_pending"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "sensor_pending"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing timeout 120 seconds new sensor fails"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "sensor_pending"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "During pairing, how far is the new window sensor from the base station, and does its LED blink blue after you hold the SYNC button for 3 seconds?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 sensor pairing fails repeatedly LED blinks blue within 1 metre"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_front"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_kitchen"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 firmware 1.0 pairing fails base station 4.2 protocol"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 peripheral firmware outdated pairing"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "new sensor out of box firmware 1.0 cannot pair hardware fault"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "PAIR_TIMEOUT root cause new device cannot be added"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Please perform a factory reset of the new window sensor only (not the base station): remove the battery, hold the SYNC button for 10 seconds, reinsert the battery, then try pairing again within 1 metre of the base station. Report whether pairing succeeds or still times out."
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "To confirm the base station pairing is working, please try pairing one of your existing working sensors (e.g., temporarily remove and re-add the Front Door sensor, or use a spare sensor if you have one). Does that sensor pair successfully?"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 5,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "sensor_pending",
+      "name": "New Sensor",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "sensor_pending"
+   },
+   "result": {
+    "lines": []
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   },
+   "result": {
+    "lines": [
+     "pairing request timed out after 120 seconds"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "sensor_pending"
+   },
+   "result": {
+    "device_id": "sensor_pending",
+    "device_fw": "1.0",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing timeout 120 seconds new sensor fails"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "sensor_pending"
+   },
+   "result": {
+    "id": "sensor_pending",
+    "name": "New Sensor",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "rssi": null,
+    "battery": 100,
+    "status": "not_paired"
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "During pairing, how far is the new window sensor from the base station, and does its LED blink blue after you hold the SYNC button for 3 seconds?"
+   },
+   "result": {
+    "answer": "I've been pairing it within one metre of the base station, and yes, the LED blinks blue."
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "pairing request timed out after 120 seconds",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 sensor pairing fails repeatedly LED blinks blue within 1 metre"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_front"
+   },
+   "result": {
+    "id": "door_front",
+    "name": "Front Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -58,
+    "battery": 82,
+    "status": "online"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_kitchen"
+   },
+   "result": {
+    "id": "win_kitchen",
+    "name": "Kitchen Window",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -61,
+    "battery": 48,
+    "status": "online"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 firmware 1.0 pairing fails base station 4.2 protocol"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 peripheral firmware outdated pairing"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "manual_base_station#Firmware update",
+      "text": "Base station firmware updates are pushed automatically at night. HB-200 firmware 4.5 removes support for the legacy v2 radio protocol. Peripherals still running v2 firmware must be upgraded to v3 firmware before or after the base station update, otherwise they disconnect."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "new sensor out of box firmware 1.0 cannot pair hardware fault"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "PAIR_TIMEOUT root cause new device cannot be added"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "manual_base_station#Device capacity",
+      "text": "HB-100 supports up to 8 bound peripherals. HB-200 supports up to 16 bound peripherals. When the limit is reached, pairing a new device fails with error E-201 even if the device is in pairing mode. Remove an unused device in the app (Device Settings > Remove Device) to free a slot."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Please perform a factory reset of the new window sensor only (not the base station): remove the battery, hold the SYNC button for 10 seconds, reinsert the battery, then try pairing again within 1 metre of the base station. Report whether pairing succeeds or still times out."
+   },
+   "result": {
+    "outcome": "I did the factory reset as you described — removed the battery, held SYNC for 10 seconds, put the battery back in, and tried pairing again within a metre. Nothing seems to have changed; it still counts down and says pairing failed."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "To confirm the base station pairing is working, please try pairing one of your existing working sensors (e.g., temporarily remove and re-add the Front Door sensor, or use a spare sensor if you have one). Does that sensor pair successfully?"
+   },
+   "result": {
+    "outcome": "I tried re-adding the Front Door sensor, but I honestly can't tell you whether it paired — I didn't want to risk messing up a sensor that's currently working fine. Is there another way to check the base station?"
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 51.0,
+ "llm_seconds": 50.8,
+ "llm_calls": 15,
+ "tokens": 48712,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "I bought a new window sensor yesterday and followed the leaflet, but the app keeps counting down 120 seconds and then says pairing failed. I've tried five times now. I changed the sensor's battery twice, just in case. Other sensors in the house work perfectly, so I don't think there is a problem with the base station.",
+ "user_turns": 3,
+ "console_calls": 9
+}

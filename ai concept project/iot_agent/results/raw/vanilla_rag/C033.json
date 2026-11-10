@@ -1,0 +1,37 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C033",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Local live view works, but no push notifications or remote clips since Tuesday. Rebooted router and base station, set DNS to automatic, but issue persists. This matches E-503 cloud reporting failure, which requires escalation after frontline steps fail.",
+ "output": {
+  "symptom_summary": "No push notifications since Tuesday, cannot view clips remotely, but local live view works on home Wi-Fi.",
+  "suspected_root_cause": "Base station cannot deliver events to cloud despite local network functionality, likely due to cloud channel or certificate issue.",
+  "key_abnormal_indicators": [
+   "No push notifications since Tuesday",
+   "Remote clip viewing fails",
+   "Local live view works",
+   "Reboot and DNS reset did not resolve",
+   "ISP confirms internet is fine"
+  ],
+  "customer_reply": "Thank you for the details. Since local live view works but events are not reaching the cloud and the basic troubleshooting steps have not resolved it, I am escalating this to our advanced support team for further investigation into the cloud connection or certificate issue."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.1,
+ "llm_seconds": 6.0,
+ "llm_calls": 1,
+ "tokens": 1150,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "Local live view works fine on my home Wi-Fi, but I haven't received a single push notification since Tuesday, and when I'm out I can't see any clips. I rebooted the router, then the base station, and even set my router's DNS to automatic like the help article said. Still nothing. I've been on hold with my ISP and they insist the internet is fine.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it accurately summarizes the symptoms and avoids claiming unperformed checks. However, actionability is limited: it only escalates without giving the customer any concrete next steps, diagnostics, or timeline. The suspected root cause is plausible but not verified, and the response does not ask any clarifying questions or confirm what was actually tested beyond the customer's own report."
+}

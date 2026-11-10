@@ -1,0 +1,37 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C038",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera remains non-functional even when placed next to the base station and after a factory reset, with no improvement from trying different power outlets and cables. Other devices work, ruling out network or base station issues. This points to a hardware fault in the camera.",
+ "output": {
+  "symptom_summary": "Study camera remains broken even beside base station after reset; LED goes solid then dark; different power outlet and cable tried; other devices work.",
+  "suspected_root_cause": "Hardware fault in the camera.",
+  "key_abnormal_indicators": [
+   "Camera fails even when placed next to base station",
+   "Factory reset does not restore functionality",
+   "LED behavior abnormal (solid then dark)",
+   "Different power sources and cables do not help",
+   "Other devices in the system work normally"
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the camera likely has a hardware fault. We recommend replacing the camera. Please contact support for warranty options."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.7,
+ "llm_calls": 1,
+ "tokens": 829,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "My study camera is still broken even beside the base station after resetting the camera. I carried it into the same room as the base station, plugged it in and held the reset button for 10 seconds as the manual says; the LED goes solid and then dark again. I also tried a different power outlet and a different cable. Everything else in the system works.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable (recommends replacement and contacting support for warranty). It accurately summarizes the customer's reported symptoms and avoids claiming any checks or fixes that were not actually performed. The root-cause label is plausible but not over-asserted. Minor deduction because actionability is somewhat limited—no specific troubleshooting or warranty steps are provided—but it meets the criteria well."
+}

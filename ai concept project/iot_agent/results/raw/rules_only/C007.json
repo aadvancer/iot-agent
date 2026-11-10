@@ -1,0 +1,98 @@
+{
+ "system": "rules_only",
+ "case_id": "C007",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "base online=False, uplink=no_internet",
+ "output": {
+  "repair_steps": [
+   "Check router and Ethernet/Wi-Fi uplink of the base station, power-cycle router then base station."
+  ],
+  "customer_reply": "We have identified the likely cause and will guide you through the fix."
+ },
+ "rule_hints": [
+  {
+   "cause": "BS_NETWORK_DOWN",
+   "tier": "L1",
+   "evidence": "base online=False, uplink=no_internet"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: pending",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": false,
+   "uplink_status": "no_internet",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-503"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": null,
+  "abnormal_devices": [],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 0.0,
+ "llm_calls": 0,
+ "tokens": 0,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "The red light on the base station has been on since I got home. The app shows no connection for every device and the live view just spins. Last weekend we moved the TV cabinet and I may have pulled some cables behind it. My son insists that all the camera batteries ran out at the same time, but that seems unlikely to me. The smart TV also complains about something, I haven't looked into it.",
+ "user_turns": 0,
+ "console_calls": 1,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and gives one actionable step (check router/uplink, power-cycle router then base station), but it is vague and unsupported: it claims 'we have identified the likely cause' without any diagnosis shown, and no questions were asked or checks performed in the session. It also does not address the customer's specific clues (moved cabinet, possibly pulled cables, red light, all devices offline, TV complaint). Clarity is moderate but the response overclaims a root cause and lacks tailored troubleshooting."
+}

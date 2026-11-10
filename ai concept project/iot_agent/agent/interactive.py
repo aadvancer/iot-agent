@@ -1,24 +1,25 @@
-"""Resumable diagnosis session that pauses for real human replies in the UI."""
-import json
+"""Resumable diagnosis sessions backed by a checkpointed LangGraph workflow."""
+import threading
 
 import config
-import llm
-from agent import planner
-from agent.agent import (
-    STEP_PROMPT,
-    SYSTEM_PROMPT,
-    TopologyAgent,
-    _labels,
-)
+from agent.agent import TopologyAgent
 from agent.memory import SessionMemory
-from agent.rules import match_causes
-from agent.triage import build_output, classify_tier
+from agent.persistence import (
+    close_interactive_thread,
+    get_or_create_interactive_thread,
+    load_case_facts,
+)
+from agent.workflow import build_workflow
 from env.case_env import CaseEnv
-from env.tools import execute
+from langgraph.types import Command
+
+
+class SessionBusy(RuntimeError):
+    """Raised when a reply arrives while the previous one is still being processed."""
 
 
 class InteractiveDiagnosis:
-    """Run the topology agent one conversational turn at a time."""
+    """Run the topology graph until it needs human input, then resume it."""
 
     def __init__(self, case, max_steps=config.MAX_STEPS):
         self.case = case
@@ -31,116 +32,115 @@ class InteractiveDiagnosis:
         self.log = []
         self.pending = None
         self.result = None
+        self.judgement = None    # agent's verdict on the last guided-action reply
+        self._lock = threading.Lock()
+        self.workflow = build_workflow(self.agent, interactive=True)
+        thread_id = get_or_create_interactive_thread(case["case_id"])
+        self.graph_config = {"configurable": {"thread_id": thread_id}}
+        snapshot = self.workflow.get_state(self.graph_config)
+        self._started = bool(snapshot and snapshot.values)
+        self.resumed = self._started   # an unfinished session for this case was restored
+        if self._started:
+            self._refresh()
+
+    def _refresh(self):
+        snapshot = self.workflow.get_state(self.graph_config)
+        if not snapshot or not snapshot.values:
+            return
+        values = snapshot.values
+        if "memory" in values:
+            self.memory = SessionMemory.from_dict(values["memory"])
+        if "case" in values:
+            self.env = CaseEnv(values["case"])
+            self.env.trace = list(values.get("trace", []))
+            self.env.actions_done = list(values.get("actions_done", []))
+            self.env.user.history = list(values.get("user_history", []))
+        self.log = values.get("log", self.log)
+        self.notes = values.get("notes", self.notes)
+        self.step = values.get("step", self.step)
+        self.pending = values.get("pending")
+        self.result = values.get("result")
+        self.judgement = values.get("judgement")
+        if self.result is not None:
+            close_interactive_thread(
+                self.case["case_id"], self.graph_config["configurable"]["thread_id"]
+            )
+
+    @property
+    def busy(self):
+        return self._lock.locked()
+
+    def _run(self, input_value):
+        # Streamlit can start a second script run while the first is still inside invoke();
+        # two concurrent resumes of the same thread would apply one reply twice.
+        if not self._lock.acquire(blocking=False):
+            raise SessionBusy("上一条回复仍在处理中，请稍候。")
+        try:
+            self.workflow.invoke(input_value, config=self.graph_config)
+        finally:
+            try:
+                self._refresh()
+            finally:
+                self._lock.release()
+        return self._interaction_prompt() if self.pending is not None else None
 
     def start(self):
         """Collect simulated console evidence and continue until a reply is needed."""
-        while (query := planner.next_query(self.memory)) is not None:
-            tool, args, stage = query
-            result = execute(self.env, tool, args)
-            self.memory.update(tool, args, result)
-            self.log.append({"phase": "collect", "stage": stage, "tool": tool, "args": args})
-        return self._continue_reasoning()
+        if self._started:
+            if self.pending is not None:
+                return self._interaction_prompt()
+            if self.result is not None:
+                return None
+            return self.resume()
+        self._started = True
+        self.memory.historical_facts = load_case_facts(self.case["case_id"])
+        return self._run(
+            {
+                "case": self.env.case,
+                "memory": self.memory.to_dict(),
+                "trace": self.env.trace,
+                "actions_done": self.env.actions_done,
+                "user_history": self.env.user.history,
+                "log": [],
+                "notes": [],
+                "step": 0,
+                "system": "interactive_topology_agent",
+                "persist_history": True,
+            }
+        )
 
     def submit(self, answer, resolved=None):
-        """Record a customer's reply and resume diagnosis until the next prompt."""
+        """Resume the graph with the customer's reply as relayed by staff.
+
+        For a guided action, leave `resolved` as None and the agent judges from the
+        reply whether the action fixed the problem; pass True/False only to override.
+        """
+        if self.busy:
+            raise SessionBusy("上一条回复仍在处理中，请稍候。")
         if self.pending is None:
             raise RuntimeError("There is no pending customer question or action.")
         if not answer.strip():
             raise ValueError("Please enter a reply before continuing.")
-        self._record_user_answer(answer, resolved)
-        return self._continue_reasoning()
+        return self._run(
+            Command(resume={"answer": answer.strip(), "resolved": resolved})
+        )
 
     def resume(self):
-        """Retry reasoning after a transient model/API error."""
+        """Retry the interrupted graph node after a transient model/API error."""
         if self.pending is not None or self.result is not None:
             raise RuntimeError("This diagnosis session is not waiting to resume.")
-        return self._continue_reasoning()
+        if not self._started:
+            raise RuntimeError("This diagnosis session has not started.")
+        return self._run(None)
 
-    def _record_user_answer(self, answer, resolved):
-        tool = self.pending["tool"]
-        args = self.pending["args"]
-        if tool == "ask_user":
-            result = {"answer": answer.strip()}
-            self.memory.update(tool, args, result)
-        elif tool == "instruct_user":
-            if not isinstance(resolved, bool):
-                raise ValueError("Choose whether the requested action resolved the issue.")
-            self.env.actions_done.append(args["action"])
-            result = {"outcome": answer.strip()}
-            self.memory.add_action(
-                args["action"], args.get("target_cause"), answer.strip(), resolved
+    def abandon(self):
+        """Discard this unfinished session so the next start for the case begins fresh."""
+        if self.result is None:
+            close_interactive_thread(
+                self.case["case_id"], self.graph_config["configurable"]["thread_id"],
+                status="abandoned",
             )
-        else:
-            raise RuntimeError(f"Unsupported pending interaction: {tool!r}")
-
-        self.env.trace.append({"tool": tool, "args": args, "result": result})
-        self.notes.append(
-            f"(step {self.step - 1}) {tool}({json.dumps(args, ensure_ascii=False)}) -> "
-            f"{json.dumps(result, ensure_ascii=False)}"
-        )
         self.pending = None
-
-    def _continue_reasoning(self):
-        while self.step < self.max_steps:
-            current_step = self.step
-            self.step += 1
-            messages = [
-                {
-                    "role": "system",
-                    "content": SYSTEM_PROMPT.format(
-                        budget=self.max_steps - current_step, labels=_labels()
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": STEP_PROMPT.format(
-                        complaint=self.memory.complaint,
-                        memory=self.memory.snapshot(),
-                        hints=json.dumps(match_causes(self.memory), ensure_ascii=False),
-                        notes="\n".join(self.notes[-3:]) or "(none)",
-                    ),
-                },
-            ]
-            response = llm.chat(messages, tools=self.agent.tools, role="agent")
-            tool_calls = response.get("tool_calls") or []
-            if not tool_calls:
-                self.notes.append(f"(step {current_step}) {response.get('content') or ''}"[:300])
-                continue
-
-            call = tool_calls[0]
-            args = json.loads(call["arguments"] or "{}")
-            name = call["name"]
-            if response.get("content"):
-                self.notes.append(f"(step {current_step}) {response['content']}"[:300])
-            if name == "submit_diagnosis":
-                self.log.append({"phase": "reason", "tool": name, "args": args})
-                return self._finish(args)
-
-            if name in ("ask_user", "instruct_user"):
-                remembered = self.memory.lookup(name, args)
-                if remembered is not None:
-                    self.memory.dedup_hits += 1
-                    self.notes.append(
-                        f"(step {current_step}) {name} already answered from memory."
-                    )
-                    continue
-                self.pending = {"tool": name, "args": args}
-                self.log.append({"phase": "reason", "tool": name, "args": args})
-                return self._interaction_prompt()
-
-            result = self.agent._call(self.env, self.memory, name, args)
-            self.notes.append(
-                f"(step {current_step}) {name}({json.dumps(args, ensure_ascii=False)}) -> "
-                f"{json.dumps(result, ensure_ascii=False)}"[:300]
-            )
-            self.log.append({"phase": "reason", "tool": name, "args": args})
-
-        hints = match_causes(self.memory)
-        diagnosis = {
-            "root_cause": hints[0]["cause"] if hints else "HW_FAULT_SUSPECTED",
-            "rationale": "Step budget exhausted; best rule-matched hypothesis.",
-        }
-        return self._finish(diagnosis)
 
     def _interaction_prompt(self):
         args = self.pending["args"]
@@ -148,28 +148,5 @@ class InteractiveDiagnosis:
             return f"建议您向客户确认：{args['question']}\n\n请把客户的回答录入下方。"
         return (
             f"建议您指导客户执行以下操作：\n\n"
-            f"{args['action']}\n\n请录入客户的操作结果，并标记问题是否已解决。"
+            f"{args['action']}\n\n请把客户操作后的反馈原话录入下方，Agent 会判断问题是否已解决。"
         )
-
-    def _finish(self, diagnosis):
-        cause = diagnosis["root_cause"]
-        tier, triggers, overridden = classify_tier(self.memory, cause)
-        output = build_output(
-            self.memory, cause, tier, diagnosis["rationale"], triggers
-        )
-        self.result = {
-            "system": "interactive_topology_agent",
-            "case_id": self.env.case["case_id"],
-            "pred_root_cause": cause,
-            "pred_tier": tier,
-            "tier_overridden": overridden,
-            "triggers": triggers,
-            "rationale": diagnosis["rationale"],
-            "output": output,
-            "rule_hints": match_causes(self.memory),
-            "log": self.log,
-            "trace": self.env.trace,
-            "dedup_hits": self.memory.dedup_hits,
-            "memory": json.loads(self.memory.snapshot()),
-        }
-        return None

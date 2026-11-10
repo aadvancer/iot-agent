@@ -1,0 +1,23 @@
+{
+ "system": "abl_no_memory",
+ "core": {
+  "case_count": 40,
+  "diagnosis_success_rate": 1.0,
+  "average_interaction_rounds": 0.95,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 1.0,
+  "support_usability_score": 3.85,
+  "usability_scored_cases": 40,
+  "average_tokens": 18005.05
+ },
+ "challenge": {
+  "case_count": 12,
+  "diagnosis_success_rate": 1.0,
+  "average_interaction_rounds": 1.0,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 1.0,
+  "support_usability_score": 3.5833333333333335,
+  "usability_scored_cases": 12,
+  "average_tokens": 21684.166666666668
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C019",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor is offline and misses events, which matches the BATTERY_LOW pattern. The customer suspects misalignment, but no physical inspection is possible. Battery depletion is a common cause for such symptoms.",
+ "output": {
+  "repair_steps": [
+   "Replace the battery in the side-door sensor with a new one of the correct type.",
+   "After replacement, open and close the door to test if the sensor triggers an event in the app.",
+   "Check the app to see if the sensor shows online and if events are recorded.",
+   "If the sensor still does not respond, try moving it closer to the base station temporarily to rule out signal issues.",
+   "If the problem continues, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the most likely cause is a low battery in the side-door sensor. Please replace the battery with a fresh one and check if the sensor comes back online and detects door openings. If the issue persists after battery replacement, we can explore other possibilities."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.1,
+ "llm_calls": 1,
+ "tokens": 870,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The side-door sensor shows offline and the app sends me an alert every few hours. I opened the door to test it and nothing happened. We had the house repainted last week and the painter may have bumped the sensor, so I think it is misaligned. I haven't touched it since.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, with concrete troubleshooting steps. However, it asserts a likely cause (low battery) and asks the customer to perform actions that were never actually performed or confirmed in the session record, and it does not address the customer's stated misalignment concern. Actionability is present but based on unverified assumptions rather than documented checks."
+}

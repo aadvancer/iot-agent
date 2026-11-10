@@ -1,0 +1,241 @@
+{
+ "system": "react",
+ "case_id": "C044",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Both offline devices (door_back, win_back) are battery-powered SEN-D1 sensors that logged low-battery warnings (7% and 9%) immediately before going offline, while their RSSI history was healthy (-58 to -63 dBm). The base station is online with no fault codes and the other 5 devices remain online, ruling out a base-station or batch-link failure. The two sensors were likely installed at the same time, so their batteries drained together.",
+ "output": {
+  "repair_steps": [
+   "Instruct the customer to replace the batteries in the back door and back window sensors with fresh CR123A batteries.",
+   "After replacement, ask the customer to verify that both sensors come back online in the app.",
+   "If the sensors do not come back online, have the customer press the tamper button on each sensor to force a reconnection.",
+   "Confirm that the low battery warnings clear and the sensors report normal battery levels."
+  ],
+  "customer_reply": "Thank you for your patience. We found that both sensors went offline due to low batteries, not a base station issue. Please replace the batteries in the back door and back window sensors with fresh CR123A batteries. They should reconnect automatically. If they don't, press the tamper button on each sensor. Let us know if you need further assistance."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "win_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor low battery offline SEN-D1 battery threshold"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_back",
+      "name": "Back Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   },
+   "result": {
+    "id": "door_back",
+    "name": "Back Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 3,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_back"
+   },
+   "result": {
+    "id": "win_back",
+    "name": "Back Window",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 5,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_back"
+   },
+   "result": {
+    "lines": [
+     "Thursday 08:12 door_back low battery warning (7%)",
+     "02:14:51 door_back lost",
+     "rssi history (7 days) door_back -58 to -61 dBm, win_back -60 to -63 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "win_back"
+   },
+   "result": {
+    "lines": [
+     "Thursday 08:15 win_back low battery warning (9%)",
+     "05:47:09 win_back lost",
+     "rssi history (7 days) door_back -58 to -61 dBm, win_back -60 to -63 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor low battery offline SEN-D1 battery threshold"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Battery cameras (CAM-S1)",
+      "text": "CAM-S1 runs on a rechargeable battery lasting 3 to 6 months. Below 10 percent the camera disables live view and may miss events; below 3 percent it goes offline. Charge with the supplied USB-C cable for about 6 hours. Frequent motion events in busy areas shorten battery life; enable power-saving mode."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 14.0,
+ "llm_seconds": 14.0,
+ "llm_calls": 5,
+ "tokens": 11501,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "Two of my sensors went offline overnight, the back door and the back window. Two at once seems like something bigger is wrong with the system. Should I be worried that the base station is failing? It's quite new and I don't want to lose the warranty period.",
+ "user_turns": 0,
+ "console_calls": 6
+}

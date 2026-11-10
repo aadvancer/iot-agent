@@ -1,0 +1,96 @@
+{
+ "system": "rules_only",
+ "case_id": "C006",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "base online=False, uplink=no_internet",
+ "output": {
+  "repair_steps": [
+   "Check router and Ethernet/Wi-Fi uplink of the base station, power-cycle router then base station."
+  ],
+  "customer_reply": "We have identified the likely cause and will guide you through the fix."
+ },
+ "rule_hints": [
+  {
+   "cause": "BS_NETWORK_DOWN",
+   "tier": "L1",
+   "evidence": "base online=False, uplink=no_internet"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: pending",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-100",
+   "fw": "3.4",
+   "online": false,
+   "uplink_status": "no_internet",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-503"
+   ],
+   "max_devices": 8,
+   "supported_protocols": [
+    "v2"
+   ]
+  },
+  "binding_table": null,
+  "abnormal_devices": [],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 0.0,
+ "llm_calls": 0,
+ "tokens": 0,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Hi, everything in my security app went grey around 7 this morning: all my cameras and sensors show offline and I get no notifications at all. Yesterday afternoon our internet provider's technician replaced the router, and since then the Wi-Fi on my laptop works fine. I tried opening the app on mobile data and it says the base station is unreachable. I'm travelling next week, so I need this working. I think the base station has died.",
+ "user_turns": 0,
+ "console_calls": 1,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and gives one actionable step (check uplink, power-cycle router then base station), but it is vague and unsupported: it claims a 'likely cause' has been identified without any diagnostic questions or actions in the session record, and it does not address the customer's travel urgency, the router replacement context, or the base-station-unreachable symptom in any concrete way."
+}

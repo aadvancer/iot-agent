@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C029",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera went offline immediately after the base station firmware update. The knowledge base states that HB-200 firmware 4.5 removes support for the legacy v2 radio protocol, and peripherals still on v2 firmware must be upgraded to v3 or they disconnect. The customer cannot find a firmware update button for the camera, which suggests the camera is still on v2 and the base station no longer communicates with it. The neighbor's camera works because it may already be on v3 or connected to a different base station. This matches the PROTOCOL_CONFLICT label, which is L2.",
+ "output": {
+  "symptom_summary": "Den camera offline after base station update; no firmware update option in app; neighbor's same model works.",
+  "suspected_root_cause": "Base station firmware update removed support for legacy v2 radio protocol, causing camera disconnection.",
+  "key_abnormal_indicators": [
+   "Camera offline immediately after base station update",
+   "No firmware update button available in app for the camera",
+   "Neighbor's same camera model still works"
+  ],
+  "customer_reply": "We have identified that the base station firmware update may have caused a protocol mismatch with your camera. Our advanced support team will assist you in updating the camera firmware to restore connectivity."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.8,
+ "llm_seconds": 5.7,
+ "llm_calls": 1,
+ "tokens": 1280,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "The den camera remains offline after the base station updated last night. I cannot find a firmware update for it in the app. Support told me last time to just update the camera, but there is no button. My neighbour has the same camera model and hers still works, so I suspect my unit is broken.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it summarizes the symptoms accurately. However, actionability is limited: it only says an advanced support team will assist, without concrete steps the customer can take. It also asserts a suspected root cause (protocol mismatch) and states the team will update the camera firmware, but the session record shows no questions asked and no actions performed, so these claims are not supported by completed checks or fixes."
+}

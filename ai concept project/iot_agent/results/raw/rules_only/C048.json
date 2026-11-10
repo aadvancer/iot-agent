@@ -1,0 +1,227 @@
+{
+ "system": "rules_only",
+ "case_id": "C048",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "device(s) ['win_new'] not paired while capacity is available",
+ "output": {
+  "repair_steps": [
+   "Hold SYNC button 3 s until LED blinks blue, keep device within 1 m of base, retry pairing."
+  ],
+  "customer_reply": "We have identified the likely cause and will guide you through the fix."
+ },
+ "rule_hints": [
+  {
+   "cause": "PAIR_TIMEOUT",
+   "tier": "L1",
+   "evidence": "device(s) ['win_new'] not paired while capacity is available"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_new",
+      "name": "New Window",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-100",
+   "fw": "3.4",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 8,
+   "supported_protocols": [
+    "v2"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 8,
+   "devices": [
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_back",
+     "name": "Back Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_new",
+     "name": "New Window",
+     "model": "SEN-D1",
+     "bound_in_base": false,
+     "bound_in_app": false,
+     "status": "not_paired"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "win_new"
+  ],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 0.0,
+ "llm_calls": 0,
+ "tokens": 0,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "My new window sensor won't pair. I think we've hit the maximum number of devices, my neighbour had the same problem with the same base station. Do I need to buy the bigger base station? I've tried three times from the living room sofa and it fails every time.",
+ "user_turns": 0,
+ "console_calls": 2,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and gives one actionable step (SYNC button, proximity, retry), but it does not address the customer's core question about device limits or whether a bigger base station is needed. It also claims 'we have identified the likely cause' without any diagnostic questions or actions in the session record to support that claim, and no checks or fixes are shown as completed."
+}

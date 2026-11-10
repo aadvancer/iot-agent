@@ -1,0 +1,161 @@
+{
+ "system": "react",
+ "case_id": "C050",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The porch camera reports 7% battery with a low-battery warning logged 3 days ago, and it went offline yesterday. Signal strength is healthy (-64 dBm), firmware is current, and the base station is online with no fault codes, so the outage is attributable to the depleted battery rather than a network or hardware fault.",
+ "output": {
+  "repair_steps": [
+   "Advise customer to replace the battery in the Porch Cam with a new CR123A battery.",
+   "Confirm the camera is powered on and reconnects to the base station after battery replacement.",
+   "If the camera does not come online, perform a factory reset by holding the reset button for 10 seconds and re-pair it with the base station."
+  ],
+  "customer_reply": "Thank you for contacting support. The issue with your Porch Cam is due to a depleted battery (7% charge). Please replace the battery with a new CR123A battery. After replacement, the camera should reconnect automatically. If it does not, press and hold the reset button for 10 seconds and re-pair it with the base station. If you need further assistance, let us know."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_porch"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_porch"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_porch",
+      "name": "Porch Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_porch"
+   },
+   "result": {
+    "id": "cam_porch",
+    "name": "Porch Cam",
+    "model": "CAM-S1",
+    "fw": "2.1",
+    "rssi": -64,
+    "battery": 7,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_porch"
+   },
+   "result": {
+    "lines": [
+     "cam_porch low battery warning 7% (3 days ago, last report)",
+     "cam_porch offline since yesterday 18:40",
+     "cam_porch power-on event 07:15, disconnect 07:16"
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 10.5,
+ "llm_seconds": 10.5,
+ "llm_calls": 5,
+ "tokens": 9335,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "Porch camera offline. It said low battery a few days ago, so maybe that's all it is. I don't have much time to deal with this, so please just tell me what to do or send me whatever part I need and I'll swap it myself this weekend.",
+ "user_turns": 0,
+ "console_calls": 4
+}

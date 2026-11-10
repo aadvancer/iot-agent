@@ -65,7 +65,7 @@ root_causes:
     tier: L2
     stage: S3
     symptoms: [several devices offline at the same time, base station itself online]
-    evidence: two or more devices offline with normal rssi history, base online, power-cycle does not recover
+    evidence: two or more devices dropped at the same time (loss events within minutes or E-610) with normal rssi history, base online, power-cycle does not recover
     escalation_reason: Indicates base station radio module or system-level fault.
 
   UPLINK_BLOCKED_PERSIST:
@@ -79,7 +79,7 @@ root_causes:
     tier: L2
     stage: S2
     symptoms: [device shown in app but base station does not list it, re-pairing fails with E-207]
-    evidence: bound_in_app == true and bound_in_base == false and re-pair fails
+    evidence: bound_in_app != bound_in_base for a device (shown in app but missing from the base table, or a ghost binding the app no longer shows), and re-pair or removal fails
     escalation_reason: Base station binding database inconsistent; needs FAE tooling to repair.
 
   HW_FAULT_SUSPECTED:
@@ -99,3 +99,5 @@ escalation_rules:
     description: The standard L1 fix for the leading hypothesis was executed and did not resolve the issue.
   - id: R4_TOPOLOGY_MISMATCH
     description: App binding list and base station binding table disagree.
+  - id: R5_HW_PERSISTS
+    description: The customer reports the device still fails next to the base station after a reset.

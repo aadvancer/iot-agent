@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C024",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The timeline stops at the end of last month, indicating no new recordings are being saved. Live view and notifications still work, so the cameras are functioning and connected. The purple light on the base station is a known indicator of storage full. The customer's assumption about firmware update is not supported by the provided knowledge; the symptoms align with storage full.",
+ "output": {
+  "repair_steps": [
+   "Check the base station storage status in the app to confirm it is full.",
+   "Delete old or unwanted recordings from the timeline to free up space.",
+   "If available, insert a compatible microSD card or connect an external drive to expand storage.",
+   "After freeing space, verify that new events are being recorded by checking the timeline for recent activity.",
+   "If the issue persists, format the storage (after backing up important footage) and test again."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms you described—the timeline stopping at the end of last month, the purple light on the base station, and live view/notifications still working—this points to the storage being full. The system has stopped recording new events because there is no space left. We can resolve this by clearing or expanding storage."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.1,
+ "llm_seconds": 6.3,
+ "llm_calls": 1,
+ "tokens": 1119,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "I went to look at the footage of a delivery from last week and the timeline stops at the end of last month. There has been a purple light on the base station for a few days that I've been ignoring. Live view and notifications still work, so I assumed the system was fine. I think the cameras stopped recording after the last firmware update.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable steps, but it asserts a definitive root cause (storage full) without any diagnostic questions or confirmed checks in the session record. The customer was asked nothing and performed no actions, so the claim that storage is full is unsupported. Steps are reasonable but built on an unverified assumption."
+}

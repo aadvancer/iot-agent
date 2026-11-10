@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C023",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera stopped uploading clips after a system update, while live view still works and storage is not full. This suggests a firmware or protocol mismatch between the camera and base station after the update, which is characteristic of PROTOCOL_CONFLICT. The neighbor's system is unaffected, ruling out a widespread service issue.",
+ "output": {
+  "symptom_summary": "Yard camera stopped uploading event clips after a system update; live view still works; storage has plenty of space; neighbor's system unaffected.",
+  "suspected_root_cause": "Firmware or protocol conflict between camera and base station following the update.",
+  "key_abnormal_indicators": [
+   "Event clips stopped after system update",
+   "Live view still functional",
+   "Storage not full",
+   "Neighbor's system unaffected"
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the issue appears to be related to a firmware or protocol conflict after the recent system update. Our advanced technical team will investigate and resolve this. We will update you shortly."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.2,
+ "llm_seconds": 5.1,
+ "llm_calls": 1,
+ "tokens": 1206,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "The yard camera used to upload a clip every time somebody walked past. Since a night when the system updated itself, the clips stopped, although live view still works. I checked the storage page and there is plenty of space, so that is not it. My neighbour with the same system has no problem.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 2,
+ "usability_reason": "The response politely summarizes the symptoms and offers a plausible root cause, but it is not actionable: no troubleshooting steps, no questions asked, and no checks or fixes were performed or verified. It defers entirely to an unspecified team, so it provides little practical help and risks implying investigation/resolution without evidence in the session record."
+}

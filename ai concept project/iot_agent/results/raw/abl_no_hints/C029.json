@@ -1,0 +1,390 @@
+{
+ "system": "abl_no_hints",
+ "case_id": "C029",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [
+  {
+   "rule": "R2_PROTOCOL",
+   "evidence": "cam_den incompatible and OTA unavailable"
+  }
+ ],
+ "rationale": "The base station firmware update to 4.5 dropped support for protocol v2, leaving cam_den (CAM-I2, fw 1.2, protocol v2) incompatible. Logs confirm \"E-305 protocol v2 not supported\" and \"OTA unavailable for an older camera revision\", and check_firmware_compat reports compatible=false with ota_available_to=null, so there is no self-service upgrade path. The same-model cam_hall remains online because it is a newer revision already on v3, ruling out a simple hardware fault.",
+ "output": {
+  "symptom_summary": "Den Cam (CAM-I2, fw 1.2) is offline after base station firmware update to 4.5. Logs show E-305 protocol v2 not supported and OTA unavailable for older camera revision.",
+  "suspected_root_cause": "Base station firmware 4.5 dropped support for protocol v2, leaving cam_den incompatible with no self-service upgrade path.",
+  "key_abnormal_indicators": [
+   "cam_den fw: 1.2",
+   "cam_den protocol: v2",
+   "base_station supported_protocols: [v3]",
+   "error_code: E-305",
+   "firmware_compat.compatible: false",
+   "firmware_compat.ota_available_to: null",
+   "cam_den status: offline",
+   "cam_hall (same model) online with protocol v3"
+  ],
+  "customer_reply": "We've identified a compatibility issue between your Den Cam and the base station after a recent update. Our engineering team will investigate further and contact you with next steps. Thank you for your patience.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "error_codes": [
+     "E-305"
+    ]
+   },
+   "affected_devices": [
+    {
+     "id": "cam_den",
+     "name": "Den Cam",
+     "model": "CAM-I2",
+     "fw": "1.2",
+     "rssi": -62,
+     "battery": null,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [
+    {
+     "rule": "R2_PROTOCOL",
+     "evidence": "cam_den incompatible and OTA unavailable"
+    }
+   ],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "PROTOCOL_CONFLICT",
+   "tier": "L2",
+   "evidence": "cam_den protocol v2 unsupported, no OTA path"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_den"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_den"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "PROTOCOL_CONFLICT",
+    "rationale": "The base station firmware update to 4.5 dropped support for protocol v2, leaving cam_den (CAM-I2, fw 1.2, protocol v2) incompatible. Logs confirm \"E-305 protocol v2 not supported\" and \"OTA unavailable for an older camera revision\", and check_firmware_compat reports compatible=false with ota_available_to=null, so there is no self-service upgrade path. The same-model cam_hall remains online because it is a newer revision already on v3, ruling out a simple hardware fault."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_den",
+      "name": "Den Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_den"
+   },
+   "result": {
+    "id": "cam_den",
+    "name": "Den Cam",
+    "model": "CAM-I2",
+    "fw": "1.2",
+    "rssi": -62,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "base firmware updated to 4.5",
+     "cam_den: E-305 protocol v2 not supported",
+     "cam_den: OTA unavailable for an older camera revision",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_den"
+   },
+   "result": {
+    "device_id": "cam_den",
+    "device_fw": "1.2",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.5",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-305"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_den",
+     "name": "Den Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_den"
+  ],
+  "device_details": {
+   "cam_den": {
+    "id": "cam_den",
+    "name": "Den Cam",
+    "model": "CAM-I2",
+    "fw": "1.2",
+    "rssi": -62,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "cam_den": {
+    "device_id": "cam_den",
+    "device_fw": "1.2",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "base firmware updated to 4.5",
+    "cam_den: E-305 protocol v2 not supported",
+    "cam_den: OTA unavailable for an older camera revision",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 10.3,
+ "llm_calls": 2,
+ "tokens": 5427,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "The den camera remains offline after the base station updated last night. I cannot find a firmware update for it in the app. Support told me last time to just update the camera, but there is no button. My neighbour has the same camera model and hers still works, so I suspect my unit is broken.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it correctly avoids claiming any checks or fixes were performed (steps_performed is empty). However, actionability is weak: it only says engineering will investigate and contact the customer, with no interim troubleshooting or concrete next steps. The root-cause explanation is coherent but not independently verified through customer-facing actions, so it earns only partial credit."
+}

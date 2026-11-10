@@ -1,165 +1,149 @@
-"""Proposed method: topology-aware diagnostic agent.
-
-run() has four phases:
-  1. Evidence collection - the planner walks S1..S5 over the support console (no LLM).
-  2. Reasoning loop     - the LLM sees ONLY the structured memory snapshot plus rule-matcher
-                          hints (not the raw transcript), and may search the KB, ask the customer,
-                          instruct a fix, or submit a diagnosis.
-  3. Triage             - taxonomy tier, overridden to L2 by hard escalation rules R1-R4.
-  4. Output             - L1 repair steps + customer reply, or L2 escalation ticket.
-"""
+"""Topology-aware diagnostic agent, orchestrated with LangGraph."""
 import copy
-import json
 
 import config
-import llm
-from agent import planner
 from agent.memory import SessionMemory
-from agent.rules import CAUSES, match_causes
-from agent.triage import build_output, classify_tier
+from agent.rules import CAUSES
+from agent.workflow import build_workflow, judge_action_reply
 from env.case_env import CaseEnv
 from env.tools import TOOL_SCHEMAS, execute
 
-SYSTEM_PROMPT = """You are a copilot for FRONTLINE SUPPORT STAFF of a gateway-centric smart security system
-(one base station = master; cameras and sensors = slaves that can only talk through the base station).
-Your reader is the support staff member, never the end customer: you never talk to the customer directly.
-The staff member has the support console and talks to the customer; ask_user means "suggest a question the staff
-member should put to the customer" and instruct_user means "give the staff member one action to walk the customer
-through". Write these as concise instructions to the staff member, and report back what the customer said.
-Your goals: find the root cause, help staff resolve self-recoverable faults at frontline (L1), and prepare an
-escalation ticket only for genuine complex faults for FAE engineers (L2). Wrong escalations waste scarce FAE time;
-missed escalations delay critical fixes.
-
-You receive a MEMORY snapshot of confirmed facts. Support-console evidence has already been collected in topology
-order (S1 base station -> S2 binding/capacity -> S3 link quality -> S4 firmware/protocol -> S5 peripheral).
-RULE HINTS are candidate causes matched deterministically from the evidence - verify them, they can be incomplete.
-
-Procedure:
-1. Reason from the master down: a fault at the base station explains peripheral symptoms; several peripherals failing
-   at the same moment points to a system-level fault, not to individual signal or battery problems.
-2. Never re-query or re-ask anything already in MEMORY. Use ask_user only for facts the console cannot show
-   (LED colour, physical location, recent changes). Use search_kb when you need the fix procedure or policy.
-3. For an L1 cause, instruct the customer to perform its standard fix once (instruct_user with target_cause) to confirm.
-   If the fix resolves the issue, submit. If it does not, reconsider: a failed standard fix means escalation.
-4. Do not instruct base-station factory resets or firmware downgrades.
-5. Finish with submit_diagnosis as soon as the evidence is sufficient. Budget: {budget} actions left.
-
-Root-cause labels (tier):
-{labels}"""
-
-STEP_PROMPT = """Customer complaint: "{complaint}"
-
-MEMORY:
-{memory}
-
-RULE HINTS:
-{hints}
-
-YOUR RECENT NOTES:
-{notes}
-
-Choose the next action (call exactly one tool)."""
-
-OUTCOME_PROMPT = """A support agent asked the customer to: "{action}"
-The customer reported: "{outcome}"
-Did this resolve the customer's original problem? Return JSON {{"resolved": true|false}}."""
-
-
-def _labels():
-    return "\n".join(f"- {k} ({v['tier']}): {', '.join(v['symptoms'])}" for k, v in CAUSES.items())
+# after this many consecutive knowledge-base searches without a new snippet, further
+# searches are answered from memory: the KB has nothing more on the question (cf. C045)
+KB_STALE_LIMIT = 2
+KB_NO_NEW_NOTE = ("No new knowledge: every result was already in MEMORY. The knowledge base has no "
+                  "further procedure for this; decide from the evidence you have.")
+KB_EXHAUSTED_NOTE = ("Search not executed: the last searches found nothing new, so the knowledge base does "
+                     "not cover this. Stop searching and submit_diagnosis from the collected evidence and "
+                     "the RULE HINTS.")
 
 
 def _agent_tools():
     tools = copy.deepcopy(TOOL_SCHEMAS)
-    for t in tools:
-        if t["function"]["name"] == "instruct_user":
-            p = t["function"]["parameters"]
-            p["properties"]["target_cause"] = {"type": "string", "enum": list(CAUSES),
-                                               "description": "Root cause this fix is meant to resolve."}
-            p["required"].append("target_cause")
-    tools.append({"type": "function", "function": {
-        "name": "submit_diagnosis", "description": "Submit the final root cause.",
-        "parameters": {"type": "object", "properties": {
-            "root_cause": {"type": "string", "enum": list(CAUSES)},
-            "rationale": {"type": "string", "description": "2-3 sentences citing the decisive evidence."}},
-            "required": ["root_cause", "rationale"]}}})
+    for tool in tools:
+        if tool["function"]["name"] == "instruct_user":
+            parameters = tool["function"]["parameters"]
+            parameters["properties"]["target_cause"] = {
+                "type": "string",
+                "enum": list(CAUSES),
+                "description": "Root cause this fix is meant to resolve.",
+            }
+            parameters["required"].append("target_cause")
+    tools.append(
+        {
+            "type": "function",
+            "function": {
+                "name": "submit_diagnosis",
+                "description": "Submit the final root cause.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "root_cause": {"type": "string", "enum": list(CAUSES)},
+                        "rationale": {
+                            "type": "string",
+                            "description": "2-3 sentences citing the decisive evidence.",
+                        },
+                    },
+                    "required": ["root_cause", "rationale"],
+                },
+            },
+        }
+    )
     return tools
 
 
 class TopologyAgent:
     name = "topology_agent"
+    # ablation switches; all on for the full system
+    use_planner = True
+    use_hints = True
+    use_memory = True
+    use_override = True
 
     def __init__(self, max_steps=config.MAX_STEPS):
         self.max_steps = max_steps
         self.tools = _agent_tools()
+        self.workflow = build_workflow(self)
 
-    # ----- tool call with memory guard -----
-    def _call(self, env, m: SessionMemory, tool, args):
-        cached = m.lookup(tool, args)
+    def _call(self, env, memory: SessionMemory, tool, args):
+        cached = memory.lookup(tool, args) if self.use_memory else None
         if cached is not None:
-            m.dedup_hits += 1
+            memory.dedup_hits += 1
             return {"note": "already in memory", **cached}
         if tool == "instruct_user":
-            res = execute(env, tool, {"action": args["action"]})
-            verdict = llm.chat_json([{"role": "user", "content": OUTCOME_PROMPT.format(
-                action=args["action"], outcome=res["outcome"])}], model=config.USER_SIM_MODEL, role="agent")
-            m.add_action(args["action"], args.get("target_cause"), res["outcome"], bool(verdict.get("resolved")))
-            return res
-        res = execute(env, tool, args)
-        m.update(tool, args, res)
-        return res
+            result = execute(env, tool, {"action": args["action"]})
+            # Same judgement as the interactive workbench: an unclear reply or a
+            # non-standard action must not count as a failed standard fix (R3).
+            resolved, standard_fix, _ = judge_action_reply(
+                memory.complaint, args["action"], result["outcome"], args.get("target_cause"))
+            memory.add_action(args["action"], args.get("target_cause"), result["outcome"],
+                              resolved, standard_fix)
+            return result
+        if tool == "search_kb" and self.use_memory:
+            return self._search_kb(env, memory, args)
+        result = execute(env, tool, args)
+        memory.update(tool, args, result)
+        return result
+
+    def _search_kb(self, env, memory: SessionMemory, args):
+        """search_kb with a memory-based stop: repeated rephrasings that only return
+        snippets already in memory are cut off instead of burning the step budget."""
+        if memory.stale_kb_searches >= KB_STALE_LIMIT:
+            return {"results": [], "note": KB_EXHAUSTED_NOTE}
+        known = {k["source"] for k in memory.kb}
+        result = execute(env, "search_kb", args)
+        memory.update("search_kb", args, result)
+        if isinstance(result.get("results"), list) and all(r["source"] in known for r in result["results"]):
+            memory.stale_kb_searches += 1
+            return {**result, "note": KB_NO_NEW_NOTE}
+        memory.stale_kb_searches = 0
+        return result
 
     def run(self, env: CaseEnv) -> dict:
-        m = SessionMemory(env.case["complaint"])
-        log = []
+        memory = SessionMemory(env.case["complaint"])
+        state = self.workflow.invoke(
+            {
+                "case": env.case,
+                "memory": memory.to_dict(),
+                "trace": env.trace,
+                "actions_done": env.actions_done,
+                "user_history": env.user.history,
+                "log": [],
+                "notes": [],
+                "step": 0,
+                "system": self.name,
+            }
+        )
+        env.trace = state["trace"]
+        env.actions_done = state["actions_done"]
+        env.user.history = state["user_history"]
+        result = state["result"]
+        result["system"] = self.name
+        return result
 
-        # Phase 1: deterministic topology-ordered evidence collection
-        while (q := planner.next_query(m)) is not None:
-            tool, args, stage = q
-            self._call(env, m, tool, args)
-            log.append({"phase": "collect", "stage": stage, "tool": tool, "args": args})
 
-        # Phase 2: LLM reasoning over structured memory
-        notes, diagnosis = [], None
-        for step in range(self.max_steps):
-            budget = self.max_steps - step
-            msgs = [
-                {"role": "system", "content": SYSTEM_PROMPT.format(budget=budget, labels=_labels())},
-                {"role": "user", "content": STEP_PROMPT.format(
-                    complaint=m.complaint, memory=m.snapshot(),
-                    hints=json.dumps(match_causes(m), ensure_ascii=False),
-                    notes="\n".join(notes[-3:]) or "(none)")},
-            ]
-            out = llm.chat(msgs, tools=self.tools, role="agent")
-            if not out["tool_calls"]:
-                notes.append(f"(step {step}) {out['content'] or ''}"[:300])
-                continue
-            tc = out["tool_calls"][0]
-            args = json.loads(tc["arguments"] or "{}")
-            if out["content"]:
-                notes.append(f"(step {step}) {out['content']}"[:300])
-            if tc["name"] == "submit_diagnosis":
-                diagnosis = args
-                log.append({"phase": "reason", "tool": "submit_diagnosis", "args": args})
-                break
-            res = self._call(env, m, tc["name"], args)
-            notes.append(f"(step {step}) {tc['name']}({json.dumps(args, ensure_ascii=False)}) -> "
-                         f"{json.dumps(res, ensure_ascii=False)}"[:300])
-            log.append({"phase": "reason", "tool": tc["name"], "args": args})
+class NoPlannerAgent(TopologyAgent):
+    """Ablation: no topology planner; the LLM must gather console evidence itself."""
+    name = "abl_no_planner"
+    use_planner = False
 
-        if diagnosis is None:   # budget exhausted: force a decision from current memory
-            hints = match_causes(m)
-            diagnosis = {"root_cause": hints[0]["cause"] if hints else "HW_FAULT_SUSPECTED",
-                         "rationale": "Step budget exhausted; best rule-matched hypothesis."}
 
-        # Phase 3 + 4: triage and output
-        cause = diagnosis["root_cause"]
-        tier, triggers, overridden = classify_tier(m, cause)
-        output = build_output(m, cause, tier, diagnosis["rationale"], triggers)
-        return {
-            "system": self.name, "case_id": env.case["case_id"],
-            "pred_root_cause": cause, "pred_tier": tier, "tier_overridden": overridden,
-            "triggers": triggers, "rationale": diagnosis["rationale"], "output": output,
-            "rule_hints": match_causes(m), "log": log, "trace": env.trace,
-            "dedup_hits": m.dedup_hits, "memory": json.loads(m.snapshot()),
-        }
+class NoHintsAgent(TopologyAgent):
+    """Ablation: no deterministic rule hints in the prompt or the budget fallback."""
+    name = "abl_no_hints"
+    use_hints = False
+
+
+class NoMemoryAgent(TopologyAgent):
+    """Ablation: raw tool transcript instead of the structured memory; no dedup or recall."""
+    name = "abl_no_memory"
+    use_memory = False
+
+
+class NoOverrideAgent(TopologyAgent):
+    """Ablation: tier taken from the taxonomy only, without hard escalation rules."""
+    name = "abl_no_override"
+    use_override = False
+
+
+ABLATIONS = {cls.name: cls for cls in (NoPlannerAgent, NoHintsAgent, NoMemoryAgent, NoOverrideAgent)}

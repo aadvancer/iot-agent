@@ -1,0 +1,248 @@
+{
+ "system": "react",
+ "case_id": "C027",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The HB-200 base station auto-updated to firmware 4.5, which removed support for the legacy v2 radio protocol. The guest room CAM-I2 (hardware revision A, firmware 1.2) still speaks v2, and check_firmware_compat confirms no OTA path exists (ota_available_to: null), with logs showing \"E-305 protocol v2 not supported\" and \"OTA unavailable for hardware revision A\". This matches historical case H-03 and requires FAE escalation for a compatibility firmware.",
+ "output": {
+  "symptom_summary": "Guest room camera (CAM-I2) went offline overnight after base station auto-update; camera has power and orange LED, but app shows offline and no update available.",
+  "suspected_root_cause": "Base station firmware 4.5 dropped support for legacy v2 protocol, and the camera (hardware revision A, firmware 1.2) cannot be upgraded OTA, causing a protocol conflict.",
+  "key_abnormal_indicators": [
+   "Base station error code E-305",
+   "Base station supported protocols: [\"v3\"]",
+   "Camera protocol: v2",
+   "check_firmware_compat: compatible=false, ota_available_to=null",
+   "Log: 'E-305 protocol v2 not supported'",
+   "Log: 'OTA unavailable for hardware revision A'",
+   "Camera hardware revision A, firmware 1.2"
+  ],
+  "customer_reply": "We've identified a compatibility issue between your base station's recent update and the guest room camera. This requires our engineering team to provide a special firmware. An engineer will contact you within 1-2 business days. No action needed from you; please avoid factory resetting the base station."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_guest"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_guest"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_guest"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported OTA unavailable hardware revision"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 peripheral firmware outdated protocol conflict base station firmware update"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_guest",
+      "name": "Guest Room Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_guest"
+   },
+   "result": {
+    "id": "cam_guest",
+    "name": "Guest Room Cam",
+    "model": "CAM-I2",
+    "fw": "1.2",
+    "rssi": -62,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_guest"
+   },
+   "result": {
+    "device_id": "cam_guest",
+    "device_fw": "1.2",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_guest"
+   },
+   "result": {
+    "lines": [
+     "cam_guest: E-305 protocol v2 not supported",
+     "cam_guest: OTA unavailable for hardware revision A"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported OTA unavailable hardware revision"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 peripheral firmware outdated protocol conflict base station firmware update"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_base_station#Firmware update",
+      "text": "Base station firmware updates are pushed automatically at night. HB-200 firmware 4.5 removes support for the legacy v2 radio protocol. Peripherals still running v2 firmware must be upgraded to v3 firmware before or after the base station update, otherwise they disconnect."
+     },
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 15.5,
+ "llm_seconds": 15.5,
+ "llm_calls": 5,
+ "tokens": 11770,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "The guest room camera went offline overnight and won't come back. It is a wired indoor camera and has power; the LED is orange. A friend who works in IT told me to factory reset the base station, but I'd rather not lose all my settings. I looked in the app for a camera update and it says none is available.",
+ "user_turns": 0,
+ "console_calls": 5
+}

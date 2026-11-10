@@ -1,0 +1,37 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C007",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "All devices are offline in the app, the base station LED is red, and live view fails for every camera. The customer mentions moving a TV cabinet and possibly pulling cables, which could have disconnected the base station's network connection. This matches the BS_NETWORK_DOWN pattern.",
+ "output": {
+  "repair_steps": [
+   "Check the Ethernet cable connection between the base station and the router; ensure it is securely plugged into the correct port.",
+   "Verify that the router is powered on and has internet connectivity.",
+   "Power-cycle the router: unplug it, wait 30 seconds, plug it back in, and wait for it to fully restart.",
+   "Power-cycle the base station: unplug it, wait 30 seconds, plug it back in, and wait for it to reconnect.",
+   "Check the base station LED: it should turn solid green or blue when connected.",
+   "If the issue persists, try a different Ethernet cable or port on the router.",
+   "If still offline, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. Since all devices are offline and the base station light is red, it sounds like the base station may have lost its network connection, possibly due to a cable being pulled when the TV cabinet was moved. Please check the Ethernet cable connection between the base station and your router, and ensure the router is powered on and functioning. If the cable is connected, try power-cycling the router and then the base station. Let us know if the issue persists."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.3,
+ "llm_seconds": 6.3,
+ "llm_calls": 1,
+ "tokens": 1231,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "The red light on the base station has been on since I got home. The app shows no connection for every device and the live view just spins. Last weekend we moved the TV cabinet and I may have pulled some cables behind it. My son insists that all the camera batteries ran out at the same time, but that seems unlikely to me. The smart TV also complains about something, I haven't looked into it.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with a logical sequence of troubleshooting steps tied to the customer's context (moved cabinet, red light, all devices offline). It avoids claiming any checks or fixes were completed, since no actions were performed in the session. Minor deduction because the response includes both a step list and a customer reply that partially duplicate each other, and it does not explicitly address the customer's uncertainty about camera batteries or the smart TV complaint."
+}

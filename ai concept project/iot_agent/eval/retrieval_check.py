@@ -16,6 +16,7 @@ PROBES = {
     "recordings stopped storage": ["Local storage", "E-402"],
     "device shown in app but missing from base station": ["E-207", "Factory reset of a peripheral"],
     "camera fails even next to base after reset": ["Escalate to FAE", "Factory reset of a peripheral"],
+    "device removed from app but base station still full E-201": ["Orphaned binding"],
 }
 
 

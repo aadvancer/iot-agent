@@ -1,0 +1,284 @@
+{
+ "system": "react",
+ "case_id": "C005",
+ "pred_root_cause": "BATCH_LINK_FAILURE",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Three sensors (door_back, motion_living, win_bed) dropped simultaneously at 14:02:11-12 with healthy batteries and normal 7-day RSSI history (-55 to -66 dBm), while the base station remains online with a good uplink. The log shows an E-610 radio module self-test warning, which per the fault-code reference indicates a base-station sub-GHz radio failure and must be escalated to FAE. This is not a per-device signal issue as the customer assumed.",
+ "output": {
+  "symptom_summary": "Three sensors (Back Door, Living Motion, Bedroom Window) went offline simultaneously at 14:02:11-12, while the base station remained online with a good uplink. Customer only noticed the back door sensor offline and assumed a signal issue.",
+  "suspected_root_cause": "Base station sub-GHz radio module failure indicated by E-610 self-test warning and simultaneous loss of multiple sensors with normal RSSI history.",
+  "key_abnormal_indicators": [
+   "E-610 radio module self-test warning in base station logs",
+   "Three sensors dropped at exactly 14:02:11-12",
+   "All three sensors had healthy batteries (81%, 74%, 66%)",
+   "7-day RSSI history for all three sensors was normal (-55 to -66 dBm)",
+   "Base station online with uplink_status ok",
+   "Other devices (cameras, other sensors) remained online"
+  ],
+  "customer_reply": "Thank you for your patience. Our diagnostics show that the issue is not with your sensor's signal strength, but with the base station's radio module. This requires attention from our engineering team. We have escalated your case and an engineer will contact you within 24 hours to arrange a repair or replacement. No action is needed from you at this time."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_bed"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-610"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-610 radio module self-test warning multiple devices offline"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 48,
+    "loop_recording": true,
+    "error_codes": [
+     "E-610"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_living",
+      "name": "Living Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_bed",
+      "name": "Bedroom Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   },
+   "result": {
+    "id": "door_back",
+    "name": "Back Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 81,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   },
+   "result": {
+    "id": "motion_living",
+    "name": "Living Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": null,
+    "battery": 74,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_bed"
+   },
+   "result": {
+    "id": "win_bed",
+    "name": "Bedroom Window",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 66,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-610"
+   },
+   "result": {
+    "lines": [
+     "E-610 radio module self-test warning"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "14:02:11 door_back lost",
+     "14:02:11 motion_living lost",
+     "14:02:12 win_bed lost",
+     "E-610 radio module self-test warning",
+     "rssi history (7 days) for all three sensors: -55 to -66 dBm",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-610 radio module self-test warning multiple devices offline"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-610 Radio module error",
+      "text": "Logged by the base station when its sub-GHz radio fails self-test or multiple peripherals drop simultaneously. Always escalate to FAE."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 17.9,
+ "llm_calls": 5,
+ "tokens": 12032,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "The back door sensor went offline. Probably the signal, it's a bit far from the base. I got a push notification around 2 pm but didn't think much of it, and only noticed in the evening that the app showed it offline. I'm thinking of buying a signal repeater for that side of the house. The front camera works as normal.",
+ "user_turns": 0,
+ "console_calls": 7,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable (escalation with a 24-hour contact commitment, no customer action needed). It avoids overclaiming fixes—no repair is stated as completed, only escalated. However, the detailed diagnostic claims (E-610 warning, three sensors offline, RSSI history, battery levels) are not supported by the session record, which shows no questions asked and no actions performed, so these specifics appear asserted rather than demonstrated. This weakens the 'avoids claiming checks not shown as completed' criterion, though the customer-facing reply itself is well-formed."
+}

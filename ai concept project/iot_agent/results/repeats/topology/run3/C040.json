@@ -1,0 +1,471 @@
+{
+ "system": "topology_agent",
+ "case_id": "C040",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The Entry Motion sensor (SEN-M1) shows no LED response at all when SYNC is held for 15 seconds, even placed directly next to the base station, while all other bound devices are online and the base station is healthy (no fault codes, uplink ok). The customer reported dropping the sensor on tiles while changing the battery, and RSSI (-60 dBm) and firmware (1.4, protocol v3, compatible) are both fine, ruling out signal and firmware causes. A device that fails to respond to reset even adjacent to the base station after physical impact indicates a hardware fault requiring escalation.",
+ "output": {
+  "symptom_summary": "Entry Motion sensor (SEN-M1) is offline and unresponsive to reset; LED stays dark when SYNC is held for 15 seconds, even when placed next to the base station. All other devices are online and base station is healthy.",
+  "suspected_root_cause": "Hardware fault in the Entry Motion sensor, likely due to physical impact from being dropped on tiles during battery change.",
+  "key_abnormal_indicators": [
+   "No LED response during 15-second SYNC hold (reset attempt)",
+   "Device remains offline despite being adjacent to base station",
+   "RSSI -60 dBm (good signal)",
+   "Firmware 1.4, protocol v3 (compatible with base station)",
+   "Base station has no error codes and uplink is ok",
+   "Customer reported dropping the sensor on tiles"
+  ],
+  "customer_reply": "Thank you for your patience. Our engineering team will review your case and contact you within 1-2 business days with next steps. No further action is needed from you at this time.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": []
+   },
+   "affected_devices": [
+    {
+     "id": "motion_entry",
+     "name": "Entry Motion",
+     "model": "SEN-M1",
+     "fw": "1.4",
+     "rssi": -60,
+     "battery": 75,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_entry"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_entry"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-M1 entry motion sensor reset procedure and hardware fault after drop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-M1 motion sensor factory reset procedure LED indicator"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer holds SYNC on the Entry Motion sensor for 15 seconds, does the LED flash white (reset confirmation), or does it stay dark / show no response at all?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "Ask the customer to hold SYNC on the Entry Motion sensor for 15 seconds again and watch the LED closely: does it flash white at all, or does it stay completely dark / show no light?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "HW_FAULT_SUSPECTED",
+    "rationale": "The Entry Motion sensor (SEN-M1) shows no LED response at all when SYNC is held for 15 seconds, even placed directly next to the base station, while all other bound devices are online and the base station is healthy (no fault codes, uplink ok). The customer reported dropping the sensor on tiles while changing the battery, and RSSI (-60 dBm) and firmware (1.4, protocol v3, compatible) are both fine, ruling out signal and firmware causes. A device that fails to respond to reset even adjacent to the base station after physical impact indicates a hardware fault requiring escalation."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_entry",
+      "name": "Entry Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_entry"
+   },
+   "result": {
+    "id": "motion_entry",
+    "name": "Entry Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "motion_entry remains offline after peripheral reset",
+     "motion_entry RSSI -60 dBm",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_entry"
+   },
+   "result": {
+    "device_id": "motion_entry",
+    "device_fw": "1.4",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-M1 entry motion sensor reset procedure and hardware fault after drop"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-07 Missing motion alerts after base update",
+      "text": "SEN-M1 on firmware 1.1 stopped reporting after base update to 4.5 with E-305. OTA to 1.4 succeeded and alerts resumed. Resolved at frontline. Note: initially escalated unnecessarily - an example of avoidable FAE workload."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-M1 motion sensor factory reset procedure LED indicator"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     },
+     {
+      "source": "historical_cases#H-07 Missing motion alerts after base update",
+      "text": "SEN-M1 on firmware 1.1 stopped reporting after base update to 4.5 with E-305. OTA to 1.4 succeeded and alerts resumed. Resolved at frontline. Note: initially escalated unnecessarily - an example of avoidable FAE workload."
+     },
+     {
+      "source": "manual_base_station#Restart and reset",
+      "text": "A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer holds SYNC on the Entry Motion sensor for 15 seconds, does the LED flash white (reset confirmation), or does it stay dark / show no response at all?"
+   },
+   "result": {
+    "answer": "I'm not sure — I didn't pay attention to the LED when I did the reset, so I can't tell you what it did."
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Ask the customer to hold SYNC on the Entry Motion sensor for 15 seconds again and watch the LED closely: does it flash white at all, or does it stay completely dark / show no light?"
+   },
+   "result": {
+    "answer": "I just tried it again and watched closely — the LED stays completely dark, no light at all."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "motion_entry",
+     "name": "Entry Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "motion_entry"
+  ],
+  "device_details": {
+   "motion_entry": {
+    "id": "motion_entry",
+    "name": "Entry Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "motion_entry": {
+    "device_id": "motion_entry",
+    "device_fw": "1.4",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "motion_entry remains offline after peripheral reset",
+    "motion_entry RSSI -60 dBm",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "When the customer holds SYNC on the Entry Motion sensor for 15 seconds, does the LED flash white (reset confirmation), or does it stay dark / show no response at all?",
+    "answer": "I'm not sure — I didn't pay attention to the LED when I did the reset, so I can't tell you what it did."
+   },
+   {
+    "question": "Ask the customer to hold SYNC on the Entry Motion sensor for 15 seconds again and watch the LED closely: does it flash white at all, or does it stay completely dark / show no light?",
+    "answer": "I just tried it again and watched closely — the LED stays completely dark, no light at all."
+   }
+  ],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[historical_cases#H-07 Missing motion alerts after base update] SEN-M1 on firmware 1.1 stopped reporting after base update to 4.5 with E-305. OTA to 1.4 succeeded and alerts resumed. Resolved at frontline. Note: initially escalated unnecessarily - an example of avoidable FAE workload.",
+   "[historical_cases#H-02 Cannot add ninth sensor] HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline.",
+   "[historical_cases#H-03 Indoor camera lost after night update] After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly.",
+   "[manual_peripherals#Factory reset of a peripheral] Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again.",
+   "[manual_base_station#Restart and reset] A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval."
+  ]
+ },
+ "wall_seconds": 26.9,
+ "llm_seconds": 26.9,
+ "llm_calls": 8,
+ "tokens": 23654,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "The entry sensor still fails next to the base station after a reset; the other sensors work. It worked for a year, then died after I dropped it on the tiles while changing the battery. Could it be signal? The entry is three walls away from the base in normal use, but I tested it right next to the base.",
+ "user_turns": 2,
+ "console_calls": 5
+}

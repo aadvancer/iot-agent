@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C050",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer reports the porch camera is offline and mentions a low battery warning a few days ago. This matches the BATTERY_LOW pattern: battery camera offline or misses events, live view fails to start.",
+ "output": {
+  "repair_steps": [
+   "Remove the battery from the porch camera.",
+   "Charge the battery using the original charging cable and adapter until the LED indicator shows fully charged (usually solid green).",
+   "Reinsert the battery into the camera.",
+   "Wait for the camera to reconnect to the base station (check the app for online status).",
+   "If the camera remains offline, try moving it closer to the base station temporarily to rule out signal issues.",
+   "If still offline after charging and reinserting, contact support for further assistance."
+  ],
+  "customer_reply": "It sounds like the battery in your porch camera is low, which is causing it to go offline. Please charge the battery fully using the provided cable and adapter. Once charged, reinsert the battery and check if the camera comes back online in the app. If the issue persists after charging, let us know and we can explore further options."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.5,
+ "llm_calls": 1,
+ "tokens": 852,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "Porch camera offline. It said low battery a few days ago, so maybe that's all it is. I don't have much time to deal with this, so please just tell me what to do or send me whatever part I need and I'll swap it myself this weekend.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, giving step-by-step charging and reconnection instructions plus escalation if needed. It avoids claiming any checks or fixes were completed, since none were performed. Minor deduction because it offers a somewhat lengthy repair_steps list beyond the customer's request for a quick fix, but the customer_reply is appropriately concise."
+}

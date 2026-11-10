@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C035",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station is online locally and cameras work, but remote notifications have stopped, indicating a persistent uplink block to the cloud. The recent mesh Wi-Fi change likely introduced a firewall or routing issue that blocks outbound connections, and disabling firewall features did not resolve it.",
+ "output": {
+  "symptom_summary": "Cameras work locally, but remote notifications have stopped after installing a new mesh Wi-Fi system.",
+  "suspected_root_cause": "The new mesh Wi-Fi system is blocking the base station's outbound connection to the cloud, preventing remote notifications.",
+  "key_abnormal_indicators": [
+   "Remote notifications stopped after mesh Wi-Fi installation",
+   "Local camera functionality remains intact",
+   "Firewall features disabled but issue persists",
+   "Base station likely online locally"
+  ],
+  "customer_reply": "Thank you for the details. Since your cameras work locally but remote notifications have stopped after installing a new mesh Wi-Fi system, it appears that the base station's connection to the cloud is being blocked. Even though you disabled firewall features, the mesh system may still be blocking required outbound ports or protocols. Please try connecting the base station directly to your old router temporarily to see if notifications resume. If they do, we'll need to configure the mesh system to allow the necessary traffic."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.2,
+ "llm_calls": 1,
+ "tokens": 962,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "My cameras work locally, but remote notifications have stopped. We just got a new mesh Wi-Fi system and I wonder if it blocks something. I've disabled the firewall features in the mesh app and rebooted all the nodes. Our old router is in a drawer if I should plug it back in.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering a concrete diagnostic step (connect base station to old router) and a follow-up plan. It avoids claiming any checks or fixes were completed, since no actions were performed in the session. The suspected root cause is framed as a hypothesis rather than a confirmed finding, which is appropriate. Minor deduction only because the root-cause label is somewhat speculative and the response could more explicitly acknowledge that no troubleshooting steps have yet been verified."
+}

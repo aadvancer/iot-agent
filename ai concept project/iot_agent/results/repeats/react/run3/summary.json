@@ -1,0 +1,23 @@
+{
+ "system": "react",
+ "core": {
+  "case_count": 40,
+  "diagnosis_success_rate": 0.95,
+  "average_interaction_rounds": 0.55,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 0.95,
+  "support_usability_score": null,
+  "usability_scored_cases": 0,
+  "average_tokens": 14080.35
+ },
+ "challenge": {
+  "case_count": 12,
+  "diagnosis_success_rate": 0.9166666666666666,
+  "average_interaction_rounds": 0.75,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 0.9166666666666666,
+  "support_usability_score": null,
+  "usability_scored_cases": 0,
+  "average_tokens": 14181.166666666666
+ }
+}

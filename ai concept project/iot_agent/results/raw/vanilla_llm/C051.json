@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C051",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint explicitly states the back door sensor shows a low battery and has gone offline. This matches the BATTERY_LOW label: battery camera/sensor offline or misses events, live view fails to start. No other issues are reported, and the customer has not checked the rest of the system, so we cannot infer other problems.",
+ "output": {
+  "repair_steps": [
+   "Replace the battery with a fresh one of the correct type.",
+   "Ensure the battery is inserted with correct polarity.",
+   "Close the sensor cover securely to engage the tamper switch.",
+   "Check the app to see if the sensor comes back online.",
+   "If still offline, move the sensor close to the base station and re-check.",
+   "If the sensor remains offline, perform a factory reset on the sensor and re-pair it."
+  ],
+  "customer_reply": "Thank you for letting us know. Changing the battery is the right first step. After replacing it, please check if the sensor comes back online in the app. If it remains offline, try moving it closer to the base station temporarily to rule out signal issues. Also, ensure the battery is inserted correctly and the sensor's tamper switch is closed. If the problem persists, let us know and we can investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.3,
+ "llm_calls": 1,
+ "tokens": 868,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "The back door sensor shows a low battery and has gone offline, so I'll change the battery tonight. While I have you on the line, is there anything else I should check? I haven't looked at the rest of the system today, I've been at work.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with step-by-step guidance and a reasonable escalation path. It avoids claiming any checks or fixes were completed, consistent with the session record showing no actions performed. Minor deduction because the customer asked broadly about checking the rest of the system, and the response focuses only on the sensor rather than addressing that broader question."
+}

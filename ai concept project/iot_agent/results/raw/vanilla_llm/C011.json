@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C011",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes a new device that cannot be added and pairing times out after 120 seconds, which matches the PAIR_TIMEOUT label. The user removed the old device from the app, and other devices work, so the issue is isolated to the new sensor's pairing process.",
+ "output": {
+  "repair_steps": [
+   "Ensure the new sensor is in pairing mode (LED blinking).",
+   "Place the sensor within 1-3 feet of the base station during pairing.",
+   "Remove the sensor from the app if it appears, then retry adding.",
+   "Power cycle the base station and retry pairing.",
+   "If pairing still times out, try a factory reset on the sensor (if applicable) and attempt again.",
+   "If the issue persists, consider replacing the sensor as it may be defective."
+  ],
+  "customer_reply": "Thank you for the details. Since the pairing process is timing out, let's try a few steps to resolve this. Please ensure the sensor is in pairing mode (LED blinking) and within range of the base station. If it still fails, we can try resetting the sensor and attempting again. If the issue persists, we may need to replace the sensor."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 9.9,
+ "llm_calls": 1,
+ "tokens": 909,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "I'm replacing a broken door sensor. I removed the old one from the app, but the replacement just times out when I try to add it, and the app says pairing expired after two minutes. My brother is an electrician and says the new sensor is probably defective, so I'm thinking of returning it. Everything else in the system works.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and provides actionable troubleshooting steps (pairing mode, proximity, removal/retry, power cycle, factory reset). It avoids claiming any checks or fixes were completed, since no actions were performed in the session. It appropriately frames replacement as a last resort rather than asserting the sensor is defective. Minor deduction: it doesn't ask clarifying questions or confirm which steps the customer already tried, and the 'repair_steps' vs 'customer_reply' duplication is slightly redundant."
+}

@@ -1,0 +1,348 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C033",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Base station is online with uplink_status \"ok\" and local live view works, but logs show repeated E-503 \"cloud reporting failed\" and no events reach the cloud (no push notifications, no remote clips). The customer already completed the full L1 fix sequence (router reboot, base station reboot, DNS set to automatic) and E-503 persists, which per the fault code reference and historical case H-06 indicates a cloud-channel/certificate issue requiring FAE escalation.",
+ "output": {
+  "symptom_summary": "Base station HB-200 (fw 4.2) is online with uplink_status ok and local live view works, but cloud event reporting fails with repeated E-503 errors. No push notifications or remote clips are received, and the issue persists after router reboot, base station reboot, and DNS set to automatic.",
+  "suspected_root_cause": "Cloud channel or certificate issue on the base station or backend, as indicated by persistent E-503 despite normal uplink and local functionality.",
+  "key_abnormal_indicators": [
+   "E-503 cloud reporting failed repeatedly",
+   "Base station online with uplink_status ok",
+   "Local live view works",
+   "No events reach cloud (no push notifications, no remote clips)",
+   "L1 fix sequence completed (router reboot, base station reboot, DNS automatic) but E-503 persists",
+   "Historical case H-06: similar symptoms resolved by FAE escalation due to expired device certificate"
+  ],
+  "customer_reply": "We've identified an issue with your system's cloud connection that requires further investigation by our engineering team. An engineer will follow up with you shortly to resolve this. Thank you for your patience.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": [
+     "E-503"
+    ]
+   },
+   "affected_devices": [],
+   "escalation_rules": [],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "BS_NETWORK_DOWN",
+   "tier": "L1",
+   "evidence": "E-503 cloud reporting failure while base online"
+  }
+ ],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 cloud reporting failed uplink blocked push notifications not received"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "UPLINK_BLOCKED_PERSIST",
+    "rationale": "Base station is online with uplink_status \"ok\" and local live view works, but logs show repeated E-503 \"cloud reporting failed\" and no events reach the cloud (no push notifications, no remote clips). The customer already completed the full L1 fix sequence (router reboot, base station reboot, DNS set to automatic) and E-503 persists, which per the fault code reference and historical case H-06 indicates a cloud-channel/certificate issue requiring FAE escalation."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "E-503 cloud reporting failed repeatedly"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_local",
+      "name": "Local Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "E-503 cloud reporting failed repeatedly",
+     "local stream remains available",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 cloud reporting failed uplink blocked push notifications not received"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-07 Missing motion alerts after base update",
+      "text": "SEN-M1 on firmware 1.1 stopped reporting after base update to 4.5 with E-305. OTA to 1.4 succeeded and alerts resumed. Resolved at frontline. Note: initially escalated unnecessarily - an example of avoidable FAE workload."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 1,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-503"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_local",
+     "name": "Local Camera",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {
+   "E-503": [
+    "E-503 cloud reporting failed repeatedly"
+   ],
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "E-503 cloud reporting failed repeatedly",
+    "local stream remains available",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-503 Cloud reporting failed] The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue).",
+   "[historical_cases#H-06 Events not in cloud] Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly.",
+   "[historical_cases#H-07 Missing motion alerts after base update] SEN-M1 on firmware 1.1 stopped reporting after base update to 4.5 with E-305. OTA to 1.4 succeeded and alerts resumed. Resolved at frontline. Note: initially escalated unnecessarily - an example of avoidable FAE workload."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 22.9,
+ "llm_calls": 8,
+ "tokens": 24064,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "Local live view works fine on my home Wi-Fi, but I haven't received a single push notification since Tuesday, and when I'm out I can't see any clips. I rebooted the router, then the base station, and even set my router's DNS to automatic like the help article said. Still nothing. I've been on hold with my ISP and they insist the internet is fine.",
+ "user_turns": 0,
+ "console_calls": 4,
+ "usability_score": 3,
+ "usability_reason": "The reply is clear and polite, and it avoids overclaiming a fix by escalating to engineering. However, actionability is weak: it gives no timeframe, next steps, or interim workaround, and it does not acknowledge the customer's already-performed troubleshooting. The session record shows no questions asked and no actions performed, yet the response references E-503 errors, uplink_status, firmware, and a completed L1 fix sequence that are not supported by the session record, which undermines the requirement to avoid claiming checks not shown as completed."
+}

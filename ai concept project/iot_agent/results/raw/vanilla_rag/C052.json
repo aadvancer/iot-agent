@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C052",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes no push notifications while local siren works, indicating base station is online locally but events are not reaching the cloud. This matches UPLINK_BLOCKED_PERSIST, which is an L2 issue per escalation policy (standard frontline fix not applicable; historical case H-06 shows similar symptoms with E-503 and required backend fix).",
+ "output": {
+  "symptom_summary": "No push notifications on phones, but local siren works when alarm triggers. App reinstall did not help.",
+  "suspected_root_cause": "Base station online locally but events not reaching cloud, possibly due to expired device certificate or persistent uplink block.",
+  "key_abnormal_indicators": [
+   "No push notifications despite local alarm functioning",
+   "App reinstall on both phones did not resolve issue",
+   "Historical case H-06 with similar symptoms had E-503 and expired certificate"
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the issue appears to be with the connection between your base station and our cloud services, not the app version. We will escalate this to our advanced support team for further investigation."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.4,
+ "llm_seconds": 6.4,
+ "llm_calls": 1,
+ "tokens": 1248,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "Since last week we don't get any push notifications on our phones, even though the siren works when the alarm goes off at home. I reinstalled the app on both phones and it didn't help. Maybe the latest app version is just buggy? Is there an older version I can install?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clear, and it avoids claiming unperformed checks or fixes. However, actionability is limited: it offers no troubleshooting steps, no questions to gather needed information, and no concrete next steps beyond escalation. The root-cause suspicion is plausible but not supported by any session evidence, and the customer's question about an older app version is not directly answered."
+}

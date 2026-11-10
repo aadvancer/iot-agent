@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C040",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The entry sensor fails even when placed next to the base station after a factory reset, which matches the escalation policy condition (5) and the HW_FAULT_SUSPECTED label. The customer also mentioned dropping the sensor on tiles, which could have caused physical damage.",
+ "output": {
+  "symptom_summary": "Entry sensor fails to connect even when placed next to the base station after a factory reset. Other sensors work fine. The sensor was dropped on tiles while changing the battery.",
+  "suspected_root_cause": "Hardware fault due to physical impact from dropping the sensor.",
+  "key_abnormal_indicators": [
+   "Sensor fails next to base station after factory reset",
+   "Other sensors work normally",
+   "History of physical impact (dropped on tiles)"
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the sensor likely has a hardware fault, possibly from the drop. We will escalate this to our advanced support team for further diagnosis and possible replacement."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 4.6,
+ "llm_seconds": 4.5,
+ "llm_calls": 1,
+ "tokens": 1205,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "The entry sensor still fails next to the base station after a reset; the other sensors work. It worked for a year, then died after I dropped it on the tiles while changing the battery. Could it be signal? The entry is three walls away from the base in normal use, but I tested it right next to the base.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable in that it escalates to advanced support for diagnosis/replacement. It correctly avoids claiming any checks or fixes were performed, since the session record shows no questions asked or actions taken. It does not overclaim a confirmed root cause, framing the hardware fault as likely. Minor deduction because actionability is limited to escalation without concrete next steps for the customer."
+}

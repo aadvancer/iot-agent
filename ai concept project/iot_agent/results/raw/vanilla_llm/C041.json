@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C041",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes a single device (garage camera) offline while other devices work fine, and the customer suspects weak signal due to distance. This matches WEAK_SIGNAL: single device intermittently offline, delayed notifications, choppy live view. No other symptoms suggest network-wide issues, pairing, battery, storage, or firmware problems.",
+ "output": {
+  "repair_steps": [
+   "Check the signal strength indicator in the app for the garage camera.",
+   "Move the camera temporarily closer to the base station to see if it comes online.",
+   "If it works closer, consider installing a Wi-Fi range extender or relocating the base station to a more central location.",
+   "Ensure no new obstructions or interference sources (e.g., large metal objects, other electronics) are near the camera or base station.",
+   "If the camera remains offline even when close to the base station, perform a factory reset and re-pair it."
+  ],
+  "customer_reply": "Thank you for the details. Based on the information provided, the issue with your garage camera is likely due to a weak Wi-Fi signal, as it is located at the far end of your house. We recommend trying a Wi-Fi range extender or moving the camera closer to the base station to improve connectivity. If the problem persists, please contact our support team for further assistance."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.4,
+ "llm_calls": 1,
+ "tokens": 921,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "Our garage camera has been offline for two days. The garage is at the far end of the house, so I assume the signal is just too weak out there. Is there a booster or repeater I can buy? Everything else seems to work fine and I haven't changed anything in the app.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable troubleshooting steps, but it assumes a weak-signal root cause without any diagnostic evidence from the session (no questions asked, no actions performed). It also does not claim checks were completed, which is good, but the customer reply prematurely concludes the cause is likely weak Wi-Fi rather than framing it as a hypothesis to verify. Usability is moderate: steps are clear and actionable, but the diagnosis is unsupported by the record."
+}

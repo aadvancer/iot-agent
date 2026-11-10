@@ -1,0 +1,257 @@
+{
+ "system": "react",
+ "case_id": "C031",
+ "pred_root_cause": "BATCH_LINK_FAILURE",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Three sub-GHz sensors (door_back, motion_living, win_bed) dropped simultaneously while the base station remains online and cameras/other sensors are fine. The base station log shows E-610 \"radio module self-test warning,\" and the KB/historical case H-05 confirm that E-610 with multiple simultaneous peripheral drops indicates a base-station radio module fault requiring FAE escalation (radio module replacement). The customer's Wi-Fi router relocation is unrelated since these sensors use sub-GHz, not Wi-Fi.",
+ "output": {
+  "symptom_summary": "Three sub-GHz sensors (Back Door, Living Motion, Bedroom Window) went offline simultaneously while the base station and all cameras/other sensors remained online. Customer moved Wi-Fi router recently but sensors use sub-GHz, not Wi-Fi.",
+  "suspected_root_cause": "Base station sub-GHz radio module fault indicated by E-610 self-test warning and simultaneous drop of multiple sub-GHz peripherals.",
+  "key_abnormal_indicators": [
+   "Base station log contains E-610 'radio module self-test warning'",
+   "Three sub-GHz sensors offline simultaneously (door_back, motion_living, win_bed)",
+   "All other devices (cameras, other sensors) online",
+   "Base station online with uplink ok",
+   "Offline sensors have normal battery levels (81%, 74%, 66%) and no RSSI data",
+   "Historical case H-05 matches: E-610 with multiple simultaneous drops, resolved by radio module replacement"
+  ],
+  "customer_reply": "Thank you for the details. Our diagnostics indicate a hardware issue with the base station's radio module, not your Wi-Fi router. I've escalated this to our engineering team, and they will contact you shortly to arrange a replacement. No further action is needed from you at this time."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-610"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_bed"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-610 error code"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-610"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_living",
+      "name": "Living Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_bed",
+      "name": "Bedroom Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-610"
+   },
+   "result": {
+    "lines": [
+     "E-610 radio module self-test warning"
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   },
+   "result": {
+    "id": "door_back",
+    "name": "Back Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 81,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   },
+   "result": {
+    "id": "motion_living",
+    "name": "Living Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": null,
+    "battery": 74,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_bed"
+   },
+   "result": {
+    "id": "win_bed",
+    "name": "Bedroom Window",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 66,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-610 error code"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-610 Radio module error",
+      "text": "Logged by the base station when its sub-GHz radio fails self-test or multiple peripherals drop simultaneously. Always escalate to FAE."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#Local storage",
+      "text": "Event clips are stored on the base station's internal eMMC (HB-100: 16 GB, HB-200: 32 GB). When loop recording is disabled and storage reaches 98 percent, new events are not recorded and error E-402 is shown. Enable loop recording in Base Station Settings > Storage, or format the storage after exporting clips."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 17.1,
+ "llm_calls": 4,
+ "tokens": 8837,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "Several devices dropped at once although the base station is still online. Around breakfast the app showed the garden door sensor, the living room motion sensor and the bedroom window sensor as offline. I moved the Wi-Fi router about 2 m last week, so I assume the new position is causing interference. Everything else is working.",
+ "user_turns": 0,
+ "console_calls": 6,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it gives a concrete next step (escalation and replacement arrangement). However, actionability is limited because no diagnostic questions or customer-performed checks are shown in the session record, yet the reply asserts that diagnostics indicate a hardware fault and references specific log evidence (E-610) and historical case data not shown as collected or verified in the record. It avoids asking the customer to do unnecessary troubleshooting, but it overstates completed diagnostic certainty relative to the recorded session."
+}

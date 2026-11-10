@@ -1,0 +1,370 @@
+{
+ "system": "rules_only",
+ "case_id": "C014",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "8/8 slots used",
+ "output": {
+  "repair_steps": [
+   "Remove an unused device from the base station, or move devices to a second base station."
+  ],
+  "customer_reply": "We have identified the likely cause and will guide you through the fix."
+ },
+ "rule_hints": [
+  {
+   "cause": "CAPACITY_EXCEEDED",
+   "tier": "L1",
+   "evidence": "8/8 slots used"
+  },
+  {
+   "cause": "BATTERY_LOW",
+   "tier": "L1",
+   "evidence": "old_test battery 0%"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "old_test"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "old_test"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-201"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_drive",
+      "name": "Driveway Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "old_test",
+      "name": "Old Test Sensor",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "new_door",
+      "name": "New Door Sensor",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "old_test"
+   },
+   "result": {
+    "id": "old_test",
+    "name": "Old Test Sensor",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": null,
+    "battery": 0,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "pairing rejected: E-201 capacity reached (8/8)",
+     "23:57:40 remote app session authenticated",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "old_test"
+   },
+   "result": {
+    "device_id": "old_test",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-100",
+   "fw": "3.4",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-201"
+   ],
+   "max_devices": 8,
+   "supported_protocols": [
+    "v2"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 8,
+   "max_devices": 8,
+   "devices": [
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_drive",
+     "name": "Driveway Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_back",
+     "name": "Back Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "old_test",
+     "name": "Old Test Sensor",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "new_door",
+     "name": "New Door Sensor",
+     "model": "SEN-D1",
+     "bound_in_base": false,
+     "bound_in_app": false,
+     "status": "not_paired"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "old_test",
+   "new_door"
+  ],
+  "device_details": {
+   "old_test": {
+    "id": "old_test",
+    "name": "Old Test Sensor",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": null,
+    "battery": 0,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "old_test": {
+    "device_id": "old_test",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "pairing rejected: E-201 capacity reached (8/8)",
+    "23:57:40 remote app session authenticated",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 0.0,
+ "llm_calls": 0,
+ "tokens": 0,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "Pairing the new garage sensor fails immediately, within a second, with an error. It does not wait for the 120 seconds. I tested the sensor on a friend's system and it paired fine there, so I'm sure it isn't the sensor. I'm on the latest app version. What else can it be?",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and avoids claiming unperformed checks, but it is not actionable: it gives a single vague repair step without explaining how to remove a device or why this relates to the immediate pairing failure, and it does not ask any diagnostic questions despite no session actions being recorded. Clarity is limited and the customer is not actually guided through a fix."
+}

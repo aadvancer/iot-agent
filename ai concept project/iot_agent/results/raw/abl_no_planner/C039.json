@@ -1,0 +1,425 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C039",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [
+  {
+   "rule": "R5_HW_PERSISTS",
+   "evidence": "customer: 'Give me a moment to hold the reset button for 5 seconds and watch it closely, and I'll tell you what the LED does' / 'When the customer holds the workshop sensor next to the base station and presses the reset button, does the sensor's LED'"
+  }
+ ],
+ "rationale": "The workshop door sensor (SEN-D1) is the only offline device while all other sensors from the same box are online, ruling out a base-station or setup problem. It has a fresh battery (75%), good signal (-60 dBm), and compatible firmware (v3 supported), yet shows no LED activity at all during a 5-second reset held directly next to the base station. A sensor that is completely dark with a new battery and good signal indicates a hardware fault requiring L2/FAE escalation.",
+ "output": {
+  "symptom_summary": "Workshop door sensor (SEN-D1) remains offline despite being bound, with fresh battery (75%), good RSSI (-60 dBm), and compatible firmware (v3). No LED activity observed during 5-second reset held next to base station.",
+  "suspected_root_cause": "Hardware fault in the sensor (SEN-D1) requiring L2/FAE escalation.",
+  "key_abnormal_indicators": [
+   "battery: 75%",
+   "rssi: -60 dBm",
+   "firmware: 1.3 (protocol v3, compatible)",
+   "LED: no activity during reset",
+   "status: offline while other sensors online"
+  ],
+  "customer_reply": "Thank you for your patience. Our advanced technical team will review your sensor's behavior and contact you within 1-2 business days with next steps. No further action is needed from you at this time.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": []
+   },
+   "affected_devices": [
+    {
+     "id": "door_workshop",
+     "name": "Workshop Door",
+     "model": "SEN-D1",
+     "fw": "1.3",
+     "rssi": -60,
+     "battery": 75,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [
+    {
+     "rule": "R5_HW_PERSISTS",
+     "evidence": "customer: 'Give me a moment to hold the reset button for 5 seconds and watch it closely, and I'll tell you what the LED does' / 'When the customer holds the workshop sensor next to the base station and presses the reset button, does the sensor's LED'"
+    }
+   ],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "HW_FAULT_SUSPECTED",
+   "tier": "L2",
+   "evidence": "still fails next to the base after a reset (customer: 'Give me a moment to hold the reset button for 5 seconds and watch it closely, and I'll tell you what the LED does' / 'When the customer holds the workshop sensor next to the base station and presses the reset button, does the sensor's LED')"
+  }
+ ],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer holds the workshop sensor next to the base station and presses the reset button, does the sensor's LED light up or blink at all? (Any LED activity, or completely dark?)"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "Could you ask the customer to do one more reset while watching the sensor closely: press and hold the reset button for 5 seconds with the new battery installed, and tell us whether the LED lights up or blinks at all (any color), or stays completely dark?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "What did the customer observe during the 5-second reset with the new battery installed — did the sensor's LED light up or blink at all (any color), or did it stay completely dark?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "HW_FAULT_SUSPECTED",
+    "rationale": "The workshop door sensor (SEN-D1) is the only offline device while all other sensors from the same box are online, ruling out a base-station or setup problem. It has a fresh battery (75%), good signal (-60 dBm), and compatible firmware (v3 supported), yet shows no LED activity at all during a 5-second reset held directly next to the base station. A sensor that is completely dark with a new battery and good signal indicates a hardware fault requiring L2/FAE escalation."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_workshop",
+      "name": "Workshop Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "device_id": "door_workshop",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_workshop"
+   },
+   "result": {
+    "lines": [
+     "door_workshop remains offline after peripheral reset",
+     "door_workshop RSSI -60 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer holds the workshop sensor next to the base station and presses the reset button, does the sensor's LED light up or blink at all? (Any LED activity, or completely dark?)"
+   },
+   "result": {
+    "answer": "I'm not sure — I didn't really pay attention to the LED when I reset it, so I can't tell you whether it lit up or blinked."
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Could you ask the customer to do one more reset while watching the sensor closely: press and hold the reset button for 5 seconds with the new battery installed, and tell us whether the LED lights up or blinks at all (any color), or stays completely dark?"
+   },
+   "result": {
+    "answer": "Sure, I can do that. Give me a moment to hold the reset button for 5 seconds and watch it closely, and I'll tell you what the LED does."
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "What did the customer observe during the 5-second reset with the new battery installed — did the sensor's LED light up or blink at all (any color), or did it stay completely dark?"
+   },
+   "result": {
+    "answer": "I just did the 5-second reset with the new battery in, and honestly I couldn't see the LED do anything — it looked completely dark to me."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_workshop",
+     "name": "Workshop Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "door_workshop"
+  ],
+  "device_details": {
+   "door_workshop": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "door_workshop": {
+    "device_id": "door_workshop",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "door_workshop": [
+    "door_workshop remains offline after peripheral reset",
+    "door_workshop RSSI -60 dBm"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "When the customer holds the workshop sensor next to the base station and presses the reset button, does the sensor's LED light up or blink at all? (Any LED activity, or completely dark?)",
+    "answer": "I'm not sure — I didn't really pay attention to the LED when I reset it, so I can't tell you whether it lit up or blinked."
+   },
+   {
+    "question": "Could you ask the customer to do one more reset while watching the sensor closely: press and hold the reset button for 5 seconds with the new battery installed, and tell us whether the LED lights up or blinks at all (any color), or stays completely dark?",
+    "answer": "Sure, I can do that. Give me a moment to hold the reset button for 5 seconds and watch it closely, and I'll tell you what the LED does."
+   },
+   {
+    "question": "What did the customer observe during the 5-second reset with the new battery installed — did the sensor's LED light up or blink at all (any color), or did it stay completely dark?",
+    "answer": "I just did the 5-second reset with the new battery in, and honestly I couldn't see the LED do anything — it looked completely dark to me."
+   }
+  ],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 13.1,
+ "llm_seconds": 35.2,
+ "llm_calls": 13,
+ "tokens": 33547,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "The workshop sensor will not report although it has good battery and was reset. I even put a brand new battery in and held it right against the base station while resetting it. The app shows it offline. The other sensors from the same box are perfect, so I don't think it is a setup problem.",
+ "user_turns": 3,
+ "console_calls": 5,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable (escalates to L2/FAE with a 1-2 business day callback and tells the customer no further action is needed). It accurately reflects the observed evidence: no LED activity during the 5-second reset, offline status, and other sensors working. It avoids claiming any unperformed checks or fixes. Minor deduction: the symptom summary includes battery/RSSI/firmware values not clearly established in the session record, and the escalation evidence quote is somewhat mismatched, but the core diagnosis and customer-facing message are well-supported and clear."
+}

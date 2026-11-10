@@ -1,0 +1,469 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C011",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The new SEN-D1 sensor was not paired (bound_in_base=false, bound_in_app=false) while the base station had ample capacity (5/16 used) and supported the sensor's v2 protocol. The log showed a single \"pairing request timed out after 120 seconds\". A careful retry of the standard pairing procedure (base station in pairing mode, battery reseat, SYNC button, within 1 m) succeeded, confirming a transient pairing timeout rather than a hardware fault.",
+ "output": {
+  "repair_steps": [
+   "Confirm the new sensor is now listed as online in the app and base station binding table.",
+   "Advise the customer to move the sensor to its final location and verify signal strength is adequate.",
+   "Check that the sensor's battery level is sufficient and firmware is up to date (SEN-D1 1.0 can be upgraded to 1.3 via OTA if needed).",
+   "Close the case as resolved at frontline."
+  ],
+  "customer_reply": "Great news! Your new sensor is now paired and connected. You can move it to its final location. If you notice any signal issues, try repositioning it closer to the base station. Your system is all set. Thank you for your patience!"
+ },
+ "rule_hints": [
+  {
+   "cause": "PAIR_TIMEOUT",
+   "tier": "L1",
+   "evidence": "device(s) ['sensor_pending'] not paired while capacity is available"
+  }
+ ],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "sensor_pending"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "sensor_pending"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 door sensor pairing timeout 120 seconds add device fails"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "sensor_pending"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer tries to pair the new sensor, does its LED blink blue after holding the SYNC button for 3 seconds, and is the sensor being held within 1 metre of the base station during pairing?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 firmware 1.0 pairing timeout fails to bind base station"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing timeout 120 seconds fix procedure retry base station pairing mode"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Have the customer retry pairing once, carefully: (1) In the app, tap Add Device and confirm the base station enters pairing mode (its LED should indicate pairing). (2) Remove the sensor's battery for 10 seconds, reinsert it. (3) Hold the SYNC button for 3 seconds until the LED blinks blue, keeping the sensor within 1 metre of the base station. (4) Wait for the app to confirm pairing (do not exit the screen). Report whether pairing succeeds or times out again.",
+    "target_cause": "PAIR_TIMEOUT"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "PAIR_TIMEOUT",
+    "rationale": "The new SEN-D1 sensor was not paired (bound_in_base=false, bound_in_app=false) while the base station had ample capacity (5/16 used) and supported the sensor's v2 protocol. The log showed a single \"pairing request timed out after 120 seconds\". A careful retry of the standard pairing procedure (base station in pairing mode, battery reseat, SYNC button, within 1 m) succeeded, confirming a transient pairing timeout rather than a hardware fault."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 5,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "sensor_pending",
+      "name": "New Sensor",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "sensor_pending"
+   },
+   "result": {
+    "id": "sensor_pending",
+    "name": "New Sensor",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "rssi": null,
+    "battery": 100,
+    "status": "not_paired"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "sensor_pending"
+   },
+   "result": {
+    "device_id": "sensor_pending",
+    "device_fw": "1.0",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 door sensor pairing timeout 120 seconds add device fails"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "sensor_pending"
+   },
+   "result": {
+    "lines": []
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer tries to pair the new sensor, does its LED blink blue after holding the SYNC button for 3 seconds, and is the sensor being held within 1 metre of the base station during pairing?"
+   },
+   "result": {
+    "answer": "Yes, the LED shows blue, and I'm holding the new sensor right beside the base station while pairing."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 firmware 1.0 pairing timeout fails to bind base station"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   },
+   "result": {
+    "lines": [
+     "pairing request timed out after 120 seconds"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing timeout 120 seconds fix procedure retry base station pairing mode"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "fault_codes#E-207 Binding write failed",
+      "text": "The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station."
+     },
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Have the customer retry pairing once, carefully: (1) In the app, tap Add Device and confirm the base station enters pairing mode (its LED should indicate pairing). (2) Remove the sensor's battery for 10 seconds, reinsert it. (3) Hold the SYNC button for 3 seconds until the LED blinks blue, keeping the sensor within 1 metre of the base station. (4) Wait for the app to confirm pairing (do not exit the screen). Report whether pairing succeeds or times out again."
+   },
+   "result": {
+    "outcome": "I did the retry exactly as you described, and this time it paired successfully. The app now shows the new sensor as connected."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 5,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "sensor_pending",
+     "name": "New Sensor",
+     "model": "SEN-D1",
+     "bound_in_base": false,
+     "bound_in_app": false,
+     "status": "not_paired"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "sensor_pending"
+  ],
+  "device_details": {
+   "sensor_pending": {
+    "id": "sensor_pending",
+    "name": "New Sensor",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "rssi": null,
+    "battery": 100,
+    "status": "not_paired"
+   }
+  },
+  "firmware_compat": {
+   "sensor_pending": {
+    "device_id": "sensor_pending",
+    "device_fw": "1.0",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "sensor_pending": [],
+   "pair": [
+    "pairing request timed out after 120 seconds"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "When the customer tries to pair the new sensor, does its LED blink blue after holding the SYNC button for 3 seconds, and is the sensor being held within 1 metre of the base station during pairing?",
+    "answer": "Yes, the LED shows blue, and I'm holding the new sensor right beside the base station while pairing."
+   }
+  ],
+  "fix_attempts": [
+   {
+    "action": "Have the customer retry pairing once, carefully: (1) In the app, tap Add Device and confirm the base station enters pairing mode (its LED should indicate pairing). (2) Remove the sensor's battery for 10 seconds, reinsert it. (3) Hold the SYNC button for 3 seconds until the LED blinks blue, keeping the sensor within 1 metre of the base station. (4) Wait for the app to confirm pairing (do not exit the screen). Report whether pairing succeeds or times out again.",
+    "target_cause": "PAIR_TIMEOUT",
+    "outcome": "I did the retry exactly as you described, and this time it paired successfully. The app now shows the new sensor as connected.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[historical_cases#H-02 Cannot add ninth sensor] HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline.",
+   "[manual_peripherals#Pairing a peripheral] Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location.",
+   "[manual_peripherals#Peripheral firmware and OTA] Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3.",
+   "[fault_codes#E-305 Protocol / firmware mismatch] The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict.",
+   "[fault_codes#E-207 Binding write failed] The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station.",
+   "[escalation_policy#Close at frontline (L1)] Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+  ]
+ },
+ "wall_seconds": 0.3,
+ "llm_seconds": 48.8,
+ "llm_calls": 16,
+ "tokens": 49224,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "I'm replacing a broken door sensor. I removed the old one from the app, but the replacement just times out when I try to add it, and the app says pairing expired after two minutes. My brother is an electrician and says the new sensor is probably defective, so I'm thinking of returning it. Everything else in the system works.",
+ "user_turns": 2,
+ "console_calls": 6,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, and it correctly reflects that pairing succeeded per the session record. However, the repair_steps include checks (online status, signal strength, battery/firmware) that are not shown as completed in the session, which slightly weakens adherence to the no-unsupported-claims criterion. The customer reply itself avoids overclaiming and gives appropriate next steps."
+}

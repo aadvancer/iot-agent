@@ -1,0 +1,335 @@
+{
+ "system": "abl_no_memory",
+ "case_id": "C048",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station had only 6 of 8 device slots used, so capacity was not the issue. The customer was attempting pairing from downstairs (far from the base station) and only tapped the SYNC button instead of holding it for 3 seconds, so the sensor never entered pairing mode. After walking through the correct procedure (within 1 metre, hold SYNC 3s, base station in pairing mode), the sensor paired immediately and shows online.",
+ "output": {
+  "repair_steps": [
+   "Confirm the new window sensor is now online in the app and bound to the base station.",
+   "Advise the customer to mount the sensor in its final location and test it by opening/closing the window.",
+   "Remind the customer to always pair devices within 1 metre of the base station and hold the SYNC button for 3 seconds until the LED blinks blue.",
+   "Close the case as resolved."
+  ],
+  "customer_reply": "Great news! Your new window sensor is now paired and online. You can now mount it in its final location and test it by opening and closing the window. For future pairings, remember to keep the device within 1 metre of the base station and hold the SYNC button for 3 seconds until the LED blinks blue. If you need further help, just let us know!"
+ },
+ "rule_hints": [
+  {
+   "cause": "PAIR_TIMEOUT",
+   "tier": "L1",
+   "evidence": "device(s) ['win_new'] not paired while capacity is available"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "win_new"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "PAIR_TIMEOUT sensor pairing fails 120 seconds standard fix procedure"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "When pairing the new window sensor, was the sensor held within 1 metre of the base station, and did its LED blink blue after holding the SYNC button for 3 seconds? Also, was the base station LED blinking blue (pairing mode) at the time?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer through the correct pairing procedure: (1) In the app, tap Add Device to put the base station into pairing mode and confirm its LED is blinking blue. (2) Bring the new window sensor within 1 metre of the base station (upstairs in the office). (3) Hold the SYNC button for a full 3 seconds until the sensor LED blinks blue. (4) Wait for pairing to complete within 120 seconds. Report whether pairing succeeds.",
+    "target_cause": "PAIR_TIMEOUT"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "PAIR_TIMEOUT",
+    "rationale": "The base station had only 6 of 8 device slots used, so capacity was not the issue. The customer was attempting pairing from downstairs (far from the base station) and only tapped the SYNC button instead of holding it for 3 seconds, so the sensor never entered pairing mode. After walking through the correct procedure (within 1 metre, hold SYNC 3s, base station in pairing mode), the sensor paired immediately and shows online."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_new",
+      "name": "New Window",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "win_new"
+   },
+   "result": {
+    "lines": []
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "PAIR_TIMEOUT sensor pairing fails 120 seconds standard fix procedure"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "When pairing the new window sensor, was the sensor held within 1 metre of the base station, and did its LED blink blue after holding the SYNC button for 3 seconds? Also, was the base station LED blinking blue (pairing mode) at the time?"
+   },
+   "result": {
+    "answer": "I'm not sure about the distance — the base station is upstairs in the office and I was downstairs on the sofa when I tried. I pressed the button once and the LED flashed once and went off; I didn't hold it for 3 seconds, and I couldn't tell you what color it was. I also don't know whether the base station LED was blinking blue — I couldn't see it from where I was."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer through the correct pairing procedure: (1) In the app, tap Add Device to put the base station into pairing mode and confirm its LED is blinking blue. (2) Bring the new window sensor within 1 metre of the base station (upstairs in the office). (3) Hold the SYNC button for a full 3 seconds until the sensor LED blinks blue. (4) Wait for pairing to complete within 120 seconds. Report whether pairing succeeds."
+   },
+   "result": {
+    "outcome": "I took the sensor upstairs to the office, held the SYNC button for a full 3 seconds, and the LED blinked blue and it paired straight away. It's showing as online in the app now."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-100",
+   "fw": "3.4",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 8,
+   "supported_protocols": [
+    "v2"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 8,
+   "devices": [
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_back",
+     "name": "Back Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_new",
+     "name": "New Window",
+     "model": "SEN-D1",
+     "bound_in_base": false,
+     "bound_in_app": false,
+     "status": "not_paired"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "win_new"
+  ],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {
+   "win_new": []
+  },
+  "customer_answers": [
+   {
+    "question": "When pairing the new window sensor, was the sensor held within 1 metre of the base station, and did its LED blink blue after holding the SYNC button for 3 seconds? Also, was the base station LED blinking blue (pairing mode) at the time?",
+    "answer": "I'm not sure about the distance — the base station is upstairs in the office and I was downstairs on the sofa when I tried. I pressed the button once and the LED flashed once and went off; I didn't hold it for 3 seconds, and I couldn't tell you what color it was. I also don't know whether the base station LED was blinking blue — I couldn't see it from where I was."
+   }
+  ],
+  "fix_attempts": [
+   {
+    "action": "Walk the customer through the correct pairing procedure: (1) In the app, tap Add Device to put the base station into pairing mode and confirm its LED is blinking blue. (2) Bring the new window sensor within 1 metre of the base station (upstairs in the office). (3) Hold the SYNC button for a full 3 seconds until the sensor LED blinks blue. (4) Wait for pairing to complete within 120 seconds. Report whether pairing succeeds.",
+    "target_cause": "PAIR_TIMEOUT",
+    "outcome": "I took the sensor upstairs to the office, held the SYNC button for a full 3 seconds, and the LED blinked blue and it paired straight away. It's showing as online in the app now.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[manual_peripherals#Pairing a peripheral] Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location.",
+   "[historical_cases#H-02 Cannot add ninth sensor] HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline.",
+   "[manual_base_station#LED status indicators] Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+  ]
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 24.8,
+ "llm_calls": 9,
+ "tokens": 18507,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "My new window sensor won't pair. I think we've hit the maximum number of devices, my neighbour had the same problem with the same base station. Do I need to buy the bigger base station? I've tried three times from the living room sofa and it fails every time.",
+ "user_turns": 2,
+ "console_calls": 3,
+ "usability_score": 5,
+ "usability_reason": "The response is clear, polite, and actionable. It confirms the sensor is online (supported by the customer's report), gives concrete next steps (mount and test), and provides a helpful reminder about correct pairing procedure. It avoids unsupported claims about fixes or checks not shown in the record, and does not incorrectly assert a maximum-device limit or recommend buying a bigger base station."
+}

@@ -1,0 +1,238 @@
+{
+ "system": "react",
+ "case_id": "C034",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station is online with uplink_status \"ok\" and all 7 devices bound and online, yet the log shows \"E-503 cloud reporting failed repeatedly\" and no events have reached the cloud since yesterday evening. This matches historical case H-06 (expired device certificate / cloud channel issue), which the KB explicitly directs to escalate to FAE when E-503 persists while the base station is online. The customer's account password change is unrelated to the base station's own cloud reporting channel.",
+ "output": {
+  "symptom_summary": "Base station online with uplink_status 'ok' and all 7 devices bound and online, but no events have reached the cloud since yesterday evening. Logs show persistent E-503 'cloud reporting failed repeatedly'.",
+  "suspected_root_cause": "Cloud channel or device certificate issue on the backend, consistent with historical case H-06 (expired device certificate).",
+  "key_abnormal_indicators": [
+   "E-503 cloud reporting failed repeatedly",
+   "No events in cloud since yesterday evening",
+   "Base station online with uplink_status 'ok'",
+   "All 7 devices bound and online",
+   "Local app session works on home network"
+  ],
+  "customer_reply": "Thank you for your patience. We've identified that the issue is with the cloud connection on our side, not your account or devices. Our engineering team will investigate and follow up with you shortly. No further action is needed from you at this time."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 cloud reporting failed uplink blocked"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cloud"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "certificate"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_local",
+      "name": "Local Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "E-503 cloud reporting failed repeatedly",
+     "local stream remains available",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 cloud reporting failed uplink blocked"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "E-503 cloud reporting failed repeatedly"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cloud"
+   },
+   "result": {
+    "lines": [
+     "E-503 cloud reporting failed repeatedly"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "certificate"
+   },
+   "result": {
+    "lines": []
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 16.1,
+ "llm_calls": 5,
+ "tokens": 11513,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "The base station is online, but none of today's events appeared in the cloud, and the app timeline has been empty since yesterday evening. I changed my account password last week; could that be the problem? I already logged out and in again and removed and re-added the account on my phone.",
+ "user_turns": 0,
+ "console_calls": 6,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it avoids asking the customer to repeat steps. However, it is only partially actionable: it tells the customer no further action is needed but gives no timeline or next step beyond a vague follow-up. It also asserts specific diagnostic findings (E-503 logs, uplink_status, all 7 devices bound, local app session works) that do not appear in the session record, since no questions were asked and no actions were performed. The root-cause label is plausible but not supported by the recorded session, so it should not be credited."
+}

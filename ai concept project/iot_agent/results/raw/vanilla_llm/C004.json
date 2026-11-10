@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C004",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Single device offline while others are fine suggests a localized issue. The customer tried power cycling and router restart, but the camera remains offline. Since it's the oldest device, it may have weaker signal or degraded hardware, but without tools, WEAK_SIGNAL is the most likely L1 cause.",
+ "output": {
+  "repair_steps": [
+   "Move the kitchen camera closer to the base station to test connectivity.",
+   "Check for physical obstructions or interference sources (e.g., microwave, thick walls) near the camera.",
+   "If the camera reconnects when closer, consider relocating it or adding a range extender.",
+   "If the camera still does not reconnect, try a factory reset and re-pairing.",
+   "If the issue persists after reset, escalate to L2 for hardware diagnostics."
+  ],
+  "customer_reply": "Thank you for the details. Since your other devices are working, the issue is likely specific to the kitchen camera. It may be experiencing a weak signal or interference. Please try moving the camera closer to the base station temporarily to see if it reconnects. If it does, consider relocating it permanently or adding a range extender."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.4,
+ "llm_calls": 1,
+ "tokens": 937,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "My kitchen camera disappeared this morning. It says offline. I already unplugged it and plugged it back in, tried a different power socket, and even restarted my Wi-Fi router because I assumed that is what the camera uses. The garden camera and the door sensor are fine, which is why I'm confused. The kitchen camera is the oldest one I own.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and provides actionable troubleshooting steps (move closer, check interference, reset/re-pair, escalate). It avoids claiming any checks or fixes were completed, since the session record shows no actions performed. Minor deduction because the customer already restarted the router and power-cycled the camera, and the response could acknowledge those steps more explicitly, but it does not falsely claim them as done."
+}

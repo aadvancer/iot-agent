@@ -37,7 +37,10 @@ Return JSON: {{"matched_action": "<key or none>", "report": "<what you tell the 
 class UserSimulator:
     def __init__(self, case: dict):
         self.case = case
-        app_view = {d["name"]: d["status"] for d in case["hidden_state"]["devices"]}
+        # the app does not list devices the customer deleted (a ghost binding may still occupy a
+        # base-station slot); devices being paired stay visible as the customer is pairing them
+        app_view = {d["name"]: d["status"] for d in case["hidden_state"]["devices"]
+                    if d["bound_in_app"] or d["status"] == "not_paired"}
         self.system = SYSTEM_TEMPLATE.format(
             complaint=case["complaint"],
             knowledge=json.dumps(case["user_knowledge"], indent=2, ensure_ascii=False),

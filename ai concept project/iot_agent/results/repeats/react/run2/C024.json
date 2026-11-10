@@ -1,0 +1,162 @@
+{
+ "system": "react",
+ "case_id": "C024",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Base station storage is at 99% with loop recording disabled, triggering error E-402 and the solid purple LED (storage >95%). This matches the customer's report that the timeline stops at the end of last month while live view and notifications still work, since those functions don't require writing new recordings. The firmware update was coincidental; the actual cause is full storage.",
+ "output": {
+  "repair_steps": [
+   "Guide customer to enable loop recording: Base Station Settings > Storage > toggle Loop Recording on.",
+   "If customer wants to keep existing clips, advise exporting them first via the app before enabling loop recording.",
+   "If loop recording is not desired, guide customer to format storage after exporting clips: Base Station Settings > Storage > Format Storage.",
+   "Confirm error E-402 clears and purple LED turns blue after action.",
+   "Advise customer to monitor storage usage periodically and consider enabling loop recording to prevent recurrence."
+  ],
+  "customer_reply": "Your base station storage is full (99%), which stopped new recordings. The purple light and error E-402 indicate this. To fix, enable loop recording in Base Station Settings > Storage, or export important clips and format storage. This will clear the error and resume recording. Live view and notifications were unaffected because they don't require storage. The firmware update was coincidental."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-402 storage full timeline stops recording"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-402"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 99,
+    "loop_recording": false,
+    "error_codes": [
+     "E-402"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 5,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-402 storage full timeline stops recording"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-402 Storage full",
+      "text": "Base station storage at or above 98 percent with loop recording disabled. Frontline action: enable loop recording or format storage."
+     },
+     {
+      "source": "manual_base_station#Local storage",
+      "text": "Event clips are stored on the base station's internal eMMC (HB-100: 16 GB, HB-200: 32 GB). When loop recording is disabled and storage reaches 98 percent, new events are not recorded and error E-402 is shown. Enable loop recording in Base Station Settings > Storage, or format the storage after exporting clips."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-402"
+   },
+   "result": {
+    "lines": [
+     "storage used 99%; loop recording disabled; E-402"
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 11.1,
+ "llm_seconds": 11.0,
+ "llm_calls": 4,
+ "tokens": 7613,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "I went to look at the footage of a delivery from last week and the timeline stops at the end of last month. There has been a purple light on the base station for a few days that I've been ignoring. Live view and notifications still work, so I assumed the system was fine. I think the cameras stopped recording after the last firmware update.",
+ "user_turns": 0,
+ "console_calls": 3
+}

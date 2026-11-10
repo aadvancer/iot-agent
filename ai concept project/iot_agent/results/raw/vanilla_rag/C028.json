@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C028",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera is the oldest model and stopped connecting after an overnight base station update, while the rest of the system remains fine. Repeated re-pairing attempts fail, which aligns with a protocol conflict between the old peripheral firmware and the updated base station firmware.",
+ "output": {
+  "symptom_summary": "Oldest camera cannot connect after base station update; re-pairing fails three times; other devices unaffected.",
+  "suspected_root_cause": "Protocol conflict between old camera firmware and updated base station firmware.",
+  "key_abnormal_indicators": [
+   "Issue started immediately after base station update",
+   "Only the oldest camera is affected",
+   "Repeated pairing attempts fail",
+   "Other devices remain functional"
+  ],
+  "customer_reply": "Thank you for the details. Since the issue started right after the base station update and only affects your oldest camera, it is likely a compatibility conflict between the camera's older firmware and the new base station firmware. We will need to check for a firmware update for the camera or perform a compatibility fix. Our advanced support team will assist you further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.7,
+ "llm_seconds": 5.7,
+ "llm_calls": 1,
+ "tokens": 1148,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "My office camera no longer connects since the overnight base station update. I've tried to re-add it three times and each time it says it can't connect. It is the oldest camera I have, from the first package three years ago. The rest of the system is fine, so I'm hesitant to blame the update.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it summarizes the symptom accurately. However, actionability is weak: it only says the advanced support team 'will assist' and vaguely mentions checking for a firmware update or compatibility fix, without concrete steps the customer can take. It also implies a diagnosis (protocol/firmware conflict) without any checks shown as completed in the session record, which contains no questions asked or actions performed. It avoids claiming fixes were done, but the root-cause assertion is unsupported by evidence."
+}

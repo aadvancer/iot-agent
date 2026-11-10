@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C001",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The living room camera intermittently goes offline while other devices are fine, and the issue started after moving the base station to the study, which likely increased distance or introduced obstacles, causing weak signal.",
+ "output": {
+  "repair_steps": [
+   "Move the base station to a more central location, ideally closer to the living room camera.",
+   "Ensure the base station is not placed near large metal objects, thick walls, or other electronics that may cause interference.",
+   "If possible, move the camera slightly or adjust its antenna orientation to improve signal strength.",
+   "Check the signal strength indicator in the app for the living room camera; if it shows weak signal, consider adding a Wi-Fi extender or repositioning the base station.",
+   "After repositioning, monitor the camera for 24-48 hours to see if the offline incidents decrease."
+  ],
+  "customer_reply": "Thank you for the details. Since only the living room camera is affected and the issue began after relocating the base station, it's likely the camera is now too far from the base station or there are new obstacles interfering with the wireless signal. We can try some steps to improve the connection without replacing the camera."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 8.6,
+ "llm_calls": 1,
+ "tokens": 954,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "My living room camera keeps going offline a few times a day, then comes back by itself. The other devices seem fine. It started about a week ago, around when we rearranged the flat and I moved the base station into the study to free up a socket in the hallway. I've restarted the camera several times and checked that it is plugged in properly. My partner thinks the camera is faulty and wants to return it, but I'd rather not buy anything new if I can avoid it.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering concrete repositioning and monitoring steps. It avoids claiming any checks or fixes were completed, since no actions were performed. It reasonably ties the issue to the base station move without overclaiming a confirmed root cause. Minor deduction because some steps assume app signal-strength visibility and the response could more explicitly frame these as suggestions to try rather than likely fixes."
+}

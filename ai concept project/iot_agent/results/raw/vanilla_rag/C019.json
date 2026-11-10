@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C019",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The side-door sensor is offline and misses events, but the base station and other devices are not reported offline. The customer suspects misalignment after repainting, which could affect the sensor's wireless signal or physical placement. This matches WEAK_SIGNAL: single device intermittently offline, delayed notifications, choppy live view.",
+ "output": {
+  "repair_steps": [
+   "Check the physical mounting of the side-door sensor; ensure it is securely attached and aligned with the magnet.",
+   "Verify that the sensor is within the recommended range of the base station and that there are no new obstructions (e.g., paint, metal) interfering with the signal.",
+   "If the sensor has a battery, check and replace it if low.",
+   "If the issue continues, remove and re-pair the sensor using the app.",
+   "If re-pairing fails or the sensor remains offline, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. Since only the side-door sensor is affected and the base station appears online, the issue is likely due to a weak signal or physical misalignment after the repainting. Please check that the sensor is properly mounted and aligned, and ensure it is within range of the base station. If the problem persists, we can guide you through re-pairing the sensor."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.5,
+ "llm_seconds": 6.4,
+ "llm_calls": 1,
+ "tokens": 1250,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The side-door sensor shows offline and the app sends me an alert every few hours. I opened the door to test it and nothing happened. We had the house repainted last week and the painter may have bumped the sensor, so I think it is misaligned. I haven't touched it since.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and provides actionable troubleshooting steps (checking mounting/alignment, range/obstructions, battery, re-pairing, contacting support). It appropriately avoids claiming any checks or fixes were completed, since the session record shows no actions performed. The customer reply reasonably infers likely causes without asserting unverified fixes. Minor deduction only because the response could more explicitly acknowledge the customer's own misalignment hypothesis and confirm no diagnostics were run."
+}

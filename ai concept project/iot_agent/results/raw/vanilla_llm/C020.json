@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C020",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint states the attic motion detector misses events and a battery warning appeared today. The primary current indicator is the battery warning, which directly explains missed events and is the most actionable root cause. The earlier missed event last week could be due to intermittent low battery or other transient issues, but without further data, battery low is the most likely cause. Heat damage is speculative and not supported by the provided information.",
+ "output": {
+  "repair_steps": [
+   "Replace the battery in the attic motion detector with a new one of the correct type.",
+   "After replacement, verify the battery level in the app shows full or normal.",
+   "Test the sensor by triggering motion and confirming the event is recorded and notification received.",
+   "If the sensor still misses events after battery replacement, contact support for further diagnosis."
+  ],
+  "customer_reply": "Your motion detector's battery is low, which can cause it to miss events. Please replace the battery with a fresh one and test the sensor. If it continues to miss events after battery replacement, we can investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.6,
+ "llm_calls": 1,
+ "tokens": 846,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The attic motion detector misses events; its battery warning appeared today. But it also missed an event last week, well before the warning, so I'm not sure the battery is the cause. It was boiling up there all summer, so maybe the heat damaged it. Should I replace the whole sensor?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable steps (replace battery, verify level, test, escalate). However, it asserts the battery is low as the cause without any diagnostic evidence in the session record, and it does not address the customer's key concerns—the pre-warning missed event and possible heat damage—nor answer whether to replace the whole sensor. The claim of a low battery is unsupported by the record."
+}

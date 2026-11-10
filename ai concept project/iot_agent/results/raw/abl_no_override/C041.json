@@ -1,0 +1,633 @@
+{
+ "system": "abl_no_override",
+ "case_id": "C041",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The Garage Cam (CAM-I2, a wired camera with no battery) is the only offline device while the base station and all 5 other devices are healthy, ruling out system-level causes. Firmware/protocol are compatible (v3 supported), and RSSI -83 dBm would only explain intermittent drops, not a fully dark LED. The decisive evidence is that the LED stays completely dark even after the customer confirmed the power adapter is firmly connected and re-plugged it — a powered camera with weak signal would still light its LED, so this indicates a hardware/power fault requiring escalation.",
+ "output": {
+  "symptom_summary": "Garage Cam (CAM-I2) is the only offline device; base station and 5 other devices are online. The camera's LED remains completely dark even after confirming power adapter is firmly connected and re-plugging it.",
+  "suspected_root_cause": "Hardware or power fault in the Garage Cam (CAM-I2), as a powered camera with weak signal would still light its LED.",
+  "key_abnormal_indicators": [
+   "Garage Cam offline for 2 days 14:22",
+   "LED completely dark after power re-plug",
+   "RSSI -83 dBm (weak but not enough to cause full dark LED)",
+   "Firmware 2.0, protocol v3 compatible",
+   "No error codes on base station",
+   "Power-on event logged 09:12 yesterday, no heartbeat followed"
+  ],
+  "customer_reply": "We've identified a likely hardware issue with your Garage Cam. I'm escalating this to our engineering team for further diagnosis. They will contact you within 1-2 business days. No further action needed from you right now. Thank you for your patience.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": []
+   },
+   "affected_devices": [
+    {
+     "id": "cam_garage",
+     "name": "Garage Cam",
+     "model": "CAM-I2",
+     "fw": "2.0",
+     "rssi": -83,
+     "battery": null,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "WEAK_SIGNAL",
+   "tier": "L1",
+   "evidence": "cam_garage rssi -83 dBm"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 garage camera offline power-on event no heartbeat battery"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 power-on event no heartbeat offline power supply"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 power-on event no heartbeat wired camera power supply offline"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "What colour/state is the LED on the Garage Cam right now, and is it plugged into power (is the power adapter firmly connected)? Also, did anything happen around 2 days ago near the garage (power outage, unplugging, moving the camera)?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera power-on event no heartbeat power adapter reset fix"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "Please have the customer physically check the Garage Cam right now: (1) Is the power adapter firmly plugged into the camera and the wall outlet? (2) What is the LED doing at this moment — solid, blinking, or completely dark? (3) If they unplug and re-plug the power adapter, does the LED light up at all?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera LED dark no power adapter no light hardware fault"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera LED dark no power no light hardware fault factory reset"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera power adapter LED dark no light hardware fault"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera no power LED dark adapter connected hardware fault escalation"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "HW_FAULT_SUSPECTED",
+    "rationale": "The Garage Cam (CAM-I2, a wired camera with no battery) is the only offline device while the base station and all 5 other devices are healthy, ruling out system-level causes. Firmware/protocol are compatible (v3 supported), and RSSI -83 dBm would only explain intermittent drops, not a fully dark LED. The decisive evidence is that the LED stays completely dark even after the customer confirmed the power adapter is firmly connected and re-plugged it — a powered camera with weak signal would still light its LED, so this indicates a hardware/power fault requiring escalation."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_garage",
+      "name": "Garage Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   },
+   "result": {
+    "id": "cam_garage",
+    "name": "Garage Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -83,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "cam_garage last RSSI -83 dBm (recorded 2 days ago at the garage location)",
+     "cam_garage offline since 2 days 14:22",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "cam_garage power-on event 09:12 yesterday, no heartbeat followed",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_garage"
+   },
+   "result": {
+    "device_id": "cam_garage",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 garage camera offline power-on event no heartbeat battery"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Battery cameras (CAM-S1)",
+      "text": "CAM-S1 runs on a rechargeable battery lasting 3 to 6 months. Below 10 percent the camera disables live view and may miss events; below 3 percent it goes offline. Charge with the supplied USB-C cable for about 6 hours. Frequent motion events in busy areas shorten battery life; enable power-saving mode."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 power-on event no heartbeat offline power supply"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 power-on event no heartbeat wired camera power supply offline"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "What colour/state is the LED on the Garage Cam right now, and is it plugged into power (is the power adapter firmly connected)? Also, did anything happen around 2 days ago near the garage (power outage, unplugging, moving the camera)?"
+   },
+   "result": {
+    "answer": "The LED goes solid when I hold reset, then goes dark — that's what I saw yesterday. I can't tell you the current LED state right now, and I don't know if the adapter is firmly connected; I haven't checked that.\n\nAs for two days ago, nothing happened that I know of — no power outage, no unplugging, no moving. I haven't changed anything."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera power-on event no heartbeat power adapter reset fix"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Please have the customer physically check the Garage Cam right now: (1) Is the power adapter firmly plugged into the camera and the wall outlet? (2) What is the LED doing at this moment — solid, blinking, or completely dark? (3) If they unplug and re-plug the power adapter, does the LED light up at all?"
+   },
+   "result": {
+    "answer": "Okay, let me go check. (1) The adapter is firmly plugged into both the camera and the wall outlet. (2) The LED is completely dark right now. (3) I unplugged and re-plugged it — the LED does not light up at all."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera LED dark no power adapter no light hardware fault"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera LED dark no power no light hardware fault factory reset"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 wired camera power adapter LED dark no light hardware fault"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 3,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_garage",
+     "name": "Garage Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_front",
+     "name": "Front Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_garage"
+  ],
+  "device_details": {
+   "cam_garage": {
+    "id": "cam_garage",
+    "name": "Garage Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -83,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "cam_garage": {
+    "device_id": "cam_garage",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "cam_garage last RSSI -83 dBm (recorded 2 days ago at the garage location)",
+    "cam_garage offline since 2 days 14:22",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "cam_garage power-on event 09:12 yesterday, no heartbeat followed",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "What colour/state is the LED on the Garage Cam right now, and is it plugged into power (is the power adapter firmly connected)? Also, did anything happen around 2 days ago near the garage (power outage, unplugging, moving the camera)?",
+    "answer": "The LED goes solid when I hold reset, then goes dark — that's what I saw yesterday. I can't tell you the current LED state right now, and I don't know if the adapter is firmly connected; I haven't checked that.\n\nAs for two days ago, nothing happened that I know of — no power outage, no unplugging, no moving. I haven't changed anything."
+   },
+   {
+    "question": "Please have the customer physically check the Garage Cam right now: (1) Is the power adapter firmly plugged into the camera and the wall outlet? (2) What is the LED doing at this moment — solid, blinking, or completely dark? (3) If they unplug and re-plug the power adapter, does the LED light up at all?",
+    "answer": "Okay, let me go check. (1) The adapter is firmly plugged into both the camera and the wall outlet. (2) The LED is completely dark right now. (3) I unplugged and re-plugged it — the LED does not light up at all."
+   }
+  ],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[historical_cases#H-01 Garage camera keeps dropping] Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline.",
+   "[manual_peripherals#Battery cameras (CAM-S1)] CAM-S1 runs on a rechargeable battery lasting 3 to 6 months. Below 10 percent the camera disables live view and may miss events; below 3 percent it goes offline. Charge with the supplied USB-C cable for about 6 hours. Frequent motion events in busy areas shorten battery life; enable power-saving mode.",
+   "[historical_cases#H-06 Events not in cloud] Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly.",
+   "[historical_cases#H-05 Three sensors offline at once] Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly.",
+   "[historical_cases#H-03 Indoor camera lost after night update] After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly.",
+   "[manual_peripherals#Factory reset of a peripheral] Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again.",
+   "[manual_base_station#LED status indicators] Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent).",
+   "[manual_peripherals#Peripheral firmware and OTA] Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+  ]
+ },
+ "wall_seconds": 0.4,
+ "llm_seconds": 68.8,
+ "llm_calls": 17,
+ "tokens": 65087,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "Our garage camera has been offline for two days. The garage is at the far end of the house, so I assume the signal is just too weak out there. Is there a booster or repeater I can buy? Everything else seems to work fine and I haven't changed anything in the app.",
+ "user_turns": 2,
+ "console_calls": 5,
+ "usability_score": 4,
+ "usability_reason": "The response is clear and polite, and it accurately summarizes the customer's reported checks (adapter firmly connected, re-plug performed, LED still dark) without claiming any unperformed fixes. It correctly avoids endorsing the customer's weak-signal/booster assumption and points to a hardware/power fault. Actionability is somewhat limited because it only escalates and gives no interim troubleshooting or next-step detail, but it does set a clear expectation (engineering contact in 1-2 business days). No unsupported claims of completed checks or fixes are made."
+}

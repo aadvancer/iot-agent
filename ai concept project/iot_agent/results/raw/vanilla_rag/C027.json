@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C027",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera is a wired indoor camera with power and an orange LED, indicating it is connected but not functioning normally. The complaint mentions the camera went offline overnight and won't come back, and the app shows no update available. The historical case H-03 describes a similar scenario: after a base station auto-update, a camera disconnected with error E-305 and no OTA was offered for that hardware revision, requiring a compatibility firmware. This suggests a protocol conflict between the base station and the camera after an update.",
+ "output": {
+  "symptom_summary": "Guest room wired indoor camera went offline overnight and won't come back. Camera has power and LED is orange. App shows no update available for the camera.",
+  "suspected_root_cause": "Protocol conflict between base station and camera after a base station firmware update, causing the camera to disconnect and not reconnect.",
+  "key_abnormal_indicators": [
+   "Camera offline overnight without manual intervention",
+   "Camera has power and LED is orange (not normal green)",
+   "No update available for camera in app",
+   "Historical case H-03 shows similar pattern after base station update"
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, it appears that a recent base station update may have caused a compatibility issue with your camera. We will need to escalate this to our advanced support team to provide a compatibility firmware update for your camera. Please do not factory reset the base station, as that will not resolve the issue and may cause loss of settings."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.4,
+ "llm_seconds": 6.3,
+ "llm_calls": 1,
+ "tokens": 1224,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "The guest room camera went offline overnight and won't come back. It is a wired indoor camera and has power; the LED is orange. A friend who works in IT told me to factory reset the base station, but I'd rather not lose all my settings. I looked in the app for a camera update and it says none is available.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it usefully advises against the factory reset the customer wanted to avoid. However, actionability is limited: it only says the case will be escalated, with no concrete next steps, timeline, or information requested from the customer. It also asserts a specific root cause (protocol conflict after a base station firmware update) that is not supported by the session record, which contains no questions asked and no actions performed. The response does not claim completed checks or fixes, but the unsupported causal claim and lack of actionable guidance keep it at a mid-range score."
+}

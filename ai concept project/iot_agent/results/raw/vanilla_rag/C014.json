@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C014",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes immediate pairing failure with an error, not a timeout. The sensor works on another system, ruling out the sensor. The knowledge snippet mentions error E-201 when capacity is exceeded, and the base station may already have the maximum number of devices. This matches the symptom of immediate failure.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to device list.",
+   "Check the number of paired devices on the base station.",
+   "If the count is at the maximum (8), identify an unused or old device.",
+   "Remove the unused device from the app.",
+   "Put the base station into pairing mode and pair the new sensor again."
+  ],
+  "customer_reply": "Thank you for the details. Since the sensor works on another system, the issue is likely with your base station's device capacity. Please check how many devices are currently paired to your base station. If it has reached the maximum (8 devices), you will need to remove an unused device before adding the new sensor. You can remove a device in the app under device settings. After removing, try pairing again."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.1,
+ "llm_seconds": 6.4,
+ "llm_calls": 1,
+ "tokens": 1132,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "Pairing the new garage sensor fails immediately, within a second, with an error. It does not wait for the 120 seconds. I tested the sensor on a friend's system and it paired fine there, so I'm sure it isn't the sensor. I'm on the latest app version. What else can it be?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with concrete steps to check device capacity and remove an unused device before re-pairing. It avoids claiming any checks or fixes were completed, since none were performed. Minor deduction: it presents the capacity limit as the likely cause without confirming the actual paired-device count, but it does frame this as something the customer should check rather than a completed diagnosis."
+}

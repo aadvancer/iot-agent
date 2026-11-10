@@ -1,0 +1,282 @@
+{
+ "system": "react",
+ "case_id": "C040",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The entry sensor worked for a year and failed immediately after being dropped on tiles during a battery change. It remains offline even placed next to the base station after a reset, despite strong RSSI (-60 dBm), adequate battery (75%), compatible firmware (v3), and no error codes — while all other devices on the same base station are online. This pattern points to physical damage to the radio module or internal circuitry from the impact, requiring FAE evaluation/replacement.",
+ "output": {
+  "symptom_summary": "Entry motion sensor (SEN-M1) went offline immediately after being dropped on tiles during a battery change and remains offline even when placed next to the base station after a reset, while all other devices on the same base station are online.",
+  "suspected_root_cause": "Physical damage to the radio module or internal circuitry from the impact, causing a hardware fault.",
+  "key_abnormal_indicators": [
+   "RSSI -60 dBm (strong signal) but device remains offline",
+   "Battery level 75% (adequate)",
+   "Firmware v1.4, protocol v3, compatible with base station (supports v2/v3)",
+   "No error codes logged on base station",
+   "All other 6 devices on same base station are online",
+   "Device worked for a year prior to drop"
+  ],
+  "customer_reply": "Thank you for your patience. Our engineering team will review your sensor's case and contact you shortly with next steps. We suspect the drop may have caused internal damage. Please keep the sensor and base station powered on for now."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_entry"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_entry"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_entry"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor offline after physical drop impact hardware fault"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "After the drop, does the entry sensor show any visible physical damage (cracked casing, loose battery compartment, rattling sound when shaken), and does its LED light up at all when you press the pairing/reset button?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "With the sensor right next to the base station, press and hold the pairing/reset button for 5 seconds and watch the LED closely. Tell me: does the LED flash or light up at all (any color), or does it stay completely dark?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {}
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_entry",
+      "name": "Entry Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_entry"
+   },
+   "result": {
+    "id": "motion_entry",
+    "name": "Entry Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_entry"
+   },
+   "result": {
+    "lines": [
+     "motion_entry remains offline after peripheral reset",
+     "motion_entry RSSI -60 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_entry"
+   },
+   "result": {
+    "device_id": "motion_entry",
+    "device_fw": "1.4",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor offline after physical drop impact hardware fault"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-610 Radio module error",
+      "text": "Logged by the base station when its sub-GHz radio fails self-test or multiple peripherals drop simultaneously. Always escalate to FAE."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "After the drop, does the entry sensor show any visible physical damage (cracked casing, loose battery compartment, rattling sound when shaken), and does its LED light up at all when you press the pairing/reset button?"
+   },
+   "result": {
+    "answer": "I don't see any cracks or loose battery cover, and I haven't noticed a rattle, but I haven't shaken it to check. As for the LED, I can't say — I didn't pay attention to whether it lit up when I pressed the reset button."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "With the sensor right next to the base station, press and hold the pairing/reset button for 5 seconds and watch the LED closely. Tell me: does the LED flash or light up at all (any color), or does it stay completely dark?"
+   },
+   "result": {
+    "outcome": "I held the pairing/reset button for 5 seconds with the sensor next to the base station, but I honestly couldn't tell you if the LED did anything — I didn't see it clearly light up, but I can't be sure it stayed completely dark either."
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "motion_entry remains offline after peripheral reset",
+     "motion_entry RSSI -60 dBm",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 25.7,
+ "llm_seconds": 25.6,
+ "llm_calls": 10,
+ "tokens": 22431,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "The entry sensor still fails next to the base station after a reset; the other sensors work. It worked for a year, then died after I dropped it on the tiles while changing the battery. Could it be signal? The entry is three walls away from the base in normal use, but I tested it right next to the base.",
+ "user_turns": 2,
+ "console_calls": 6
+}

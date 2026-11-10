@@ -1,0 +1,187 @@
+{
+ "system": "react",
+ "case_id": "C008",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station reports online:false with uplink_status no_internet and E-503, and the customer confirms a solid red LED plus a street-wide broadband outage after a thunderstorm (Wi-Fi connects but no internet). All devices appear offline in the app because the base station cannot reach the cloud, not because of any device fault. This is an ISP-level outage; once broadband is restored the system should recover.",
+ "output": {
+  "repair_steps": [
+   "Advise customer that the issue is due to a broadband outage in their area, not a fault with the security system.",
+   "Instruct customer to wait for their internet service provider to restore broadband service.",
+   "Once internet is restored, ask customer to check the base station LED: it should turn solid green (or normal color) and devices should come back online in the app automatically.",
+   "If devices remain offline after internet is restored, guide customer to power-cycle the router and base station: unplug both, wait 2 minutes, plug in router first, wait for it to fully boot, then plug in base station.",
+   "If issue persists after power-cycling, escalate to FAE with note that E-503 persists despite internet restoration."
+  ],
+  "customer_reply": "Thank you for your patience. Our diagnostics show your base station is offline because your home internet is down due to the street-wide broadband outage after the thunderstorm. Your security system is not faulty. Once your internet service is restored, your devices should automatically reconnect and appear online in the app. If they don't, please restart your router and base station. We're here if you need further help."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 uplink no internet base station red light"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "Can you confirm the base station LED is blinking red (not solid), and is your home internet/router working right now (e.g., can other devices like a laptop reach the internet)?"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_main",
+      "name": "Main Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "base station uplink lost: E-503"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 uplink no internet base station red light"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#Network uplink",
+      "text": "The base station connects to the home router by Ethernet (recommended) or 2.4 GHz Wi-Fi. If all cameras and sensors show offline in the app at the same time, first check whether the base station itself is online. Power-cycle the router, wait 2 minutes, then power-cycle the base station. The base station requires outbound TCP 443 and 8883 to the cloud."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Can you confirm the base station LED is blinking red (not solid), and is your home internet/router working right now (e.g., can other devices like a laptop reach the internet)?"
+   },
+   "result": {
+    "answer": "The base light is solid red, not blinking. As for the internet, our home Wi-Fi shows as connected on my phone but websites won't load, so it doesn't seem to be working."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 27.5,
+ "llm_calls": 6,
+ "tokens": 11374,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Every camera and sensor has shown offline since this morning, although they were all fine last night. The base station has a red light. I rebooted my phone and reinstalled the app because I thought that was the problem, but nothing changed. We had a thunderstorm last night and my neighbour says the broadband is down on our street too.",
+ "user_turns": 1,
+ "console_calls": 3,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable: correctly ties the issue to the confirmed broadband outage (customer reported Wi-Fi connected but no internet, solid red LED), tells the customer to wait for ISP restoration, then check LED/reconnect, then power-cycle router and base station, then escalate. Avoids claiming any checks or fixes were performed beyond what the record supports. Minor deduction: the escalation note references 'E-503' which was never mentioned in the session, and the response could more explicitly acknowledge the solid-red vs blinking distinction, but overall usability is high."
+}

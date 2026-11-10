@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C020",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The attic motion detector missed an event today and a battery warning appeared today. The knowledge base indicates that battery-powered devices below 10% may miss events. The earlier missed event last week could be due to intermittent low battery or other transient issues, but the current battery warning and missed event align with BATTERY_LOW. No other root cause fits the symptoms.",
+ "output": {
+  "repair_steps": [
+   "Charge the motion detector using the supplied USB-C cable for about 6 hours.",
+   "After charging, verify the battery level in the app.",
+   "Test the device by triggering motion and checking if events are recorded.",
+   "If the device continues to miss events after a full charge, contact support for further diagnosis."
+  ],
+  "customer_reply": "Thank you for the details. Based on the information you provided, the most likely cause is a low battery. The battery warning and the missed event today are consistent with a low battery condition. While the earlier missed event last week might have been due to other factors, we recommend first charging the battery fully and then monitoring the device. If the issue persists after charging, we can investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.4,
+ "llm_seconds": 5.4,
+ "llm_calls": 1,
+ "tokens": 1229,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The attic motion detector misses events; its battery warning appeared today. But it also missed an event last week, well before the warning, so I'm not sure the battery is the cause. It was boiling up there all summer, so maybe the heat damaged it. Should I replace the whole sensor?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable steps (charge, verify, test, escalate). However, it asserts 'the most likely cause is a low battery' despite the customer noting a missed event before the warning and possible heat damage, and no diagnostic checks were actually performed or confirmed in the session record. It does not overclaim completed fixes, but the causal claim is not supported by any shown verification."
+}

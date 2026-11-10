@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C018",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The porch camera is the only device affected, and it fails to start live view with a 'camera unavailable' message. The customer rebooted the router, but other cameras are fine, suggesting the issue is specific to this camera's connection rather than a network-wide problem. This pattern is consistent with weak signal or intermittent connectivity for a single device.",
+ "output": {
+  "repair_steps": [
+   "Check the signal strength indicator for the porch camera in the app.",
+   "Move the camera closer to the base station or Wi-Fi router to improve signal.",
+   "Ensure there are no new obstructions or interference sources near the camera.",
+   "Reboot the camera by removing and reinserting its battery or power cycling it.",
+   "If the issue continues, try repositioning the base station or adding a Wi-Fi extender."
+  ],
+  "customer_reply": "Thank you for the details. Since only the porch camera is affected and other cameras are working, it's likely that the porch camera is experiencing a weak or unstable connection to the base station or Wi-Fi. We recommend checking the signal strength in the app and moving the camera closer to the base station or router to see if that improves the live view. If the issue persists, we can further troubleshoot."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.6,
+ "llm_calls": 1,
+ "tokens": 910,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The porch camera won't start live view; it just spins and then says camera unavailable. It started a couple of days ago. I thought it was the Wi-Fi because our router was updated recently, so I rebooted the router twice, but nothing changed. The other cameras are fine.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and offers actionable troubleshooting steps. However, it does not acknowledge the customer's already-performed router reboots, and it frames the weak-connection cause as likely without any diagnostic evidence from the session (no signal strength was checked or reported). It avoids claiming completed checks, but actionability is somewhat generic and not tailored to the prior reboots."
+}

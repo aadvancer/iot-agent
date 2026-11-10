@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C009",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer reports a new device cannot be added and pairing times out after 120 seconds, which matches the PAIR_TIMEOUT label. Other devices work, so base station is likely fine.",
+ "output": {
+  "repair_steps": [
+   "Ensure the sensor is in pairing mode (LED blinking) and within 1-3 feet of the base station.",
+   "Remove the sensor from the app if it appears in the device list, then retry pairing.",
+   "Power cycle the base station (unplug for 30 seconds, then plug back in) and wait for it to fully boot.",
+   "Reset the sensor to factory defaults by holding the pairing button for 10 seconds until the LED flashes rapidly, then try pairing again.",
+   "If pairing still fails, try pairing with a different smartphone or tablet to rule out app issues.",
+   "If the issue persists, contact support for a possible replacement sensor."
+  ],
+  "customer_reply": "Thank you for the details. Since your other sensors are working, the base station is likely fine. The issue is specific to pairing the new window sensor. We'll guide you through steps to resolve the pairing timeout."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.7,
+ "llm_calls": 1,
+ "tokens": 888,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "I bought a new window sensor yesterday and followed the leaflet, but the app keeps counting down 120 seconds and then says pairing failed. I've tried five times now. I changed the sensor's battery twice, just in case. Other sensors in the house work perfectly, so I don't think there is a problem with the base station.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it provides actionable troubleshooting steps. However, the session record shows no questions were asked and no actions were performed, so the response's implication that the customer provided details and that steps were guided/completed is unsupported. It also does not acknowledge the customer's already-performed actions (five pairing attempts, two battery changes) or tailor the steps accordingly. The root-cause suggestion (base station likely fine) is reasonable but not verified in the record."
+}

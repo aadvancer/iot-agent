@@ -1,0 +1,705 @@
+{
+ "system": "abl_no_memory",
+ "case_id": "C039",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The workshop sensor has a fresh battery (75%), good RSSI (-60 dBm), compatible firmware (v3 protocol supported), and was correctly re-paired via the full remove/reset/pair sequence — yet it drops offline again within a minute even when held next to the base station. All other sensors from the same box work, ruling out a system-level or setup problem. A device that fails immediately after a correct re-pair while adjacent to the base station indicates a hardware fault.",
+ "output": {
+  "symptom_summary": "Workshop Door sensor (SEN-D1) drops offline within a minute after successful re-pairing, even when held next to the base station. All other sensors work normally.",
+  "suspected_root_cause": "Hardware fault in the Workshop Door sensor.",
+  "key_abnormal_indicators": [
+   "RSSI -60 dBm (good)",
+   "Battery 75% (fresh)",
+   "Firmware 1.3 (compatible, v3 protocol)",
+   "No error codes in base station logs",
+   "Device re-pairs successfully but goes offline within 1 minute",
+   "All other 6 devices online",
+   "Base station online, no errors"
+  ],
+  "customer_reply": "Thank you for your patience. Our engineering team will review your case and contact you within 24 hours with next steps. No further action is needed from you at this time.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": []
+   },
+   "affected_devices": [
+    {
+     "id": "door_workshop",
+     "name": "Workshop Door",
+     "model": "SEN-D1",
+     "fw": "1.3",
+     "rssi": -60,
+     "battery": 75,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [],
+   "steps_performed": [
+    "Walk the customer through the correct re-pair sequence: (1) In the app, remove the \"Workshop Door\" sensor from the device list. (2) On the sensor, hold SYNC for 15 seconds until the LED flashes white (factory reset). (3) In the app, tap Add Device to put the base station into pairing mode. (4) Hold the sensor's SYNC button for 3 seconds until its LED blinks blue, keeping it within 1 metre of the base station. Report whether the sensor re-pairs and comes online. -> I followed all the steps and it did pair up, but then it went offline again within about a minute."
+   ]
+  }
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor offline after reset new battery held next to base station still offline"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor offline after reset new battery held next to base station hardware fault factory reset"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "peripheral factory reset remove from app then re-pair procedure"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "When you reset the workshop sensor, did you hold the SYNC button for a full 15 seconds until the LED flashed white (factory reset), and did you first remove the sensor from the app's device list before resetting it? Also, what colour is the sensor's LED showing right now?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "device shown in app but offline after reset remove from app re-pair E-207 binding table"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer through the correct re-pair sequence: (1) In the app, remove the \"Workshop Door\" sensor from the device list. (2) On the sensor, hold SYNC for 15 seconds until the LED flashes white (factory reset). (3) In the app, tap Add Device to put the base station into pairing mode. (4) Hold the sensor's SYNC button for 3 seconds until its LED blinks blue, keeping it within 1 metre of the base station. Report whether the sensor re-pairs and comes online.",
+    "target_cause": "PAIR_TIMEOUT"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "offline"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "HW_FAULT_SUSPECTED",
+    "rationale": "The workshop sensor has a fresh battery (75%), good RSSI (-60 dBm), compatible firmware (v3 protocol supported), and was correctly re-paired via the full remove/reset/pair sequence — yet it drops offline again within a minute even when held next to the base station. All other sensors from the same box work, ruling out a system-level or setup problem. A device that fails immediately after a correct re-pair while adjacent to the base station indicates a hardware fault."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_workshop",
+      "name": "Workshop Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "door_workshop remains offline after peripheral reset",
+     "door_workshop RSSI -60 dBm",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "device_id": "door_workshop",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor offline after reset new battery held next to base station still offline"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_workshop"
+   },
+   "result": {
+    "lines": [
+     "door_workshop remains offline after peripheral reset",
+     "door_workshop RSSI -60 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor offline after reset new battery held next to base station hardware fault factory reset"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_base_station#Restart and reset",
+      "text": "A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "peripheral factory reset remove from app then re-pair procedure"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "manual_base_station#Restart and reset",
+      "text": "A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "When you reset the workshop sensor, did you hold the SYNC button for a full 15 seconds until the LED flashed white (factory reset), and did you first remove the sensor from the app's device list before resetting it? Also, what colour is the sensor's LED showing right now?"
+   },
+   "result": {
+    "answer": "I reset the sensor itself only — I didn't reset the base station, and I don't recall removing it from the app's device list first. As for the LED colour right now, I can't tell you — I don't have that in front of me."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "device shown in app but offline after reset remove from app re-pair E-207 binding table"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-207 Binding write failed",
+      "text": "The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station."
+     },
+     {
+      "source": "manual_base_station#Orphaned binding (device removed in app but still bound in base station)",
+      "text": "If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+     },
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer through the correct re-pair sequence: (1) In the app, remove the \"Workshop Door\" sensor from the device list. (2) On the sensor, hold SYNC for 15 seconds until the LED flashes white (factory reset). (3) In the app, tap Add Device to put the base station into pairing mode. (4) Hold the sensor's SYNC button for 3 seconds until its LED blinks blue, keeping it within 1 metre of the base station. Report whether the sensor re-pairs and comes online."
+   },
+   "result": {
+    "outcome": "I followed all the steps and it did pair up, but then it went offline again within about a minute."
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_workshop"
+   },
+   "result": {
+    "lines": [
+     "door_workshop remains offline after peripheral reset",
+     "door_workshop RSSI -60 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-"
+   },
+   "result": {
+    "lines": []
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   },
+   "result": {
+    "lines": []
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "offline"
+   },
+   "result": {
+    "lines": [
+     "door_workshop remains offline after peripheral reset"
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_workshop",
+     "name": "Workshop Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "door_workshop"
+  ],
+  "device_details": {
+   "door_workshop": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "door_workshop": {
+    "device_id": "door_workshop",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "door_workshop remains offline after peripheral reset",
+    "door_workshop RSSI -60 dBm",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ],
+   "door_workshop": [
+    "door_workshop remains offline after peripheral reset",
+    "door_workshop RSSI -60 dBm"
+   ],
+   "E-": [],
+   "pair": [],
+   "offline": [
+    "door_workshop remains offline after peripheral reset"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "When you reset the workshop sensor, did you hold the SYNC button for a full 15 seconds until the LED flashed white (factory reset), and did you first remove the sensor from the app's device list before resetting it? Also, what colour is the sensor's LED showing right now?",
+    "answer": "I reset the sensor itself only — I didn't reset the base station, and I don't recall removing it from the app's device list first. As for the LED colour right now, I can't tell you — I don't have that in front of me."
+   }
+  ],
+  "fix_attempts": [
+   {
+    "action": "Walk the customer through the correct re-pair sequence: (1) In the app, remove the \"Workshop Door\" sensor from the device list. (2) On the sensor, hold SYNC for 15 seconds until the LED flashes white (factory reset). (3) In the app, tap Add Device to put the base station into pairing mode. (4) Hold the sensor's SYNC button for 3 seconds until its LED blinks blue, keeping it within 1 metre of the base station. Report whether the sensor re-pairs and comes online.",
+    "target_cause": "PAIR_TIMEOUT",
+    "outcome": "I followed all the steps and it did pair up, but then it went offline again within about a minute.",
+    "resolved": false,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[historical_cases#H-02 Cannot add ninth sensor] HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline.",
+   "[historical_cases#H-04 Whole house offline] All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline.",
+   "[historical_cases#H-05 Three sensors offline at once] Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly.",
+   "[manual_base_station#Restart and reset] A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval.",
+   "[manual_peripherals#Factory reset of a peripheral] Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again.",
+   "[manual_peripherals#Pairing a peripheral] Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location.",
+   "[fault_codes#E-207 Binding write failed] The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station.",
+   "[manual_base_station#Orphaned binding (device removed in app but still bound in base station)] If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+  ]
+ },
+ "wall_seconds": 33.7,
+ "llm_seconds": 65.1,
+ "llm_calls": 19,
+ "tokens": 66093,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "The workshop sensor will not report although it has good battery and was reset. I even put a brand new battery in and held it right against the base station while resetting it. The app shows it offline. The other sensors from the same box are perfect, so I don't think it is a setup problem.",
+ "user_turns": 2,
+ "console_calls": 13,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clear, and it avoids claiming unperformed fixes. However, actionability is weak: it only says engineering will follow up within 24 hours and gives no interim troubleshooting or diagnostic steps. The root-cause label (hardware fault) is asserted without being demonstrated in the session record, and several listed indicators (RSSI, battery, firmware, logs) are not shown as actually collected during the session, so those claims are unsupported."
+}

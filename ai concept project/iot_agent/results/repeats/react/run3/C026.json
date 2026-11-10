@@ -1,0 +1,161 @@
+{
+ "system": "react",
+ "case_id": "C026",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Base station storage is at 98% with loop recording disabled, triggering E-402. Manual clip deletion only temporarily frees space, so the warning returns as new events fill storage again. Enabling loop recording (or formatting after export) resolves it; no hardware fault indicated.",
+ "output": {
+  "repair_steps": [
+   "Open Base Station Settings > Storage in the app.",
+   "Enable loop recording to automatically overwrite oldest clips when storage is full.",
+   "If customer prefers to keep all clips, export important clips and then format storage.",
+   "Confirm E-402 clears and storage percentage drops below 98%."
+  ],
+  "customer_reply": "Your base station storage is nearly full (98%) and loop recording is off, so new events can't be saved. To fix, enable loop recording in Base Station Settings > Storage, or export important clips and format storage. This will prevent the warning from returning. No hardware fault was found."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-402"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-402 storage full loop recording"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 98,
+    "loop_recording": false,
+    "error_codes": [
+     "E-402"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 5,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-402"
+   },
+   "result": {
+    "lines": [
+     "storage used 98%; loop recording disabled; E-402"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-402 storage full loop recording"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-402 Storage full",
+      "text": "Base station storage at or above 98 percent with loop recording disabled. Frontline action: enable loop recording or format storage."
+     },
+     {
+      "source": "manual_base_station#Local storage",
+      "text": "Event clips are stored on the base station's internal eMMC (HB-100: 16 GB, HB-200: 32 GB). When loop recording is disabled and storage reaches 98 percent, new events are not recorded and error E-402 is shown. Enable loop recording in Base Station Settings > Storage, or format the storage after exporting clips."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 9.7,
+ "llm_seconds": 9.6,
+ "llm_calls": 4,
+ "tokens": 7302,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "The app shows a storage warning but I don't know what it wants me to do. I deleted some old clips one by one, which frees a bit of space, but the warning comes back the next day. All cameras show online and live view works. Is the base station's memory failing?",
+ "user_turns": 0,
+ "console_calls": 3
+}

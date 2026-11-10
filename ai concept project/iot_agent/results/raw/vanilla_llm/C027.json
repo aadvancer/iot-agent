@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C027",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera is wired and has power (LED orange), but it went offline overnight and won't reconnect. No mention of other devices being offline, so it's likely a single-device connectivity issue. The friend's suggestion to factory reset the base station is not necessary yet. The app shows no update available, ruling out firmware issues. The most probable cause is weak signal or interference affecting this camera.",
+ "output": {
+  "repair_steps": [
+   "Move the camera closer to the base station to test connectivity.",
+   "Check for physical obstructions or new electronic devices near the camera or base station.",
+   "Power cycle the camera by unplugging it for 30 seconds and plugging it back in.",
+   "If the camera reconnects when closer, consider relocating it permanently or adding a Wi-Fi extender."
+  ],
+  "customer_reply": "Thank you for the details. Since only the guest room camera is offline and it has power, we suspect a weak signal or interference. Please try moving the camera closer to the base station temporarily to see if it reconnects. Also, check for any new obstacles or electronic devices that might be causing interference. We can guide you through further steps if needed."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.0,
+ "llm_calls": 1,
+ "tokens": 919,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "The guest room camera went offline overnight and won't come back. It is a wired indoor camera and has power; the LED is orange. A friend who works in IT told me to factory reset the base station, but I'd rather not lose all my settings. I looked in the app for a camera update and it says none is available.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable steps, and it avoids claiming any checks or fixes were completed. However, it is somewhat generic and includes a Wi-Fi extender suggestion for a wired camera, which is confusing. It also doesn't address the customer's concern about avoiding a factory reset or the orange LED meaning."
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C018",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The porch camera is a battery-powered CAM-S1. The symptom of live view failing to start while other cameras are fine matches the documented behavior when battery is below 10%: live view is disabled. The issue started recently, consistent with battery depletion. No other indicators suggest network or base station issues since other cameras work.",
+ "output": {
+  "repair_steps": [
+   "Remove the porch camera from its mount.",
+   "Connect the supplied USB-C cable to the camera and a USB power adapter.",
+   "Charge the camera for at least 6 hours until the battery is full.",
+   "Reinstall the camera and check the battery level in the app.",
+   "Attempt live view again."
+  ],
+  "customer_reply": "Thank you for the details. Since your other cameras are working, the issue is likely with the porch camera itself. For battery-powered cameras, live view is disabled when the battery is low. Please charge the camera using the supplied USB-C cable for about 6 hours and then try live view again. If the problem persists after charging, let us know and we can investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.4,
+ "llm_seconds": 6.4,
+ "llm_calls": 1,
+ "tokens": 1153,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The porch camera won't start live view; it just spins and then says camera unavailable. It started a couple of days ago. I thought it was the Wi-Fi because our router was updated recently, so I rebooted the router twice, but nothing changed. The other cameras are fine.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and provides concrete, actionable steps (remove, charge 6 hours, reinstall, check battery, retry live view). It avoids claiming any checks or fixes were completed, since no actions were performed in the session. It reasonably infers a likely cause from the customer's report that other cameras work, but does not overclaim a confirmed diagnosis. Minor deduction only because the step list and reply are somewhat redundant and the root-cause inference is plausible rather than verified."
+}

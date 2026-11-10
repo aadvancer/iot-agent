@@ -5,15 +5,15 @@
  "pred_tier": "L1",
  "tier_overridden": false,
  "triggers": [],
- "rationale": "The Hallway Motion sensor was connected but not sending events, and the base station log showed \"E-305 protocol v2 not supported\" after the base station firmware update to 4.5 (which supports only v3). Firmware compatibility check confirmed the sensor was on protocol v2 with an OTA path to 1.4. The customer performed the OTA update, and motion alerts resumed, confirming the root cause.",
+ "rationale": "The base station auto-updated to firmware 4.5, which dropped protocol v2 support, causing the Hallway Motion sensor (SEN-M1, fw 1.1, protocol v2) to log E-305 and stop sending events while remaining connected. The standard L1 fix (OTA upgrade of the sensor from 1.1 to 1.4, protocol v3) completed successfully and the sensor resumed sending alerts, confirming the root cause.",
  "output": {
   "repair_steps": [
-   "Open the Hallway Motion device settings in the app",
-   "Start the available OTA firmware update to version 1.4",
-   "Keep the base station powered and online during the update",
-   "Confirm motion alerts resume after the update completes"
+   "Confirm the Hallway Motion sensor (SEN-M1) firmware updated from 1.1 to 1.4 via OTA.",
+   "Verify the sensor is now sending motion alerts and no longer logging E-305.",
+   "Check the base station logs to ensure no new E-305 errors for motion_hall.",
+   "Close the case as resolved with root cause PERIPHERAL_FW_OUTDATED."
   ],
-  "customer_reply": "Thank you for your patience. The Hallway Motion sensor was using an older protocol (v2) that the updated base station no longer supports. The OTA firmware update to version 1.4 brought the sensor up to protocol v3, restoring motion alerts. Your system is now fully operational."
+  "customer_reply": "Your Hallway Motion sensor is now updated and working correctly. The issue was caused by a firmware mismatch after the base station update. The sensor has been upgraded to the latest firmware, and it is now sending alerts as expected. No further action is needed. Thank you for your patience!"
  },
  "rule_hints": [
   {
@@ -61,9 +61,16 @@
   },
   {
    "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported peripheral firmware OTA upgrade fix"
+   }
+  },
+  {
+   "phase": "reason",
    "tool": "instruct_user",
    "args": {
-    "action": "In the app, open the Hallway Motion device settings and start the available firmware update to version 1.4 (OTA). Keep the base station powered and online during the update, and report whether the update completes and whether motion alerts resume.",
+    "action": "In the app, go to the Hallway Motion sensor's settings and trigger a firmware update (OTA). The sensor should upgrade from 1.1 to 1.4. Confirm the update completes and the sensor starts sending alerts again.",
     "target_cause": "PERIPHERAL_FW_OUTDATED"
    }
   },
@@ -72,7 +79,7 @@
    "tool": "submit_diagnosis",
    "args": {
     "root_cause": "PERIPHERAL_FW_OUTDATED",
-    "rationale": "The Hallway Motion sensor was connected but not sending events, and the base station log showed \"E-305 protocol v2 not supported\" after the base station firmware update to 4.5 (which supports only v3). Firmware compatibility check confirmed the sensor was on protocol v2 with an OTA path to 1.4. The customer performed the OTA update, and motion alerts resumed, confirming the root cause."
+    "rationale": "The base station auto-updated to firmware 4.5, which dropped protocol v2 support, causing the Hallway Motion sensor (SEN-M1, fw 1.1, protocol v2) to log E-305 and stop sending events while remaining connected. The standard L1 fix (OTA upgrade of the sensor from 1.1 to 1.4, protocol v3) completed successfully and the sensor resumed sending alerts, confirming the root cause."
    }
   }
  ],
@@ -100,7 +107,7 @@
    "tool": "get_topology",
    "args": {},
    "result": {
-    "bound_count": 3,
+    "bound_count": 6,
     "max_devices": 16,
     "devices": [
      {
@@ -123,6 +130,30 @@
       "id": "door_front",
       "name": "Front Door",
       "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
       "bound_in_base": true,
       "bound_in_app": true,
       "status": "online"
@@ -152,8 +183,15 @@
    },
    "result": {
     "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
      "base station firmware updated 4.2 -> 4.5 at 03:10",
-     "motion_hall: E-305 protocol v2 not supported"
+     "motion_hall: E-305 protocol v2 not supported",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
     ]
    }
   },
@@ -174,12 +212,34 @@
    }
   },
   {
-   "tool": "instruct_user",
+   "tool": "search_kb",
    "args": {
-    "action": "In the app, open the Hallway Motion device settings and start the available firmware update to version 1.4 (OTA). Keep the base station powered and online during the update, and report whether the update completes and whether motion alerts resume."
+    "query": "E-305 protocol v2 not supported peripheral firmware OTA upgrade fix"
    },
    "result": {
-    "outcome": "I started the firmware update in the app for Hallway Motion. It finished in about 3 minutes, and motion alerts are working again."
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the app, go to the Hallway Motion sensor's settings and trigger a firmware update (OTA). The sensor should upgrade from 1.1 to 1.4. Confirm the update completes and the sensor starts sending alerts again."
+   },
+   "result": {
+    "outcome": "I found the update option in the Hallway Motion settings and ran it. It took about three minutes to finish, and now the sensor is sending alerts again."
    }
   }
  ],
@@ -208,7 +268,7 @@
    ]
   },
   "binding_table": {
-   "bound_count": 3,
+   "bound_count": 6,
    "max_devices": 16,
    "devices": [
     {
@@ -231,6 +291,30 @@
      "id": "door_front",
      "name": "Front Door",
      "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
      "bound_in_base": true,
      "bound_in_app": true,
      "status": "online"
@@ -265,26 +349,43 @@
   },
   "logs": {
    "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
     "base station firmware updated 4.2 -> 4.5 at 03:10",
-    "motion_hall: E-305 protocol v2 not supported"
+    "motion_hall: E-305 protocol v2 not supported",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
    ]
   },
   "customer_answers": [],
   "fix_attempts": [
    {
-    "action": "In the app, open the Hallway Motion device settings and start the available firmware update to version 1.4 (OTA). Keep the base station powered and online during the update, and report whether the update completes and whether motion alerts resume.",
+    "action": "In the app, go to the Hallway Motion sensor's settings and trigger a firmware update (OTA). The sensor should upgrade from 1.1 to 1.4. Confirm the update completes and the sensor starts sending alerts again.",
     "target_cause": "PERIPHERAL_FW_OUTDATED",
-    "outcome": "I started the firmware update in the app for Hallway Motion. It finished in about 3 minutes, and motion alerts are working again.",
-    "resolved": true
+    "outcome": "I found the update option in the Hallway Motion settings and ran it. It took about three minutes to finish, and now the sensor is sending alerts again.",
+    "resolved": true,
+    "standard_fix": true
    }
   ],
-  "knowledge_snippets": []
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-305 Protocol / firmware mismatch] The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict.",
+   "[manual_peripherals#Peripheral firmware and OTA] Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3.",
+   "[historical_cases#H-03 Indoor camera lost after night update] After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+  ]
  },
- "wall_seconds": 20.9,
- "llm_calls": 5,
- "tokens": 8728,
+ "wall_seconds": 0.1,
+ "llm_seconds": 18.4,
+ "llm_calls": 6,
+ "tokens": 14836,
  "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
  "gt_tier": "L1",
+ "complaint": "Since yesterday my hallway motion sensor doesn't send any alerts. It still shows in the app. The LED blinks when I walk past it, so it seems to be working, and I changed its battery last month. We never touch the base station settings, but I think it installs things at night by itself. The front door sensor next to it is working fine.",
  "user_turns": 1,
- "console_calls": 5
+ "console_calls": 5,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, and it accurately reflects the completed OTA update and restored alerts reported in the session. It avoids overclaiming by not asserting unverified checks like base station log review as completed. Minor weakness: it states the root cause (firmware mismatch after base station update) somewhat definitively, though this is consistent with the record's resolution label."
 }

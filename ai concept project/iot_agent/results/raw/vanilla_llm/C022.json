@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C022",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor appears connected in the app but events are not being uploaded, which matches the symptom of outdated peripheral firmware causing missing events. The garage door operates normally, ruling out a physical sensor fault. Wi-Fi extender did not help, indicating the issue is not signal-related.",
+ "output": {
+  "repair_steps": [
+   "Open the app and navigate to the device settings for the garage door sensor.",
+   "Check for available firmware updates and install if any.",
+   "After update, test the sensor by opening/closing the garage door and verify events appear in the app.",
+   "If no update is available or issue persists, perform a power cycle of the sensor (remove and reinsert battery if applicable).",
+   "If still unresolved, contact L2 support for further diagnosis."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the sensor's firmware may be outdated, causing events not to be uploaded even though it shows as connected. We recommend updating the sensor's firmware through the app. If the issue persists after the update, please contact support for further assistance."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.2,
+ "llm_calls": 1,
+ "tokens": 888,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "Events from the garage door sensor haven't come through for two days, although the app shows it as connected. My husband thinks the garage Wi-Fi is bad, so he installed a Wi-Fi extender there, which didn't help. The garage door opens and closes normally, so the sensor itself should be fine.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable steps (check firmware, test, power cycle, escalate). However, it speculates that firmware 'may be outdated' without any diagnostic evidence, and the session record shows no questions asked or actions performed, so no checks or fixes are actually confirmed as completed. It avoids falsely claiming completed work, but the root-cause framing is unverified. Clarity and actionability are good; support for the diagnosis is weak."
+}

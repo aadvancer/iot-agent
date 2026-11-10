@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C048",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer suspects the maximum device limit has been reached, which aligns with the CAPACITY_EXCEEDED label. The complaint mentions pairing failure for a new device, and the customer references a neighbor with the same base station having a similar issue. No other symptoms (like error codes or offline devices) are provided to suggest alternative causes.",
+ "output": {
+  "repair_steps": [
+   "Check the base station's maximum device capacity in the user manual or app.",
+   "Remove any unused or old devices from the base station to free up capacity.",
+   "Attempt to pair the new window sensor again.",
+   "If pairing still fails, consider upgrading to a base station with higher capacity."
+  ],
+  "customer_reply": "Thank you for the details. Based on your description, it sounds like the base station may have reached its maximum supported device capacity. This can prevent new devices from pairing. We recommend checking the device limit for your base station model and, if needed, removing an unused device or upgrading to a base station that supports more devices. If the issue persists after ensuring capacity is available, please let us know."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.1,
+ "llm_calls": 1,
+ "tokens": 864,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "My new window sensor won't pair. I think we've hit the maximum number of devices, my neighbour had the same problem with the same base station. Do I need to buy the bigger base station? I've tried three times from the living room sofa and it fails every time.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clear, and offers actionable steps (check capacity, remove unused devices, retry pairing, consider upgrade). However, it does not address the customer's specific detail about trying from the sofa (proximity/pairing distance), and it frames the capacity issue as likely without confirming the device limit was actually checked. It avoids claiming completed checks, but actionability is somewhat generic and the root-cause assumption is not verified against the session record (which shows no actions performed)."
+}

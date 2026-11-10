@@ -1,0 +1,195 @@
+{
+ "system": "react",
+ "case_id": "C002",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The HB-100 base station supports a maximum of 8 bound peripherals and already has 8 bound (bound_count=8, max_devices=8). The base station log shows \"pairing request rejected: E-201 capacity reached (8/8)\", and the active fault code is E-201, which the KB confirms means capacity reached. The customer does not need to return the sensor; removing an unused device (e.g., the offline \"Test Sensor\") will free a slot.",
+ "output": {
+  "repair_steps": [
+   "In the app, go to Device Settings for the offline 'Test Sensor' (motion_old) and select Remove Device.",
+   "Confirm removal to free a slot on the HB-100 base station.",
+   "Put the base station into pairing mode from the app (Add Device).",
+   "Hold the SYNC button on the new door sensor for 3 seconds until its LED blinks blue, keeping it within 1 metre of the base station.",
+   "Wait for pairing to complete (timeout 120 seconds), then move the sensor to its final location."
+  ],
+  "customer_reply": "Thank you for your patience. Your base station has reached its maximum of 8 connected devices, which is why the new sensor won't pair. No need to return it. Simply remove an unused device, such as the offline 'Test Sensor', from the app (Device Settings > Remove Device). Then try pairing your new sensor again by putting the base station into pairing mode and holding the sensor's SYNC button for 3 seconds. If you need further help, let us know."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity exceeded max devices pairing"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-201"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 55,
+    "loop_recording": true,
+    "error_codes": [
+     "E-201"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_drive",
+      "name": "Driveway Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_old",
+      "name": "Test Sensor",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_garage",
+      "name": "New Garage Door",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity exceeded max devices pairing"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-201 Capacity reached",
+      "text": "The base station already holds its maximum number of bound peripherals. Frontline action: remove an unused device. Not an escalation case."
+     },
+     {
+      "source": "manual_base_station#Device capacity",
+      "text": "HB-100 supports up to 8 bound peripherals. HB-200 supports up to 16 bound peripherals. When the limit is reached, pairing a new device fails with error E-201 even if the device is in pairing mode. Remove an unused device in the app (Device Settings > Remove Device) to free a slot."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-201"
+   },
+   "result": {
+    "lines": [
+     "pairing request rejected: E-201 capacity reached (8/8)"
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 12.2,
+ "llm_calls": 4,
+ "tokens": 8278,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "I bought a new door sensor last week but it just won't pair. I followed the instructions and held the button. The app shows an error with a code, and I have tried both my phone and my partner's phone with the same result. Our system has grown over the years and, honestly, I don't remember how many devices we have. Do I need to return the sensor?",
+ "user_turns": 0,
+ "console_calls": 3,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and provides actionable steps, but it asserts a specific root cause (base station at maximum of 8 devices) and references an offline 'Test Sensor' (motion_old) that were never established in the session record—no questions were asked and no diagnostics were performed. This violates the requirement to avoid claiming checks/fixes not shown as completed. Clarity and actionability are otherwise reasonable."
+}

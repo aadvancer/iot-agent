@@ -1,0 +1,202 @@
+{
+ "system": "react",
+ "case_id": "C043",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station showed online=false with uplink_status \"no_internet\", and the logs recorded \"ethernet link down\" followed by \"cloud session closed\" — taking all 6 bound devices offline simultaneously. The garden camera's low-battery warning (6%) was merely the last report before the uplink loss and was a red herring. Re-seating the Ethernet cable into the correct port on the new router and power-cycling restored the blue LED and brought all devices back online.",
+ "output": {
+  "repair_steps": [
+   "Check the base station LED: if solid red or blinking red, proceed with network troubleshooting.",
+   "Verify the Ethernet cable is securely connected from the base station to the correct LAN port on the router.",
+   "Power-cycle the router, wait 2 minutes, then power-cycle the base station.",
+   "Confirm the base station LED turns solid blue and all devices show online in the app.",
+   "If the issue persists, check router internet connectivity and firewall settings (allow outbound TCP 443 and 8883)."
+  ],
+  "customer_reply": "We found that the base station had lost its network connection, which took all devices offline, including your garden camera. After reconnecting the Ethernet cable to the correct port on your new router and power-cycling, everything is back online. The camera's low battery was just a coincidence. Please let us know if you need further assistance."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "base station offline all devices LED blinking red no internet"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "What color is the LED on the base station right now (solid red, blinking red, solid blue, or no light)?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Check the Ethernet cable connecting the base station to the router — is it plugged in securely at both ends? Also check whether the router itself is powered on and has internet (e.g., does Wi-Fi work on a phone?)."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "Monday 18:02 uplink lost: ethernet link down",
+     "Monday 18:02 cloud session closed",
+     "cam_garden low battery warning 6% (last report before uplink loss)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "base station offline all devices LED blinking red no internet"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     },
+     {
+      "source": "manual_base_station#Network uplink",
+      "text": "The base station connects to the home router by Ethernet (recommended) or 2.4 GHz Wi-Fi. If all cameras and sensors show offline in the app at the same time, first check whether the base station itself is online. Power-cycle the router, wait 2 minutes, then power-cycle the base station. The base station requires outbound TCP 443 and 8883 to the cloud."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "What color is the LED on the base station right now (solid red, blinking red, solid blue, or no light)?"
+   },
+   "result": {
+    "answer": "It's blinking red."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Check the Ethernet cable connecting the base station to the router — is it plugged in securely at both ends? Also check whether the router itself is powered on and has internet (e.g., does Wi-Fi work on a phone?)."
+   },
+   "result": {
+    "outcome": "I plugged the base station's Ethernet cable into the new router in the hallway and power-cycled the router and then the base. The light is blue now and everything in the app is back online."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 18.4,
+ "llm_seconds": 18.3,
+ "llm_calls": 8,
+ "tokens": 15084,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "The garden camera is offline again. Its battery was low last week and I thought charging it would fix it, but it's still not working. Can you just send me a new battery for it? I didn't really check the rest of the system, I only use that camera.",
+ "user_turns": 2,
+ "console_calls": 3
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C015",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera intermittently goes offline for short periods and notifications are delayed, which matches weak signal symptoms. The user replaced the battery and updated the app, ruling out battery low and app issues. The camera is new, so hardware fault is less likely. The issue is isolated to one device, not multiple, so batch link failure is unlikely.",
+ "output": {
+  "repair_steps": [
+   "Check the signal strength indicator for the camera in the app.",
+   "Move the camera closer to the base station or remove obstacles between them.",
+   "Ensure the base station is centrally located and not near interference sources like microwaves or thick walls.",
+   "If possible, add a Wi-Fi extender or reposition the base station to improve coverage.",
+   "Monitor the camera for 24 hours to see if the disconnections reduce."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the camera is likely experiencing a weak wireless signal to the base station. This can cause intermittent disconnections and delayed notifications. We recommend checking the signal strength in the app and relocating the camera or base station to improve connectivity."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.1,
+ "llm_calls": 1,
+ "tokens": 888,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The camera in my detached garage keeps dropping off. It is offline maybe five times a day for 10 to 30 minutes and then comes back by itself, and notifications from it are delayed. I replaced the camera battery and updated the app, but nothing changes. The camera is brand new, bought in the spring, so it shouldn't be faulty.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering concrete troubleshooting steps (signal strength check, relocation, interference avoidance, extender, monitoring). It avoids claiming any checks or fixes were completed, since the session record shows no actions performed. It does speculate on a likely cause (weak signal) but frames it as a recommendation rather than a confirmed diagnosis, and does not overclaim. Minor deduction only because the root-cause suggestion is somewhat presumptive without any diagnostic data gathered."
+}

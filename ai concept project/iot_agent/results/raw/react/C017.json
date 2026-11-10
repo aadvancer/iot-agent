@@ -1,0 +1,184 @@
+{
+ "system": "react",
+ "case_id": "C017",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The shed door sensor shows RSSI -88 dBm (very weak) with repeated heartbeat losses, while other sensors on the same base station are healthy (e.g., front door at -58 dBm). The customer reports the issue began after installing a new metal shed, which attenuates the RF signal, and moving the sensor within the door frame did not help. This is a single-device intermittent connectivity issue consistent with weak signal.",
+ "output": {
+  "repair_steps": [
+   "Advise customer to relocate the sensor to a position with better RF line-of-sight to the base station, ideally outside the metal shed or near a non-metal wall/window.",
+   "If relocation is not possible, recommend installing a range extender or moving the base station closer to the shed.",
+   "Check for any firmware updates for the sensor and base station, and apply if available.",
+   "If the issue persists after these steps, escalate to L2 for possible hardware replacement or advanced RF survey."
+  ],
+  "customer_reply": "We've identified that the metal shed is weakening the signal between your sensor and base station. Try moving the sensor to a spot with a clearer path to the base station, like near a window or outside the shed. If that's not possible, consider a range extender or moving the base station closer. Let us know if the issue continues."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_shed"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_shed"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_front"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_shed",
+      "name": "Shed Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "intermittent"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_shed"
+   },
+   "result": {
+    "id": "door_shed",
+    "name": "Shed Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -88,
+    "battery": 67,
+    "status": "intermittent"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_shed"
+   },
+   "result": {
+    "lines": [
+     "door_shed heartbeat lost repeatedly (RSSI -88 dBm)"
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_front"
+   },
+   "result": {
+    "id": "door_front",
+    "name": "Front Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -58,
+    "battery": 82,
+    "status": "online"
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 13.2,
+ "llm_calls": 5,
+ "tokens": 9688,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The shed door sensor keeps going offline and coming back. Honestly it only started after we put up the new metal shed in October. The app notifies me about it at random times, including at night. I tried moving the sensor to the other side of the door frame, but that made no difference.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it offers actionable steps (relocate sensor, add range extender, check firmware, escalate). However, it presents the metal shed as an identified cause without any diagnostic evidence in the session record, and it includes 'check for firmware updates' as a step rather than a completed action. The customer had already tried relocating the sensor, which the response does not acknowledge. Actionability is decent but the unsupported root-cause claim and lack of acknowledgment of prior attempts limit the score."
+}

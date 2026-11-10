@@ -1,0 +1,111 @@
+{
+  "case_id": "C043",
+  "complaint": "The garden camera is offline again. Its battery was low last week and I thought charging it would fix it, but it's still not working. Can you just send me a new battery for it? I didn't really check the rest of the system, I only use that camera.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-200",
+      "fw": "4.2",
+      "online": false,
+      "uplink_status": "no_internet",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": []
+    },
+    "devices": [
+      {
+        "id": "cam_garden",
+        "name": "Garden Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 6,
+        "status": "offline"
+      },
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 83,
+        "status": "offline"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 66,
+        "status": "offline"
+      },
+      {
+        "id": "cam_front",
+        "name": "Front Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 58,
+        "status": "offline"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": 47,
+        "status": "offline"
+      },
+      {
+        "id": "cam_hall",
+        "name": "Hall Cam",
+        "model": "CAM-I2",
+        "fw": "2.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": null,
+        "battery": null,
+        "status": "offline"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "Monday 18:02 uplink lost: ethernet link down",
+      "Monday 18:02 cloud session closed",
+      "cam_garden low battery warning 6% (last report before uplink loss)",
+      "06:30:12 radio channel scan: channel 4 selected, utilisation 18%"
+    ]
+  },
+  "user_knowledge": {
+    "base_led": "blinking red",
+    "router": "We changed internet provider on Monday; the new router is in the hallway.",
+    "other_devices": "Now that you mention it, the app shows everything as offline.",
+    "recent_changes": "new internet provider and router on Monday"
+  },
+  "action_outcomes": {
+    "charge_camera": "I charged it fully again; it still shows offline.",
+    "restart_base_station": "The base station still blinks red.",
+    "reconnect_uplink_and_power_cycle": "After plugging the base station's Ethernet cable into the new router and power-cycling router then base, the LED turns blue and all devices come back online.",
+    "replace_battery": "No change."
+  },
+  "gt_root_cause": "BS_NETWORK_DOWN",
+  "gt_tier": "L1",
+  "gt_key_checks": [
+    "S1"
+  ],
+  "difficulty": "hard",
+  "split": "challenge",
+  "requires_interaction": false,
+  "notes": "The master is down, so every peripheral looks offline; the low-battery garden camera the customer blames is a distractor that topology-ordered checking prunes."
+}

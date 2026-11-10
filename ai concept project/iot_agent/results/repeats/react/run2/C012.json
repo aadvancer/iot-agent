@@ -1,0 +1,196 @@
+{
+ "system": "react",
+ "case_id": "C012",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The HB-100 base station supports a maximum of 8 bound peripherals and is currently at 8/8 (bound_count 8, max_devices 8), with active fault code E-201. The customer is attempting to add a 9th device (New Door Sensor), which fails with E-201 even though pairing mode is correct. An unused \"Old Test Sensor\" (offline, battery 0) is still bound in both app and base station and can be removed to free a slot.",
+ "output": {
+  "repair_steps": [
+   "In the app, go to Devices, select 'Old Test Sensor', then Device Settings > Remove Device.",
+   "Confirm removal when prompted.",
+   "After removal, verify the base station shows 7/8 bound devices and no E-201 error.",
+   "Guide the customer to pair the new door sensor: put it in pairing mode and add it in the app."
+  ],
+  "customer_reply": "Your base station has reached its maximum of 8 connected devices, which is why the new sensor can't be added. I see an unused 'Old Test Sensor' that is offline and has no battery. Please remove it in the app: Devices > Old Test Sensor > Device Settings > Remove Device. Once removed, you'll have a free slot to add your new garage door sensor. Let me know if you need help with the steps."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity exceeded max devices"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "old_test"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-201"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_drive",
+      "name": "Driveway Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "old_test",
+      "name": "Old Test Sensor",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "new_door",
+      "name": "New Door Sensor",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity exceeded max devices"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-201 Capacity reached",
+      "text": "The base station already holds its maximum number of bound peripherals. Frontline action: remove an unused device. Not an escalation case."
+     },
+     {
+      "source": "manual_base_station#Device capacity",
+      "text": "HB-100 supports up to 8 bound peripherals. HB-200 supports up to 16 bound peripherals. When the limit is reached, pairing a new device fails with error E-201 even if the device is in pairing mode. Remove an unused device in the app (Device Settings > Remove Device) to free a slot."
+     },
+     {
+      "source": "manual_base_station#Orphaned binding (device removed in app but still bound in base station)",
+      "text": "If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "old_test"
+   },
+   "result": {
+    "id": "old_test",
+    "name": "Old Test Sensor",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": null,
+    "battery": 0,
+    "status": "offline"
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 12.6,
+ "llm_seconds": 12.6,
+ "llm_calls": 5,
+ "tokens": 11204,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "I want to add a sensor to the garage door, but the app refuses to register it. The screen shows an error with a code and I'm not sure what it means. I held the button on the sensor until it blinked, exactly like in the video. I've had this system for a few years and added things bit by bit. Is the new sensor dead on arrival?",
+ "user_turns": 0,
+ "console_calls": 3
+}

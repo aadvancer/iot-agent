@@ -1,0 +1,264 @@
+{
+ "system": "react",
+ "case_id": "C004",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The kitchen camera (CAM-I2, hardware rev A, firmware 1.2) speaks protocol v2, but the HB-200 base station on firmware 4.5 only supports protocol v3, producing E-305. check_firmware_compat confirms no OTA path exists for this hardware revision, and the KB historical case H-03 documents the identical scenario requiring FAE escalation for a compatibility firmware.",
+ "output": {
+  "symptom_summary": "Kitchen camera (CAM-I2, hardware rev A, firmware 1.2) went offline after base station HB-200 updated to firmware 4.5. Camera is bound but shows offline with E-305 error on base station. Other devices including a newer CAM-I2 (firmware 2.0) remain online.",
+  "suspected_root_cause": "Protocol conflict: camera firmware 1.2 uses protocol v2, but base station firmware 4.5 only supports protocol v3, and no OTA path exists for this hardware revision.",
+  "key_abnormal_indicators": [
+   "Base station error code: E-305",
+   "Camera firmware: 1.2 (protocol v2)",
+   "Base station supported protocols: [v3]",
+   "check_firmware_compat: compatible=false, ota_available_to=null",
+   "Log: 'cam_kitchen: E-305 protocol v2 not supported'",
+   "Log: 'cam_kitchen: OTA unavailable for hardware rev A'",
+   "Historical case H-03: identical scenario, required FAE escalation"
+  ],
+  "customer_reply": "We've identified a compatibility issue between your kitchen camera and the base station after a recent update. This requires a specialized firmware from our engineering team. An engineer will contact you within 1-2 business days to resolve it. No further action is needed from you at this time."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_kitchen"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_kitchen"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_kitchen"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_hall"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_hall"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported OTA unavailable hardware rev"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 62,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_kitchen",
+      "name": "Kitchen Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_kitchen"
+   },
+   "result": {
+    "id": "cam_kitchen",
+    "name": "Kitchen Cam",
+    "model": "CAM-I2",
+    "fw": "1.2",
+    "rssi": -62,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_kitchen"
+   },
+   "result": {
+    "device_id": "cam_kitchen",
+    "device_fw": "1.2",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_kitchen"
+   },
+   "result": {
+    "lines": [
+     "cam_kitchen: E-305 protocol v2 not supported",
+     "cam_kitchen: OTA unavailable for hardware rev A"
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_hall"
+   },
+   "result": {
+    "id": "cam_hall",
+    "name": "Hall Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -60,
+    "battery": null,
+    "status": "online"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_hall"
+   },
+   "result": {
+    "device_id": "cam_hall",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported OTA unavailable hardware rev"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 15.0,
+ "llm_seconds": 14.9,
+ "llm_calls": 5,
+ "tokens": 11503,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "My kitchen camera disappeared this morning. It says offline. I already unplugged it and plugged it back in, tried a different power socket, and even restarted my Wi-Fi router because I assumed that is what the camera uses. The garden camera and the door sensor are fine, which is why I'm confused. The kitchen camera is the oldest one I own.",
+ "user_turns": 0,
+ "console_calls": 7
+}

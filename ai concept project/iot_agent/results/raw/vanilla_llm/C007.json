@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C007",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "All devices are offline in the app, the base station LED is red, and live view fails for every camera. The customer mentions moving furniture and possibly pulling cables, which could have disconnected the base station's network or power. This matches the BS_NETWORK_DOWN pattern.",
+ "output": {
+  "repair_steps": [
+   "Check that the base station's power adapter is securely plugged into a working outlet and that the power cable is not damaged.",
+   "Verify that the Ethernet cable (if used) is firmly connected to both the base station and the router, or ensure the Wi-Fi connection is active.",
+   "Inspect the cables behind the TV cabinet for any visible damage or disconnection.",
+   "Restart the base station by unplugging it for 30 seconds and plugging it back in.",
+   "After restart, wait a few minutes and check if the LED turns green and devices come online in the app."
+  ],
+  "customer_reply": "Thank you for the details. Based on your description, it sounds like the base station may have lost its network connection or power, possibly due to the cables being disturbed when you moved the TV cabinet. We'll guide you through checking the connections."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.4,
+ "llm_calls": 1,
+ "tokens": 925,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "The red light on the base station has been on since I got home. The app shows no connection for every device and the live view just spins. Last weekend we moved the TV cabinet and I may have pulled some cables behind it. My son insists that all the camera batteries ran out at the same time, but that seems unlikely to me. The smart TV also complains about something, I haven't looked into it.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with a logical sequence of checks tied to the customer's report of moved cables and a red base-station light. It avoids claiming any checks or fixes were completed, since none were performed. It loses a point only because the steps are generic and not yet tailored to the customer's specific answers, as no diagnostic questions were asked."
+}

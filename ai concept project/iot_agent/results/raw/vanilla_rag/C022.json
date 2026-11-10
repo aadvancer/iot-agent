@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C022",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The garage door sensor is shown as connected in the app but events are not coming through. This matches the symptom of PERIPHERAL_FW_OUTDATED: device connected but features missing / events not uploaded, error E-305. The customer's Wi-Fi extender did not help, indicating the issue is not network-related. The sensor itself opens and closes normally, so hardware is likely fine. No other devices are reported offline, so it's not a batch failure or base station issue.",
+ "output": {
+  "repair_steps": [
+   "Check the sensor's firmware version in the app.",
+   "If an update is available, initiate the firmware update for the garage door sensor.",
+   "Ensure the sensor is within range of the base station during the update.",
+   "After the update, test the sensor by opening and closing the garage door to verify events are received.",
+   "If the issue persists, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the sensor appears connected but its firmware may be outdated, causing events not to be uploaded. We will guide you through updating the sensor firmware to resolve this."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.8,
+ "llm_seconds": 5.7,
+ "llm_calls": 1,
+ "tokens": 1225,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "Events from the garage door sensor haven't come through for two days, although the app shows it as connected. My husband thinks the garage Wi-Fi is bad, so he installed a Wi-Fi extender there, which didn't help. The garage door opens and closes normally, so the sensor itself should be fine.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable steps, but it assumes the firmware is outdated without any diagnostic evidence from the session record (no questions asked, no actions performed). It does not claim checks were completed, which is good, but the root-cause assertion is speculative and unsupported. Usability is moderate: clear and courteous, but actionability is based on an unverified premise."
+}

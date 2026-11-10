@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C049",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint states that live view works fine but no new clips are recorded after a specific date. This matches the STORAGE_FULL pattern where new events are not recorded and the playback list stops at a date. The customer's suspicion about internet dropping is not supported because live view works, indicating network connectivity is fine.",
+ "output": {
+  "repair_steps": [
+   "Check the storage status in the app (e.g., under Settings > Storage).",
+   "If storage is full, delete old or unwanted recordings to free up space.",
+   "Consider enabling automatic overwrite of oldest recordings if available.",
+   "If the issue persists after freeing space, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. Since live view is working, your internet connection is likely fine. The issue appears to be that your camera's storage is full, which prevents new recordings. We can guide you through checking and freeing up storage space."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.6,
+ "llm_calls": 1,
+ "tokens": 841,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "Our camera recordings stopped about two weeks ago. Live view works fine, but there are no new clips in the event list after the 3rd. I think the internet must be dropping at night, our broadband has been flaky. Should I call my internet provider about it?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides actionable steps (check storage, delete old recordings, enable overwrite). However, it asserts the issue 'appears to be that storage is full' without any diagnostic evidence—no questions were asked and no checks were performed in the session record, so this root-cause claim is unsupported. It also doesn't directly address the customer's internet-provider question beyond a brief reassurance. Clarity and actionability are decent, but the unsupported diagnosis lowers the score."
+}

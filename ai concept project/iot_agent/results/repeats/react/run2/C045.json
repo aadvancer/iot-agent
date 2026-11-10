@@ -1,0 +1,198 @@
+{
+ "system": "react",
+ "case_id": "C045",
+ "pred_root_cause": "BINDING_TABLE_CORRUPT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station reports 8/8 bound devices and error E-201, but the app lists only 7. The extra slot is held by an orphaned binding: 'motion_old' (Sensor 7) is bound_in_base=true but bound_in_app=false and offline. The customer removed it from the app last year while it was offline, so the base station kept the entry. Per the KB, this binding-table inconsistency cannot be cleared by frontline (app can't remove an unlisted device, re-pairing won't free the slot, factory reset is disallowed) and must be escalated to FAE to remove the ghost entry.",
+ "output": {
+  "symptom_summary": "Customer cannot add a new garage door sensor because the base station reports capacity full (E-201) with 8/8 devices bound, but the app only lists 7 devices. The extra slot is held by an orphaned binding for 'motion_old' (Sensor 7), which was removed from the app last year while offline.",
+  "suspected_root_cause": "Binding-table inconsistency: the base station retains a ghost entry for 'motion_old' (bound_in_base=true, bound_in_app=false) that occupies a slot and triggers E-201.",
+  "key_abnormal_indicators": [
+   "Base station error code: E-201",
+   "bound_count: 8, max_devices: 8",
+   "Device 'motion_old' (Sensor 7) has bound_in_base=true, bound_in_app=false, status=offline",
+   "App lists only 7 devices, but base station has 8 bound entries"
+  ],
+  "customer_reply": "We've identified the issue: an old sensor removed from the app is still occupying a slot on the base station. This requires our engineering team to clear it. We've escalated your case and will follow up within 1-2 business days. Thank you for your patience."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_old"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity exceeded device removed from app but still bound in base station"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-201"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_porch",
+      "name": "Porch Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_old",
+      "name": "Sensor 7",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": false,
+      "status": "offline"
+     },
+     {
+      "id": "door_garage",
+      "name": "New Garage Door",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_old"
+   },
+   "result": {
+    "id": "motion_old",
+    "name": "Sensor 7",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": null,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity exceeded device removed from app but still bound in base station"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_base_station#Orphaned binding (device removed in app but still bound in base station)",
+      "text": "If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+     },
+     {
+      "source": "fault_codes#E-201 Capacity reached",
+      "text": "The base station already holds its maximum number of bound peripherals. Frontline action: remove an unused device. Not an escalation case."
+     },
+     {
+      "source": "manual_base_station#Device capacity",
+      "text": "HB-100 supports up to 8 bound peripherals. HB-200 supports up to 16 bound peripherals. When the limit is reached, pairing a new device fails with error E-201 even if the device is in pairing mode. Remove an unused device in the app (Device Settings > Remove Device) to free a slot."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 12.6,
+ "llm_seconds": 12.6,
+ "llm_calls": 4,
+ "tokens": 8975,
+ "gt_root_cause": "BINDING_TABLE_CORRUPT",
+ "gt_tier": "L2",
+ "complaint": "I can't add my new garage door sensor, the app says the system is full. That makes no sense: I only have 7 devices in the app and the manual says this base station supports 8. I already removed the old hallway sensor from the app last year, so there should be a free slot.",
+ "user_turns": 0,
+ "console_calls": 3
+}

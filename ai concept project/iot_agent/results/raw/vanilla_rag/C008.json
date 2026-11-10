@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C008",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "All devices are offline simultaneously and the base station LED is red, which matches the BS_NETWORK_DOWN pattern. The customer also reports a thunderstorm and neighbor's broadband outage, suggesting a local network issue. No support tools are available, so this is based solely on the complaint.",
+ "output": {
+  "repair_steps": [
+   "Check if the home router has internet access (e.g., by connecting a phone or computer to Wi-Fi and browsing).",
+   "If internet is down, contact the internet service provider to restore service.",
+   "Once internet is restored, power-cycle the base station: unplug power, wait 30 seconds, plug back in.",
+   "Wait 2-3 minutes for the base station to reconnect; the LED should turn green.",
+   "Open the app and verify that devices come back online."
+  ],
+  "customer_reply": "Thank you for the details. It sounds like your base station has lost its connection to the internet, which is why all devices show offline and the LED is red. Since your neighbor also has a broadband outage after the storm, the issue is likely with your internet service. Please check if your router has internet access, and if not, contact your ISP. Once internet is restored, power-cycle the base station and check if the LED turns green."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.5,
+ "llm_seconds": 6.3,
+ "llm_calls": 1,
+ "tokens": 1292,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Every camera and sensor has shown offline since this morning, although they were all fine last night. The base station has a red light. I rebooted my phone and reinstalled the app because I thought that was the problem, but nothing changed. We had a thunderstorm last night and my neighbour says the broadband is down on our street too.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable with logical troubleshooting steps tied to the reported red light and neighborhood outage. It avoids claiming any checks or fixes were completed, appropriately framing steps as things for the customer to do. Minor deduction only because it doesn't explicitly acknowledge the customer's already-performed phone reboot/app reinstall, but overall usability is strong."
+}

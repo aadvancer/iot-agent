@@ -1,0 +1,226 @@
+{
+ "system": "react",
+ "case_id": "C048",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station had only 6 of 8 devices bound, so capacity was not the issue. Logs showed pairing windows expiring with \"no join request received,\" indicating the sensor never entered pairing mode correctly — the customer was pressing the button once (LED flashed once) instead of holding SYNC for 3 seconds, and attempting from the sofa far from the base station. Following the correct procedure (hold SYNC 3s, within 1m of base station) paired the sensor immediately.",
+ "output": {
+  "repair_steps": [
+   "Confirm the sensor is now paired and online in the app.",
+   "Advise the customer to move the sensor to its final location and test it.",
+   "Close the ticket with root cause PAIR_TIMEOUT and resolution notes."
+  ],
+  "customer_reply": "Your new window sensor is now paired successfully. The issue was not a device limit but the pairing procedure: the SYNC button must be held for 3 seconds until the LED blinks blue, and the sensor must be within 1 metre of the base station during pairing. You can now move the sensor to its final location. If you need further help, let us know."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "win_new"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing window expired no join request received sensor"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "When you put the new window sensor into pairing mode, does its LED blink (and what colour), and did you remove the battery pull-tab / insert the battery correctly?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "First, check the battery: open the sensor and confirm the battery is inserted with correct polarity and any plastic pull-tab is removed. Then, move next to the base station (within 1 metre). Open Add Device in the app to start the 120-second pairing window, then press and HOLD the SYNC button on the sensor for a full 3 seconds until the LED blinks blue (not just a single press)."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_new",
+      "name": "New Window",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "win_new"
+   },
+   "result": {
+    "lines": []
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   },
+   "result": {
+    "lines": [
+     "19:02:10 pairing window opened",
+     "19:04:10 pairing window expired: no join request received",
+     "19:05:40 pairing window opened",
+     "19:07:40 pairing window expired: no join request received"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing window expired no join request received sensor"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "When you put the new window sensor into pairing mode, does its LED blink (and what colour), and did you remove the battery pull-tab / insert the battery correctly?"
+   },
+   "result": {
+    "answer": "I pressed the button once and the LED flashed once, then went off — I couldn't really tell you the colour. As for the battery, I just took it out of the box and tried it, so I can't say whether the tab was removed or the battery is in right."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "First, check the battery: open the sensor and confirm the battery is inserted with correct polarity and any plastic pull-tab is removed. Then, move next to the base station (within 1 metre). Open Add Device in the app to start the 120-second pairing window, then press and HOLD the SYNC button on the sensor for a full 3 seconds until the LED blinks blue (not just a single press)."
+   },
+   "result": {
+    "outcome": "I checked the battery and the pull-tab, then went and stood right next to the base station upstairs and held the sync button for a full 3 seconds. The LED blinked blue and it paired straight away — the New Window sensor now shows as online in the app."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.1,
+ "llm_seconds": 20.4,
+ "llm_calls": 8,
+ "tokens": 15447,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "My new window sensor won't pair. I think we've hit the maximum number of devices, my neighbour had the same problem with the same base station. Do I need to buy the bigger base station? I've tried three times from the living room sofa and it fails every time.",
+ "user_turns": 2,
+ "console_calls": 4,
+ "usability_score": 5,
+ "usability_reason": "The response is clear, polite, and actionable: it confirms the successful pairing, explains the actual root cause (pairing procedure, not device limit), and gives a concrete next step (move sensor and test). It avoids unsupported claims—the pairing success and LED behavior are supported by the session record, and it does not assert any unperformed checks or fixes."
+}

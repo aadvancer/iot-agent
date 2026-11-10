@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C001",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes a single camera intermittently going offline while other devices are fine, which matches the WEAK_SIGNAL pattern. The customer moved the base station to a different room, likely increasing distance or introducing obstacles, causing weak signal for that camera. No other symptoms like all devices offline, pairing issues, or error codes are present.",
+ "output": {
+  "repair_steps": [
+   "Check the signal strength of the living room camera in the app (look for RSSI or signal bars).",
+   "Move the base station to a more central location, ideally closer to the living room camera, or at least away from walls and large metal objects.",
+   "If moving the base station is not possible, consider adding a Wi-Fi range extender or a dedicated repeater (like the RP-1) between the base station and the camera.",
+   "Ensure the camera is not near sources of interference such as microwaves, cordless phones, or thick concrete walls.",
+   "After adjusting, monitor the camera for 24-48 hours to see if the offline events decrease."
+  ],
+  "customer_reply": "Thank you for the details. Since only your living room camera is affected and the issue started after moving the base station, it's likely a weak signal issue. We can try some steps to improve the connection without replacing the camera."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 8.2,
+ "llm_seconds": 7.4,
+ "llm_calls": 1,
+ "tokens": 1355,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "My living room camera keeps going offline a few times a day, then comes back by itself. The other devices seem fine. It started about a week ago, around when we rearranged the flat and I moved the base station into the study to free up a socket in the hallway. I've restarted the camera several times and checked that it is plugged in properly. My partner thinks the camera is faulty and wants to return it, but I'd rather not buy anything new if I can avoid it.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with concrete steps (check RSSI, relocate base station, add repeater, avoid interference, monitor). It avoids claiming any checks or fixes were completed, since none were performed. It does infer a likely weak-signal cause from the customer's report, which is reasonable, but the score is not based on that label. Minor deduction because it does not ask clarifying questions or confirm the customer's already-performed restart/plug checks before prescribing steps."
+}

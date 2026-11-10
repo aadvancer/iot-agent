@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C045",
+ "pred_root_cause": "BINDING_TABLE_CORRUPT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer sees only 7 devices in the app, but the base station reports E-201 (capacity exceeded). The manual snippet explains that removing a device in the app while it is offline can leave an orphaned binding in the base station, which still occupies a slot. This causes the base station to think it is full even though the app shows fewer devices. Frontline cannot clear this; it requires backend binding tool access, so escalation to L2 is appropriate.",
+ "output": {
+  "symptom_summary": "Customer cannot add new garage door sensor; app shows error E-201 (system full) despite only 7 devices listed in app (limit 8). Customer removed an old hallway sensor last year.",
+  "suspected_root_cause": "Orphaned binding: old hallway sensor removed in app while offline left a ghost entry in base station, consuming a slot and causing E-201.",
+  "key_abnormal_indicators": [
+   "App shows 7 devices, but base station reports capacity exceeded (E-201).",
+   "Customer removed a device previously (hallway sensor) but slot not freed.",
+   "Manual indicates orphaned bindings can occur when device removed while offline.",
+   "Historical case H-02 shows E-201 when base station has 8 devices, but here app count is 7, suggesting hidden binding."
+  ],
+  "customer_reply": "Thank you for the details. It appears that the base station may still have an entry for the old hallway sensor you removed last year, even though it no longer appears in the app. This 'ghost' entry is still using one of the 8 device slots, so the system thinks it is full. Our frontline team cannot clear this remotely; I will escalate your case to our advanced support team who can remove the stale entry. They will contact you shortly."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 7.8,
+ "llm_seconds": 7.7,
+ "llm_calls": 1,
+ "tokens": 1403,
+ "gt_root_cause": "BINDING_TABLE_CORRUPT",
+ "gt_tier": "L2",
+ "complaint": "I can't add my new garage door sensor, the app says the system is full. That makes no sense: I only have 7 devices in the app and the manual says this base station supports 8. I already removed the old hallway sensor from the app last year, so there should be a free slot.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable: explains the likely ghost-entry cause and states escalation to advanced support for removal. It avoids claiming any checks or fixes were completed, consistent with the empty session record. Slight deduction because the root cause is presented somewhat definitively without any diagnostic steps shown, and no interim customer action or timeline is offered."
+}

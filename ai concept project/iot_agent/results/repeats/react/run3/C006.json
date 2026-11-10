@@ -1,0 +1,324 @@
+{
+ "system": "react",
+ "case_id": "C006",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station is online locally (devices bound and some reporting online, LED turned solid blue after restart), but the support console persistently shows uplink_status=no_internet with recurring E-503 and base station online=false. The trigger was a router replacement the previous day, and the standard L1 restart sequence restored local device connectivity but did not clear the cloud uplink failure. This matches historical case H-06 where E-503 persisted after router/DNS restart and required escalation for a backend/cloud-channel issue.",
+ "output": {
+  "symptom_summary": "Customer reports all devices went offline after router replacement; base station LED turned solid blue and devices appear online locally after power-cycle, but support console still shows base station online=false, uplink_status=no_internet, and recurring E-503.",
+  "suspected_root_cause": "Persistent cloud uplink failure (E-503) after router replacement, likely due to backend/cloud-channel issue (e.g., certificate or DNS) rather than local connectivity.",
+  "key_abnormal_indicators": [
+   "base station online=false in console despite local LED solid blue",
+   "uplink_status=no_internet",
+   "error_codes: E-503",
+   "some devices show offline in topology while others online",
+   "router replaced previous day"
+  ],
+  "customer_reply": "Thank you for your patience. Our advanced engineering team will investigate the remaining cloud connection issue and will contact you shortly with a resolution. Your local system is functioning, but remote access may be limited until then."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 base station no internet uplink router replaced"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "What color is the LED on the base station right now, and is the base station connected to the new router via an Ethernet cable or Wi-Fi?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "uplink"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Check the base station's connection to the new router. If it uses an Ethernet cable, make sure the cable is plugged into a LAN port (not the WAN/Internet port) on the new router, and that the cable is firmly seated at both ends. If it connects via Wi-Fi, the base station likely needs to be re-paired to the new router's Wi-Fi network (the old network no longer exists). Please report which connection type it uses and whether the cable/port looks correct."
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Power-cycle in this order: (1) unplug the new router's power, wait 30 seconds, plug it back in and wait for its internet light to come on; (2) then unplug the base station's power, wait 30 seconds, and plug it back in. Wait 2-3 minutes, then tell me the base station LED color and whether the app shows devices online."
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_main",
+      "name": "Main Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "base station uplink lost: E-503"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 base station no internet uplink router replaced"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "What color is the LED on the base station right now, and is the base station connected to the new router via an Ethernet cable or Wi-Fi?"
+   },
+   "result": {
+    "answer": "The LED on the base station is solid red. I don't know whether it's connected by Ethernet cable or Wi-Fi — the technician plugged things back in and I can't tell which port the cable is in."
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "uplink"
+   },
+   "result": {
+    "lines": [
+     "base station uplink lost: E-503"
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Check the base station's connection to the new router. If it uses an Ethernet cable, make sure the cable is plugged into a LAN port (not the WAN/Internet port) on the new router, and that the cable is firmly seated at both ends. If it connects via Wi-Fi, the base station likely needs to be re-paired to the new router's Wi-Fi network (the old network no longer exists). Please report which connection type it uses and whether the cable/port looks correct."
+   },
+   "result": {
+    "outcome": "I checked the cable at the base station and the router, but I honestly can't tell which port it's in or whether it's Ethernet or Wi-Fi — it all looks plugged in to me. Nothing seems to have changed; the light is still solid red."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Power-cycle in this order: (1) unplug the new router's power, wait 30 seconds, plug it back in and wait for its internet light to come on; (2) then unplug the base station's power, wait 30 seconds, and plug it back in. Wait 2-3 minutes, then tell me the base station LED color and whether the app shows devices online."
+   },
+   "result": {
+    "outcome": "I unplugged the router, waited 30 seconds, plugged it back in, then did the same with the base station. After a couple of minutes the base station light turned solid blue and all my devices show online in the app again."
+   }
+  },
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_main",
+      "name": "Main Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 2,
+ "memory": {},
+ "wall_seconds": 35.5,
+ "llm_seconds": 35.5,
+ "llm_calls": 12,
+ "tokens": 29261,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Hi, everything in my security app went grey around 7 this morning: all my cameras and sensors show offline and I get no notifications at all. Yesterday afternoon our internet provider's technician replaced the router, and since then the Wi-Fi on my laptop works fine. I tried opening the app on mobile data and it says the base station is unreachable. I'm travelling next week, so I need this working. I think the base station has died.",
+ "user_turns": 3,
+ "console_calls": 6
+}

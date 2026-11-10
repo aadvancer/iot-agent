@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C016",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor intermittently goes offline and misses events, while a similar sensor in the hallway works fine. This pattern suggests a weak or unstable wireless signal to the cellar sensor rather than a hardware fault, because the device is not consistently offline and the issue is location-specific.",
+ "output": {
+  "repair_steps": [
+   "Check the signal strength indicator for the cellar sensor in the app.",
+   "Move the sensor closer to the base station or remove obstacles (e.g., thick walls, metal objects) that may block the signal.",
+   "If possible, reposition the base station to a more central location.",
+   "Test the sensor by triggering it and verifying that alerts are received.",
+   "If the problem continues, consider swapping the sensor with the hallway sensor to confirm whether the issue follows the device or the location."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the most likely cause is a weak wireless signal between the cellar sensor and the base station. This can cause intermittent offline status and missed alerts. We recommend checking the signal strength in the app and relocating the sensor or base station to improve connectivity. If the issue persists after these steps, please let us know."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.5,
+ "llm_seconds": 6.5,
+ "llm_calls": 1,
+ "tokens": 1223,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "My cellar motion sensor misses alerts. Twice last week I walked through the cellar to test it and got nothing on my phone. The app sometimes shows it offline for a few minutes. I assume the sensor is faulty because it is an older unit, but the hallway sensor of the same model works perfectly.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering concrete diagnostic and remediation steps. It avoids claiming any checks or fixes were completed, since no actions were performed in the session. It does state a likely cause (weak signal) as a hypothesis rather than a confirmed finding, which is acceptable. Minor deduction only because the root-cause suggestion is somewhat assertive given no diagnostics were actually performed, but it is framed as 'most likely' and paired with verification steps."
+}

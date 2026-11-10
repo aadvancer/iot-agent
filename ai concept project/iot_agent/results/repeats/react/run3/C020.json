@@ -1,0 +1,241 @@
+{
+ "system": "react",
+ "case_id": "C020",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The attic motion sensor (SEN-M1) is at 8% battery, below the 10% threshold at which sensors begin missing events, and is now offline. Signal is strong (-62 dBm), firmware is current and protocol-compatible (v3), and only this single device is affected, ruling out batch link failure, protocol conflict, or firmware issues. The earlier missed event is consistent with a gradually draining battery (accelerated by attic heat), not a hardware fault.",
+ "output": {
+  "repair_steps": [
+   "Instruct the customer to replace the battery in the attic motion sensor (SEN-M1) with a fresh CR123A lithium battery.",
+   "After replacement, verify the sensor comes back online in the app and test by triggering motion.",
+   "Advise the customer that high attic temperatures can shorten battery life; consider checking the battery every 3-4 months."
+  ],
+  "customer_reply": "Thanks for your patience. Our diagnostics show the attic motion sensor's battery is at 8%, below the 10% threshold where missed events can occur. The heat may have accelerated drain, but the sensor itself is fine. Please replace the battery with a fresh CR123A lithium battery. Once replaced, it should come back online and resume normal operation. If issues persist after replacement, let us know."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_attic"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_attic"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_attic"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "motion sensor battery low offline missed events heat damage"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-M1 motion sensor battery threshold offline events"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_attic",
+      "name": "Attic Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_attic"
+   },
+   "result": {
+    "id": "motion_attic",
+    "name": "Attic Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": -62,
+    "battery": 8,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_attic"
+   },
+   "result": {
+    "lines": [
+     "motion_attic battery level 8%"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_attic"
+   },
+   "result": {
+    "device_id": "motion_attic",
+    "device_fw": "1.4",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "motion sensor battery low offline missed events heat damage"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Battery cameras (CAM-S1)",
+      "text": "CAM-S1 runs on a rechargeable battery lasting 3 to 6 months. Below 10 percent the camera disables live view and may miss events; below 3 percent it goes offline. Charge with the supplied USB-C cable for about 6 hours. Frequent motion events in busy areas shorten battery life; enable power-saving mode."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-M1 motion sensor battery threshold offline events"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-07 Missing motion alerts after base update",
+      "text": "SEN-M1 on firmware 1.1 stopped reporting after base update to 4.5 with E-305. OTA to 1.4 succeeded and alerts resumed. Resolved at frontline. Note: initially escalated unnecessarily - an example of avoidable FAE workload."
+     },
+     {
+      "source": "manual_peripherals#Battery cameras (CAM-S1)",
+      "text": "CAM-S1 runs on a rechargeable battery lasting 3 to 6 months. Below 10 percent the camera disables live view and may miss events; below 3 percent it goes offline. Charge with the supplied USB-C cable for about 6 hours. Frequent motion events in busy areas shorten battery life; enable power-saving mode."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 17.4,
+ "llm_seconds": 17.3,
+ "llm_calls": 6,
+ "tokens": 14228,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The attic motion detector misses events; its battery warning appeared today. But it also missed an event last week, well before the warning, so I'm not sure the battery is the cause. It was boiling up there all summer, so maybe the heat damaged it. Should I replace the whole sensor?",
+ "user_turns": 0,
+ "console_calls": 5
+}

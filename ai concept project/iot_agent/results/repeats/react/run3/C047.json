@@ -1,0 +1,248 @@
+{
+ "system": "react",
+ "case_id": "C047",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The living room motion sensor (SEN-M1) was running firmware v1.1 on the legacy v2 radio protocol, while the base station (HB-200, fw 4.5) only supports v3, producing E-305 \"protocol v2 not supported\" and a \"connected_no_events\" status. The device still detected motion (LED blinking) but could not upload events. A frontline OTA upgrade to v1.4 resolved the issue and alerts resumed, confirming the low battery was not the cause.",
+ "output": {
+  "repair_steps": [
+   "In the app, navigate to the Living Motion sensor's settings and check for a firmware update.",
+   "Trigger the OTA firmware upgrade to v1.4 and wait for completion.",
+   "Verify that the sensor status changes to 'online' and that motion events are received.",
+   "Confirm that the E-305 error code clears from the base station.",
+   "Advise the customer to replace the battery soon as it is at 12%, but note it was not the cause of the issue."
+  ],
+  "customer_reply": "We identified that your motion sensor's firmware was outdated and incompatible with the base station after a recent update. I've guided you through updating the sensor's firmware, and your alerts should now be working normally. The low battery was not the cause, but I recommend replacing it soon as it's at 12%. If you have any further issues, please let us know."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_living"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_living"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported firmware upgrade"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-305"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the app, go to the Living Motion sensor's settings and check for a firmware update. Trigger the firmware upgrade (to v1.4) and wait for it to complete. Report whether the update succeeds or fails."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_living",
+      "name": "Living Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "connected_no_events"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_living"
+   },
+   "result": {
+    "id": "motion_living",
+    "name": "Living Motion",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": -60,
+    "battery": 12,
+    "status": "connected_no_events"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_living"
+   },
+   "result": {
+    "device_id": "motion_living",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "1.4"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_living"
+   },
+   "result": {
+    "lines": [
+     "motion_living: E-305 protocol v2 not supported"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 not supported firmware upgrade"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#Firmware update",
+      "text": "Base station firmware updates are pushed automatically at night. HB-200 firmware 4.5 removes support for the legacy v2 radio protocol. Peripherals still running v2 firmware must be upgraded to v3 firmware before or after the base station update, otherwise they disconnect."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-305"
+   },
+   "result": {
+    "lines": [
+     "motion_living: E-305 protocol v2 not supported"
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the app, go to the Living Motion sensor's settings and check for a firmware update. Trigger the firmware upgrade (to v1.4) and wait for it to complete. Report whether the update succeeds or fails."
+   },
+   "result": {
+    "outcome": "I found the firmware update in the sensor's settings and ran it. It took about three minutes to finish, and now the alerts are working again."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 17.3,
+ "llm_seconds": 17.2,
+ "llm_calls": 7,
+ "tokens": 14837,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "The living room motion sensor stopped sending alerts since yesterday. The app shows that its battery is getting low (12%), so I guess that's the reason? I'll buy batteries, but wanted to check first because its light still blinks when I walk past it.",
+ "user_turns": 1,
+ "console_calls": 6
+}

@@ -1,0 +1,220 @@
+{
+ "system": "react",
+ "case_id": "C028",
+ "pred_root_cause": "PROTOCOL_CONFLICT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station auto-updated to firmware 4.5, which removed support for the legacy v2 radio protocol. The office camera (CAM-I2, firmware 1.2) still speaks v2, and check_firmware_compat confirms no OTA upgrade path exists for this legacy hardware (ota_available_to: null). Logs show \"E-305 protocol v2 not supported\" and \"OTA unavailable for legacy hardware,\" matching the historical case H-03 that required FAE escalation.",
+ "output": {
+  "symptom_summary": "Customer reports that the office camera (CAM-I2) no longer connects after an overnight base station update. The camera fails to re-add with a connection error, while all other devices remain online.",
+  "suspected_root_cause": "Base station firmware 4.5 dropped support for the legacy v2 radio protocol, and the CAM-I2 (firmware 1.2) has no OTA upgrade path to v3.",
+  "key_abnormal_indicators": [
+   "Base station error code: E-305",
+   "Base station firmware: 4.5",
+   "Base station supported protocols: [\"v3\"]",
+   "Office camera model: CAM-I2",
+   "Office camera firmware: 1.2",
+   "Office camera protocol: v2",
+   "check_firmware_compat: compatible=false, ota_available_to=null",
+   "Log entries: 'E-305 protocol v2 not supported', 'OTA unavailable for legacy hardware'"
+  ],
+  "customer_reply": "Thank you for your patience. We've identified a compatibility issue between your base station update and the office camera. Our engineering team will follow up with a resolution. No action needed from you at this time."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_office"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_office"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_office"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 legacy hardware OTA unavailable base station v3"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_office",
+      "name": "Office Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_office"
+   },
+   "result": {
+    "id": "cam_office",
+    "name": "Office Cam",
+    "model": "CAM-I2",
+    "fw": "1.2",
+    "rssi": -62,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_office"
+   },
+   "result": {
+    "device_id": "cam_office",
+    "device_fw": "1.2",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_office"
+   },
+   "result": {
+    "lines": [
+     "cam_office: E-305 protocol v2 not supported",
+     "cam_office: OTA unavailable for legacy hardware"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-305 protocol v2 legacy hardware OTA unavailable base station v3"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_base_station#Firmware update",
+      "text": "Base station firmware updates are pushed automatically at night. HB-200 firmware 4.5 removes support for the legacy v2 radio protocol. Peripherals still running v2 firmware must be upgraded to v3 firmware before or after the base station update, otherwise they disconnect."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 13.3,
+ "llm_seconds": 13.2,
+ "llm_calls": 5,
+ "tokens": 10788,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "My office camera no longer connects since the overnight base station update. I've tried to re-add it three times and each time it says it can't connect. It is the oldest camera I have, from the first package three years ago. The rest of the system is fine, so I'm hesitant to blame the update.",
+ "user_turns": 0,
+ "console_calls": 5
+}

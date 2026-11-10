@@ -1,0 +1,208 @@
+{
+ "system": "react",
+ "case_id": "C016",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The cellar motion sensor shows RSSI -83 dBm (weak) versus -64 dBm for the working hallway sensor, and base station logs show repeated heartbeat loss at that RSSI. Battery (67%) and firmware (v3, compatible with base station) are fine, ruling out battery or firmware causes. The intermittent offline and missed alerts are consistent with marginal RF signal in the cellar.",
+ "output": {
+  "repair_steps": [
+   "Advise customer to move the cellar motion sensor closer to the base station or to a location with better RF line-of-sight.",
+   "If moving is not possible, suggest installing a range extender/repeater compatible with the system.",
+   "Check for and remove possible RF obstructions (e.g., metal shelving, thick walls, large appliances) between sensor and base station.",
+   "If signal remains weak, recommend relocating the base station to a more central location."
+  ],
+  "customer_reply": "We found your cellar sensor has a weak wireless signal (RSSI -83 dBm) compared to the hallway sensor (-64 dBm), causing intermittent disconnections. The sensor itself is fine. To improve reliability, try moving it closer to the base station or removing obstructions. If that's not possible, a range extender may help. Let us know if you need further assistance."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_cellar"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_hall"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_cellar"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_cellar"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_cellar",
+      "name": "Cellar Motion",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "intermittent"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_cellar"
+   },
+   "result": {
+    "id": "motion_cellar",
+    "name": "Cellar Motion",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -83,
+    "battery": 67,
+    "status": "intermittent"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_hall"
+   },
+   "result": {
+    "id": "motion_hall",
+    "name": "Hallway Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": -64,
+    "battery": 74,
+    "status": "online"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "motion_cellar"
+   },
+   "result": {
+    "lines": [
+     "motion_cellar heartbeat lost repeatedly (RSSI -83 dBm)"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_cellar"
+   },
+   "result": {
+    "device_id": "motion_cellar",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 13.7,
+ "llm_calls": 5,
+ "tokens": 9956,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "My cellar motion sensor misses alerts. Twice last week I walked through the cellar to test it and got nothing on my phone. The app sometimes shows it offline for a few minutes. I assume the sensor is faulty because it is an older unit, but the hallway sensor of the same model works perfectly.",
+ "user_turns": 0,
+ "console_calls": 6,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable steps (moving the sensor, removing obstructions, adding a repeater, relocating the base station). However, it claims a specific diagnostic finding (RSSI -83 dBm vs -64 dBm) that is not supported by the session record, which shows no questions asked and no actions performed. This unsupported claim of a completed check lowers the score despite otherwise good usability."
+}

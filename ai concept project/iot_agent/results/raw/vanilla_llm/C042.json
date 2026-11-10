@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C042",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor's light blinks on motion, indicating it is powered and detecting, but events are not triggering. The app shows an update badge, suggesting a firmware update is pending. This matches PERIPHERAL_FW_OUTDATED: device connected but features missing/events not uploaded.",
+ "output": {
+  "repair_steps": [
+   "Open the app and navigate to the garage motion sensor device page.",
+   "Look for a firmware update notification or badge and tap it.",
+   "Follow the on-screen instructions to download and install the update.",
+   "Ensure the sensor is within range of the base station during the update.",
+   "After the update completes, test the sensor by walking past it and checking for notifications."
+  ],
+  "customer_reply": "Please update the firmware of your garage motion sensor via the app. Go to device settings, check for firmware update, and install it. After the update, test the sensor again."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.9,
+ "llm_calls": 1,
+ "tokens": 851,
+ "gt_root_cause": "PROTOCOL_CONFLICT",
+ "gt_tier": "L2",
+ "complaint": "Since the automatic update the night before last, my garage motion sensor doesn't trigger anything. Its light still blinks when I walk past and the app shows a little update badge on it, so I suppose it just needs an update? Please tell me the quickest way to get it working again.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable steps for updating the firmware. However, it assumes the update badge indicates a needed firmware update and directs the customer to install it without any diagnostic confirmation, and no questions were asked or checks performed in the session record to support that this is the correct fix. It avoids claiming completed checks, but the actionability is somewhat generic and unverified against the actual issue."
+}

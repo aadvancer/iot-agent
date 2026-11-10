@@ -1,0 +1,422 @@
+{
+ "system": "abl_no_memory",
+ "case_id": "C036",
+ "pred_root_cause": "BINDING_TABLE_CORRUPT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [
+  {
+   "rule": "R4_TOPOLOGY_MISMATCH",
+   "evidence": "app/base disagree on ['door_patio']"
+  }
+ ],
+ "rationale": "The base station is online with all other 6 devices healthy, ruling out a system-level fault. The patio sensor (door_patio) is listed in the app but absent from the base station binding table (bound_in_app=true, bound_in_base=false), and logs show \"E-207 binding table write failed\" plus \"listed in app but absent from base station table\". Firmware is protocol-compatible (v3), so this is not a protocol conflict. Per KB policy, an app/base binding-table disagreement with E-207 indicates a corrupted binding table and must be escalated to FAE (L2); the power cut during pairing is the likely trigger.",
+ "output": {
+  "symptom_summary": "Patio Door sensor (door_patio) is offline and listed in the app but missing from the base station binding table. Base station is online with all other 6 devices healthy, and logs show E-207 binding table write failed.",
+  "suspected_root_cause": "Corrupted binding table on the base station, likely triggered by a power cut during pairing.",
+  "key_abnormal_indicators": [
+   "door_patio bound_in_app=true, bound_in_base=false",
+   "Base station error code E-207",
+   "Log: 'door_patio: E-207 binding table write failed'",
+   "Log: 'door_patio is listed in app but absent from base station table'",
+   "Base station firmware 4.2, device firmware 1.3, protocol v3 (compatible)"
+  ],
+  "customer_reply": "We've identified an issue with the patio door sensor's connection to the base station. Our engineering team will investigate further and contact you within 24 hours. No action needed from you at this time. Thank you for your patience.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": [
+     "E-207"
+    ]
+   },
+   "affected_devices": [
+    {
+     "id": "door_patio",
+     "name": "Patio Door",
+     "model": "SEN-D1",
+     "fw": "1.3",
+     "rssi": null,
+     "battery": 72,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [
+    {
+     "rule": "R4_TOPOLOGY_MISMATCH",
+     "evidence": "app/base disagree on ['door_patio']"
+    }
+   ],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "BINDING_TABLE_CORRUPT",
+   "tier": "L2",
+   "evidence": "app/base binding mismatch: ['door_patio']"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_patio"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_patio"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-207 binding table corrupt re-pair fails power cut"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "BINDING_TABLE_CORRUPT",
+    "rationale": "The base station is online with all other 6 devices healthy, ruling out a system-level fault. The patio sensor (door_patio) is listed in the app but absent from the base station binding table (bound_in_app=true, bound_in_base=false), and logs show \"E-207 binding table write failed\" plus \"listed in app but absent from base station table\". Firmware is protocol-compatible (v3), so this is not a protocol conflict. Per KB policy, an app/base binding-table disagreement with E-207 indicates a corrupted binding table and must be escalated to FAE (L2); the power cut during pairing is the likely trigger."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-207"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_patio",
+      "name": "Patio Door",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_patio"
+   },
+   "result": {
+    "id": "door_patio",
+    "name": "Patio Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 72,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "door_patio: E-207 binding table write failed",
+     "door_patio is listed in app but absent from base station table",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_patio"
+   },
+   "result": {
+    "device_id": "door_patio",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-207 binding table corrupt re-pair fails power cut"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-207 Binding write failed",
+      "text": "The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station."
+     },
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     },
+     {
+      "source": "escalation_policy#Escalate to FAE (L2)",
+      "text": "Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-207"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_patio",
+     "name": "Patio Door",
+     "model": "SEN-D1",
+     "bound_in_base": false,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "door_patio"
+  ],
+  "device_details": {
+   "door_patio": {
+    "id": "door_patio",
+    "name": "Patio Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 72,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "door_patio": {
+    "device_id": "door_patio",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "door_patio: E-207 binding table write failed",
+    "door_patio is listed in app but absent from base station table",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-207 Binding write failed] The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station.",
+   "[manual_peripherals#Factory reset of a peripheral] Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again.",
+   "[escalation_policy#Escalate to FAE (L2)] Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset."
+  ]
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 13.9,
+ "llm_calls": 3,
+ "tokens": 8337,
+ "gt_root_cause": "BINDING_TABLE_CORRUPT",
+ "gt_tier": "L2",
+ "complaint": "The patio sensor is still in my app and shows offline, but when I check the base station's device list the patio sensor isn't there. I tried removing it from the app and adding it again, and it gave an error code starting with E-2. We had a power cut while I was adding it last Thursday.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and clearly summarizes the symptom and suspected cause, but it is largely non-actionable: it tells the customer no action is needed and that engineering will investigate, without any concrete troubleshooting steps. It also asserts diagnostic findings (E-207 binding table write failure, logs, firmware compatibility) that do not appear in the session record, where no questions were asked and no actions were performed. The customer's reported E-2 error is not addressed, and the claimed checks are unsupported by the record."
+}

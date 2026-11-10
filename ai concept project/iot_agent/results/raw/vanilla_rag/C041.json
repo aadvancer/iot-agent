@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C041",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes a single garage camera offline while everything else works, and the customer suspects weak signal due to distance. Historical case H-01 matches this pattern (detached garage, RSSI -86 dBm, resolved with repeater). No other devices affected, so base station and network are likely fine.",
+ "output": {
+  "repair_steps": [
+   "Purchase a compatible Wi-Fi repeater (e.g., RP-1).",
+   "Place the repeater halfway between the base station and the garage camera.",
+   "Power on the repeater and connect it to the same network as the base station.",
+   "Wait for the camera to reconnect automatically, or power-cycle the camera.",
+   "Verify the camera status in the app and test live view."
+  ],
+  "customer_reply": "Thank you for the details. Based on your description, the issue is likely due to weak Wi-Fi signal at the garage location. We recommend installing a range extender or repeater (such as the RP-1) to improve connectivity. Please ensure the repeater is placed midway between the base station and the garage camera. After installation, check if the camera comes back online in the app. If the problem persists, please contact us again."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.1,
+ "llm_seconds": 7.1,
+ "llm_calls": 1,
+ "tokens": 1174,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "Our garage camera has been offline for two days. The garage is at the far end of the house, so I assume the signal is just too weak out there. Is there a booster or repeater I can buy? Everything else seems to work fine and I haven't changed anything in the app.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable steps for installing a repeater. However, it assumes weak Wi-Fi signal as the cause without any diagnostic questions or actions being performed, and it does not verify the root cause. The session record shows no questions asked or actions performed, so the claim that the issue is 'likely due to weak Wi-Fi signal' is unsupported. The response avoids claiming checks or fixes were completed, which is good, but the actionability is limited by the lack of troubleshooting before recommending a purchase."
+}

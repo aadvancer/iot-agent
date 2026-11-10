@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C031",
+ "pred_root_cause": "BATCH_LINK_FAILURE",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Multiple devices (garden door sensor, living room motion sensor, bedroom window sensor) went offline simultaneously while the base station remains online. This pattern matches BATCH_LINK_FAILURE, where several devices drop at once but the base station itself stays connected. The customer's recent router move could have introduced interference, but the simultaneous failure of multiple devices suggests a common link issue rather than individual weak signals.",
+ "output": {
+  "symptom_summary": "Three devices (garden door sensor, living room motion sensor, bedroom window sensor) reported offline simultaneously in the app, while the base station remained online. Customer moved Wi-Fi router 2 meters last week, suspecting interference.",
+  "suspected_root_cause": "Batch link failure due to possible RF interference from router relocation affecting multiple devices simultaneously.",
+  "key_abnormal_indicators": [
+   "Multiple devices offline at the same time",
+   "Base station online",
+   "Recent router relocation",
+   "No individual device issues reported"
+  ],
+  "customer_reply": "Thank you for the details. Since several devices went offline at the same time while the base station is still online, this points to a batch link failure. We will escalate this to our advanced support team for further investigation. Please ensure the base station is powered on and connected to your router. We will follow up with next steps."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.0,
+ "llm_seconds": 5.9,
+ "llm_calls": 1,
+ "tokens": 1269,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "Several devices dropped at once although the base station is still online. Around breakfast the app showed the garden door sensor, the living room motion sensor and the bedroom window sensor as offline. I moved the Wi-Fi router about 2 m last week, so I assume the new position is causing interference. Everything else is working.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clearly summarizes the symptom and a plausible root cause, and it avoids claiming unperformed checks or fixes. However, actionability is weak: it only asks the customer to ensure the base station is powered and connected (which the customer already indicated is online) and defers to escalation without concrete troubleshooting steps. It also speculates about RF interference without evidence from the session record."
+}

@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C026",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes a storage warning that returns after deleting clips, with cameras online and live view working. This matches STORAGE_FULL, where new events are not recorded and playback stops at a date, often due to insufficient storage. The user's manual deletion frees space temporarily but the warning recurs, indicating storage remains full or fills quickly.",
+ "output": {
+  "repair_steps": [
+   "Delete a larger number of old recordings or format the storage if appropriate.",
+   "Check recording settings and reduce video quality or motion detection sensitivity to lower storage usage.",
+   "Consider adding external storage or upgrading the storage capacity if supported.",
+   "Monitor the storage status after freeing space to ensure the warning does not return immediately."
+  ],
+  "customer_reply": "Thank you for the details. Based on the information provided, the issue is likely due to the base station's storage being full. The warning appears because the storage is at capacity, and deleting a few clips only frees a small amount of space that quickly fills again. To resolve this, you can delete more old recordings or adjust your recording settings to reduce storage usage. If the issue persists after freeing significant space, further assistance may be needed."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.6,
+ "llm_calls": 1,
+ "tokens": 884,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "The app shows a storage warning but I don't know what it wants me to do. I deleted some old clips one by one, which frees a bit of space, but the warning comes back the next day. All cameras show online and live view works. Is the base station's memory failing?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and offers actionable steps (delete more recordings, adjust settings, consider external storage, monitor status), and it avoids claiming any checks or fixes were completed since no actions were performed. However, clarity is somewhat reduced by the mismatch between the customer's question (is the base station's memory failing?) and the response, which asserts the storage is 'likely full' without any diagnostic evidence, and the repair steps are generic rather than tailored to the reported behavior. Actionability is moderate but lacks specificity on how to verify storage status or distinguish memory failure from capacity issues."
+}

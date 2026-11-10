@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C006",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "All devices show offline simultaneously and the app reports the base station is unreachable, indicating the base station lost its network connection. The router was replaced the previous day, which likely disrupted the base station's uplink. This matches the pattern of BS_NETWORK_DOWN where all devices are offline and the base station cannot be reached.",
+ "output": {
+  "repair_steps": [
+   "Check the Ethernet cable connection between the base station and the router; ensure it is securely plugged into a LAN port on the router and the base station's WAN port.",
+   "Power-cycle the router: unplug it, wait 30 seconds, plug it back in, and wait for it to fully restart.",
+   "Power-cycle the base station: unplug it, wait 30 seconds, plug it back in, and wait for it to reconnect.",
+   "If the base station uses Wi-Fi, use the app to reconnect it to the new router's Wi-Fi network (SSID and password).",
+   "After the base station reconnects, verify that the LED is solid green and that devices come back online in the app."
+  ],
+  "customer_reply": "Thank you for the details. Since all devices went offline at the same time and the app says the base station is unreachable, the issue is likely with the base station's connection to your network, especially after the router replacement. Please check the Ethernet cable connection between the base station and the new router, ensure it's plugged into a LAN port, and then power-cycle both the router and the base station. If the base station uses Wi-Fi, reconnect it to the new router's network. This should restore connectivity."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 7.4,
+ "llm_seconds": 7.1,
+ "llm_calls": 1,
+ "tokens": 1393,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Hi, everything in my security app went grey around 7 this morning: all my cameras and sensors show offline and I get no notifications at all. Yesterday afternoon our internet provider's technician replaced the router, and since then the Wi-Fi on my laptop works fine. I tried opening the app on mobile data and it says the base station is unreachable. I'm travelling next week, so I need this working. I think the base station has died.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with concrete steps tailored to the router-replacement context. It avoids claiming any checks or fixes were completed, since none were performed. Minor deduction because it presents multiple conditional branches (Ethernet vs. Wi-Fi) without first asking the customer which setup applies, and the 'should restore connectivity' phrasing is slightly presumptive."
+}

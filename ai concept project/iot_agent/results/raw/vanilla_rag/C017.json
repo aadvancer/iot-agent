@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C017",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor intermittently goes offline and comes back, and the issue started after installing a new metal shed, which can block or reflect wireless signals. Moving the sensor to the other side of the door frame did not help, suggesting the metal structure is causing signal attenuation. This matches the WEAK_SIGNAL pattern: single device intermittently offline, delayed notifications, choppy live view.",
+ "output": {
+  "repair_steps": [
+   "Check the signal strength indicator for the sensor in the app; if it shows weak signal, proceed with the following steps.",
+   "Relocate the sensor to a position with a clearer line of sight to the base station, avoiding metal obstructions.",
+   "If possible, move the sensor closer to the base station or to a location outside the metal shed.",
+   "Consider installing a wireless repeater (e.g., RP-1) between the sensor and the base station to boost the signal.",
+   "After repositioning, monitor the sensor for 24-48 hours to see if the offline events decrease."
+  ],
+  "customer_reply": "Thank you for the details. The intermittent offline behavior of your shed door sensor, especially after the installation of a metal shed, suggests that the metal structure is interfering with the wireless signal between the sensor and the base station. This can cause the sensor to lose connection and then reconnect, triggering notifications at random times. We recommend improving the signal strength by relocating the sensor or adding a signal repeater if available. Please ensure the sensor is within range and consider placing it where the metal shed does not obstruct the line of sight to the base station."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 8.5,
+ "llm_seconds": 8.4,
+ "llm_calls": 1,
+ "tokens": 1339,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The shed door sensor keeps going offline and coming back. Honestly it only started after we put up the new metal shed in October. The app notifies me about it at random times, including at night. I tried moving the sensor to the other side of the door frame, but that made no difference.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering concrete steps (check signal strength, relocate sensor, add repeater, monitor). It avoids claiming any checks or fixes were completed, since no actions were performed in the session. It does not overclaim root cause as confirmed, framing metal interference as a likely cause. Minor deduction only because it doesn't ask clarifying questions or confirm the customer's prior relocation attempt was acknowledged in the steps."
+}

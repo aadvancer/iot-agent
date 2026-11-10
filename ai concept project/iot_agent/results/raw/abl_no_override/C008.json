@@ -1,0 +1,307 @@
+{
+ "system": "abl_no_override",
+ "case_id": "C008",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station showed online=False with uplink_status=no_internet and error E-503, and the customer confirmed a solid red LED (no internet uplink). All 6 devices were offline/affected at once, pointing to a system-level fault rather than individual devices. The customer confirmed their home broadband was down (ISP outage after a thunderstorm); after power-cycling the router and base station, the LED turned solid blue and all devices came back online, confirming the root cause and resolving the issue at L1.",
+ "output": {
+  "repair_steps": [
+   "Confirm the base station LED is solid blue and all devices show online in the app.",
+   "Advise the customer to contact their ISP if the broadband outage recurs.",
+   "Document the ISP outage and power-cycle resolution in the case notes.",
+   "Close the ticket as resolved at L1."
+  ],
+  "customer_reply": "Thanks for your patience. The issue was caused by a temporary internet outage from your ISP. After power-cycling your router and base station, your system is back online with all devices connected. If this happens again, please check your home internet first and restart your router and base station. Feel free to reach out if you need further help."
+ },
+ "rule_hints": [
+  {
+   "cause": "BS_NETWORK_DOWN",
+   "tier": "L1",
+   "evidence": "base online=False, uplink=no_internet"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "What colour is the light on the base station right now, and is it solid or blinking? (e.g. solid red, blinking red)"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "base station solid red LED no internet E-503 fix procedure"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Ask the customer to confirm whether their home broadband/internet is currently working (e.g. can another device like a phone on Wi-Fi load a webpage). If broadband is down, this is an ISP outage — have them wait for service restoration. If broadband is up, have them power-cycle the router and then the base station (unplug base station, wait 30s, plug back in) and check if the LED turns solid blue.",
+    "target_cause": "BS_NETWORK_DOWN"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "BS_NETWORK_DOWN",
+    "rationale": "The base station showed online=False with uplink_status=no_internet and error E-503, and the customer confirmed a solid red LED (no internet uplink). All 6 devices were offline/affected at once, pointing to a system-level fault rather than individual devices. The customer confirmed their home broadband was down (ISP outage after a thunderstorm); after power-cycling the router and base station, the LED turned solid blue and all devices came back online, confirming the root cause and resolving the issue at L1."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_main",
+      "name": "Main Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "What colour is the light on the base station right now, and is it solid or blinking? (e.g. solid red, blinking red)"
+   },
+   "result": {
+    "answer": "It's a solid red light on the base station — not blinking."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "base station solid red LED no internet E-503 fix procedure"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Ask the customer to confirm whether their home broadband/internet is currently working (e.g. can another device like a phone on Wi-Fi load a webpage). If broadband is down, this is an ISP outage — have them wait for service restoration. If broadband is up, have them power-cycle the router and then the base station (unplug base station, wait 30s, plug back in) and check if the LED turns solid blue."
+   },
+   "result": {
+    "outcome": "I checked and my home internet wasn't working — my phone shows Wi-Fi connected but websites won't load. So I power-cycled the router, waited a couple of minutes, then unplugged the base station, waited 30 seconds and plugged it back in — now the light is solid blue and all my cameras and sensors are back online."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.5",
+   "online": false,
+   "uplink_status": "no_internet",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-503"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_main",
+     "name": "Main Camera",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_main",
+   "cam_garden",
+   "win_kitchen",
+   "motion_stairs"
+  ],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {},
+  "customer_answers": [
+   {
+    "question": "What colour is the light on the base station right now, and is it solid or blinking? (e.g. solid red, blinking red)",
+    "answer": "It's a solid red light on the base station — not blinking."
+   }
+  ],
+  "fix_attempts": [
+   {
+    "action": "Ask the customer to confirm whether their home broadband/internet is currently working (e.g. can another device like a phone on Wi-Fi load a webpage). If broadband is down, this is an ISP outage — have them wait for service restoration. If broadband is up, have them power-cycle the router and then the base station (unplug base station, wait 30s, plug back in) and check if the LED turns solid blue.",
+    "target_cause": "BS_NETWORK_DOWN",
+    "outcome": "I checked and my home internet wasn't working — my phone shows Wi-Fi connected but websites won't load. So I power-cycled the router, waited a couple of minutes, then unplugged the base station, waited 30 seconds and plugged it back in — now the light is solid blue and all my cameras and sensors are back online.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-503 Cloud reporting failed] The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue).",
+   "[historical_cases#H-04 Whole house offline] All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline.",
+   "[manual_base_station#LED status indicators] Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 26.5,
+ "llm_calls": 9,
+ "tokens": 20522,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Every camera and sensor has shown offline since this morning, although they were all fine last night. The base station has a red light. I rebooted my phone and reinstalled the app because I thought that was the problem, but nothing changed. We had a thunderstorm last night and my neighbour says the broadband is down on our street too.",
+ "user_turns": 2,
+ "console_calls": 2,
+ "usability_score": 5,
+ "usability_reason": "The response is clear, polite, and actionable. It accurately reflects the session record: the customer confirmed the ISP outage, performed the router and base station power-cycle, and reported the LED turned solid blue with all devices back online. The reply avoids claiming any unperformed checks or fixes, and the repair steps are consistent with what was actually done. Minor note: the first repair step ('Confirm the base station LED is solid blue...') is phrased as a future action, but the customer already reported this, so it's not an unsupported claim."
+}

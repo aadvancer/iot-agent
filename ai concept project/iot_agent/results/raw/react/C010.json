@@ -1,0 +1,374 @@
+{
+ "system": "react",
+ "case_id": "C010",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station was online with no fault codes, only 5/16 slots used, and the SEN-D1 sensor had 100% battery, compatible firmware (v2 protocol), and was within 1 metre of the base station. The logs showed only a generic \"pairing request timed out after 120 seconds\" with no E-201/E-207 errors. A clean retry with the SYNC button held for a full 3 seconds (LED blinking blue) paired successfully, confirming a pairing-procedure issue rather than a hardware or binding-table fault.",
+ "output": {
+  "repair_steps": [
+   "Instruct the customer to put the base station into pairing mode via the app and confirm the base station LED is blinking blue.",
+   "Have the customer press and hold the SYNC button on the sensor for a full 3 seconds until its LED blinks blue.",
+   "Ensure the sensor is within 1 metre of the base station during pairing.",
+   "Wait up to 120 seconds for pairing to complete.",
+   "Confirm the sensor appears in the app and is online."
+  ],
+  "customer_reply": "Thank you for your patience. The issue was with the pairing procedure: the SYNC button needs to be held for a full 3 seconds until the sensor's LED blinks blue. Please try again following these steps: put the base station into pairing mode, hold SYNC for 3 seconds, keep the sensor within 1 metre, and wait up to 120 seconds. It should pair successfully now. If you need further help, let us know."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "sensor_pending"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "sensor_pending"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "sensor_pending"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing timeout 120 seconds sensor SEN-D1 firmware"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "Where is the base station located relative to the shelf where you placed the new hallway sensor? Is the sensor within about 1 metre of the base station (not the router) when you try to pair it?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing timeout causes sensor not pairing LED blue"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 firmware 1.0 pairing issue known bug"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-207 re-pairing fails binding table"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Please walk the customer through a clean pairing retry: (1) In the app, tap Add Device and confirm the base station LED is blinking blue (pairing mode). (2) On the new hallway sensor, press and HOLD the SYNC button for a full 3 seconds until its LED blinks blue — if it does not blink blue, remove and reinsert the battery, then try again. (3) Keep the sensor within 1 metre of the base station and wait up to 120 seconds. Ask the customer to report whether the sensor's LED blinks blue and whether pairing succeeds."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 5,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "sensor_pending",
+      "name": "New Sensor",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "sensor_pending"
+   },
+   "result": {
+    "lines": []
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "pair"
+   },
+   "result": {
+    "lines": [
+     "pairing request timed out after 120 seconds"
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "sensor_pending"
+   },
+   "result": {
+    "id": "sensor_pending",
+    "name": "New Sensor",
+    "model": "SEN-D1",
+    "fw": "1.0",
+    "rssi": null,
+    "battery": 100,
+    "status": "not_paired"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "sensor_pending"
+   },
+   "result": {
+    "device_id": "sensor_pending",
+    "device_fw": "1.0",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing timeout 120 seconds sensor SEN-D1 firmware"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Where is the base station located relative to the shelf where you placed the new hallway sensor? Is the sensor within about 1 metre of the base station (not the router) when you try to pair it?"
+   },
+   "result": {
+    "answer": "The sensor is on the shelf right next to the base station when I try to pair it — well within a metre. The Wi-Fi router is also close by, about 30 cm from the base station."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "pairing timeout causes sensor not pairing LED blue"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "pairing request timed out after 120 seconds",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 firmware 1.0 pairing issue known bug"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "manual_peripherals#Pairing a peripheral",
+      "text": "Put the base station into pairing mode from the app (Add Device). Then hold the SYNC button on the camera or sensor for 3 seconds until its LED blinks blue. Keep the peripheral within 1 metre of the base station during pairing. Pairing times out after 120 seconds. After pairing, the device can be moved to its final location."
+     },
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-207 re-pairing fails binding table"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-207 Binding write failed",
+      "text": "The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station."
+     },
+     {
+      "source": "manual_base_station#Orphaned binding (device removed in app but still bound in base station)",
+      "text": "If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+     },
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Please walk the customer through a clean pairing retry: (1) In the app, tap Add Device and confirm the base station LED is blinking blue (pairing mode). (2) On the new hallway sensor, press and HOLD the SYNC button for a full 3 seconds until its LED blinks blue — if it does not blink blue, remove and reinsert the battery, then try again. (3) Keep the sensor within 1 metre of the base station and wait up to 120 seconds. Ask the customer to report whether the sensor's LED blinks blue and whether pairing succeeds."
+   },
+   "result": {
+    "outcome": "I held the SYNC button on the new sensor for a full 3 seconds until its LED blinked blue, kept it within a metre of the base station, and tried again — this time it paired successfully."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 14.3,
+ "llm_seconds": 32.4,
+ "llm_calls": 11,
+ "tokens": 30474,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "The new hallway sensor times out every time I try to add it. The app says pairing expired. I'm renting this flat, so I don't want to drill anything yet. I just wanted to put the sensor on the shelf near the router first and test it. Last month a different sensor paired without any problem, so I don't understand what changed.",
+ "user_turns": 2,
+ "console_calls": 7,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable steps that match the session record. However, the reply is framed as a prospective retry ('Please try again... It should pair successfully now') even though the customer already reported successful pairing, so it slightly misrepresents the completed outcome rather than confirming it."
+}

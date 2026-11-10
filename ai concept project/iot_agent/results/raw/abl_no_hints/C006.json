@@ -1,0 +1,313 @@
+{
+ "system": "abl_no_hints",
+ "case_id": "C006",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "All 6 devices showed offline simultaneously in the app while the base station reported online=false, uplink_status=no_internet, and E-503, pointing to a base-station-level network fault rather than individual device problems. The trigger was the router replacement the prior afternoon. The standard L1 fix (power-cycle router, wait 2 min, then power-cycle base station) restored the uplink: LED turned solid blue and all devices came back online, confirming BS_NETWORK_DOWN as the root cause.",
+ "output": {
+  "repair_steps": [
+   "Confirm base station LED is solid blue and all devices show online in app.",
+   "Advise customer to keep router and base station powered on and connected.",
+   "Document resolution: router replacement caused base station network loss; power-cycle sequence restored uplink.",
+   "Close ticket as resolved with root cause BS_NETWORK_DOWN (L1)."
+  ],
+  "customer_reply": "Great news! Your system is back online. The issue was caused by the new router not being recognized by the base station. Power-cycling both devices re-established the connection. All cameras and sensors are now online. If anything goes offline again, try restarting the router first, wait 2 minutes, then restart the base station. Have a great day!"
+ },
+ "rule_hints": [
+  {
+   "cause": "BS_NETWORK_DOWN",
+   "tier": "L1",
+   "evidence": "base online=False, uplink=no_internet"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 base station no internet uplink lost router replacement"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Ask the customer to power-cycle the new router (unplug power, wait 30 seconds, plug back in), wait 2 full minutes for it to fully boot, then power-cycle the base station (unplug, wait 10 seconds, plug back in). Then check whether the base station LED turns solid (not blinking red) and whether devices come back online in the app.",
+    "target_cause": "BS_NETWORK_DOWN"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "BS_NETWORK_DOWN",
+    "rationale": "All 6 devices showed offline simultaneously in the app while the base station reported online=false, uplink_status=no_internet, and E-503, pointing to a base-station-level network fault rather than individual device problems. The trigger was the router replacement the prior afternoon. The standard L1 fix (power-cycle router, wait 2 min, then power-cycle base station) restored the uplink: LED turned solid blue and all devices came back online, confirming BS_NETWORK_DOWN as the root cause."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "base station uplink lost: E-503"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_main",
+      "name": "Main Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 base station no internet uplink lost router replacement"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#Network uplink",
+      "text": "The base station connects to the home router by Ethernet (recommended) or 2.4 GHz Wi-Fi. If all cameras and sensors show offline in the app at the same time, first check whether the base station itself is online. Power-cycle the router, wait 2 minutes, then power-cycle the base station. The base station requires outbound TCP 443 and 8883 to the cloud."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Ask the customer to power-cycle the new router (unplug power, wait 30 seconds, plug back in), wait 2 full minutes for it to fully boot, then power-cycle the base station (unplug, wait 10 seconds, plug back in). Then check whether the base station LED turns solid (not blinking red) and whether devices come back online in the app."
+   },
+   "result": {
+    "outcome": "Okay, I unplugged the router, waited 30 seconds, plugged it back in, and gave it two minutes. Then I power-cycled the base station, and now the light is solid blue and all my cameras and sensors are back online in the app."
+   }
+  }
+ ],
+ "dedup_hits": 1,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-100",
+   "fw": "3.4",
+   "online": false,
+   "uplink_status": "no_internet",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-503"
+   ],
+   "max_devices": 8,
+   "supported_protocols": [
+    "v2"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 8,
+   "devices": [
+    {
+     "id": "cam_main",
+     "name": "Main Camera",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_main",
+   "cam_garden",
+   "win_kitchen",
+   "motion_stairs"
+  ],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {
+   "E-503": [
+    "base station uplink lost: E-503"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "Ask the customer to power-cycle the new router (unplug power, wait 30 seconds, plug back in), wait 2 full minutes for it to fully boot, then power-cycle the base station (unplug, wait 10 seconds, plug back in). Then check whether the base station LED turns solid (not blinking red) and whether devices come back online in the app.",
+    "target_cause": "BS_NETWORK_DOWN",
+    "outcome": "Okay, I unplugged the router, waited 30 seconds, plugged it back in, and gave it two minutes. Then I power-cycled the base station, and now the light is solid blue and all my cameras and sensors are back online in the app.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-503 Cloud reporting failed] The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue).",
+   "[historical_cases#H-06 Events not in cloud] Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly.",
+   "[manual_base_station#Network uplink] The base station connects to the home router by Ethernet (recommended) or 2.4 GHz Wi-Fi. If all cameras and sensors show offline in the app at the same time, first check whether the base station itself is online. Power-cycle the router, wait 2 minutes, then power-cycle the base station. The base station requires outbound TCP 443 and 8883 to the cloud."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 27.9,
+ "llm_calls": 9,
+ "tokens": 23244,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Hi, everything in my security app went grey around 7 this morning: all my cameras and sensors show offline and I get no notifications at all. Yesterday afternoon our internet provider's technician replaced the router, and since then the Wi-Fi on my laptop works fine. I tried opening the app on mobile data and it says the base station is unreachable. I'm travelling next week, so I need this working. I think the base station has died.",
+ "user_turns": 1,
+ "console_calls": 3,
+ "usability_score": 5,
+ "usability_reason": "The response is clear, polite, and actionable. It accurately reflects the completed power-cycle sequence and the customer's reported outcome (solid blue LED, devices online), avoids claiming unperformed checks, and provides a sensible follow-up instruction. The root cause is stated consistently with the session record."
+}

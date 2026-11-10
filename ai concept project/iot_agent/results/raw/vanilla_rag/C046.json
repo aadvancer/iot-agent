@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C046",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera is intermittently offline with choppy live view, which matches weak signal symptoms. The customer reports freezing and going offline, and restarting does not help. Historical case H-01 shows similar symptoms resolved with a repeater. No evidence of all devices offline, pairing issues, or other root causes.",
+ "output": {
+  "repair_steps": [
+   "Check the camera's signal strength (RSSI) in the app.",
+   "If RSSI is below -70 dBm, move the camera closer to the base station or remove obstacles.",
+   "Reposition the base station to a more central location.",
+   "If the distance is too great, install a range extender (e.g., RP-1 repeater) between the camera and base station.",
+   "After adjustments, monitor the camera for 24-48 hours to see if offline events and choppiness are reduced."
+  ],
+  "customer_reply": "Thank you for the details. The symptoms you're describing—intermittent offline, freezing, and choppy picture—are often caused by a weak Wi-Fi signal between the camera and the base station, especially for outdoor cameras like the one on your garden shed. Before considering a replacement, we can try a few steps to improve the connection. Could you please check the signal strength in the app and let us know the RSSI value? If it's below -70 dBm, we may need to move the camera closer, adjust the antenna, or add a range extender. We can also try repositioning the base station or removing any obstacles. Let's start with these steps and see if the stability improves."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 7.2,
+ "llm_seconds": 7.2,
+ "llm_calls": 1,
+ "tokens": 1314,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The camera on the garden shed is clearly defective. It keeps freezing and going offline and the picture is choppy. It's only four months old and still under warranty, so I'd like a replacement unit sent out please. I've already restarted it a few times and it makes no difference.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, providing specific troubleshooting steps and asking the customer to check RSSI. It avoids claiming any checks or fixes were completed, since none were performed. It does not directly address the warranty replacement request, but it reasonably proposes diagnostics before replacement. Minor deduction for not acknowledging the replacement request more explicitly."
+}

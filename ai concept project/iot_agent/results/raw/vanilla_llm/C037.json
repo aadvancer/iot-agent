@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C037",
+ "pred_root_cause": "BINDING_TABLE_CORRUPT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The device appears in the app but the base station does not list it, and re-pairing fails, which matches the BINDING_TABLE_CORRUPT pattern. The customer's mention of account sync is not a known root cause in the provided labels.",
+ "output": {
+  "symptom_summary": "Lobby sensor is listed in the app but not bound to the base station; re-pairing attempts have failed.",
+  "suspected_root_cause": "Corrupted binding table on the base station causing inconsistency between app and base station device lists.",
+  "key_abnormal_indicators": [
+   "Device shown in app but not in base station list",
+   "Re-pairing fails",
+   "Inconsistency between app and base station"
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, it appears the base station's binding table may be corrupted. We will guide you through a reset of the base station's binding table and re-pairing the device. Please ensure the device is in pairing mode and close to the base station."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.4,
+ "llm_calls": 1,
+ "tokens": 867,
+ "gt_root_cause": "BINDING_TABLE_CORRUPT",
+ "gt_tier": "L2",
+ "complaint": "The app lists my lobby sensor, but the base station says it is not bound. I'm confused: the app says one thing and the base station another. I've deleted and re-added it twice. I wonder whether my account is out of sync with my husband's account, since he also uses the app.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clear, and it offers a plausible next step (reset binding table and re-pair). However, actionability is limited because no concrete reset procedure is provided, and it asserts a suspected root cause ('binding table may be corrupted') without any diagnostic checks shown as completed in the session record. It also does not address the customer's account-sync concern. No unsupported claims of completed fixes are made, which is good, but the lack of verified checks and vague instructions keep it at a middling score."
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C024",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The timeline stops at a specific date, live view and notifications still work, and there is a purple light on the base station. These symptoms align with storage being full, which prevents new recordings. The firmware update is likely coincidental.",
+ "output": {
+  "repair_steps": [
+   "Check the storage status in the app or base station settings.",
+   "Delete old or unwanted recordings to free up space.",
+   "If storage is full, consider adding an external storage device or upgrading the storage capacity.",
+   "After freeing space, verify that new events are being recorded and the timeline updates.",
+   "If the issue persists, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms you described, the most likely cause is that the storage on your base station is full. This would explain why the timeline stops at the end of last month and why live view and notifications still work. The purple light on the base station is often an indicator of storage issues. We recommend checking the storage status and freeing up space or expanding storage."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.5,
+ "llm_calls": 1,
+ "tokens": 869,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "I went to look at the footage of a delivery from last week and the timeline stops at the end of last month. There has been a purple light on the base station for a few days that I've been ignoring. Live view and notifications still work, so I assumed the system was fine. I think the cameras stopped recording after the last firmware update.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides actionable steps (check storage, delete recordings, add storage, verify recording). However, it asserts a likely cause (full storage) and interprets the purple light as a storage indicator without any diagnostic confirmation in the session record—no questions were asked and no checks were performed. It does frame the cause as 'most likely' rather than confirmed, and includes a verification step, but the unsupported claim about the purple light and storage status weakens adherence to the no-unverified-claims criterion."
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C043",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera was reported low battery last week and remains offline after charging. The complaint focuses on a single battery-powered camera with no mention of other devices or system-wide issues, matching the BATTERY_LOW pattern.",
+ "output": {
+  "repair_steps": [
+   "Ensure the battery is fully charged using the original charger for at least 4 hours.",
+   "Remove and reinsert the battery, making sure it clicks into place.",
+   "Press and hold the setup button for 3 seconds to see if the camera powers on.",
+   "If the camera still does not respond, try a different known-good battery if available.",
+   "If the camera works with a different battery, replace the original battery."
+  ],
+  "customer_reply": "I understand you'd like a new battery. Before we proceed, could you confirm the battery was fully charged and properly seated? Also, check if the camera's LED shows any activity when you press the setup button. If the issue persists after these checks, we can explore replacement options."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.4,
+ "llm_calls": 1,
+ "tokens": 845,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "The garden camera is offline again. Its battery was low last week and I thought charging it would fix it, but it's still not working. Can you just send me a new battery for it? I didn't really check the rest of the system, I only use that camera.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering concrete troubleshooting steps and a conditional path to replacement. It avoids claiming any checks or fixes were completed, instead asking the customer to confirm charging/seating and LED activity. Minor deduction because it front-loads a list of steps rather than first gathering the customer's confirmation, but overall it is well-structured and honest about what remains unverified."
+}

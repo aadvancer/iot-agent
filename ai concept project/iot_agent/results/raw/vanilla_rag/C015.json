@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C015",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The camera intermittently goes offline for 10-30 minutes multiple times a day and notifications are delayed, which matches weak signal symptoms. The customer replaced the battery and updated the app, ruling out battery low and app issues. The camera is new, so hardware fault is less likely. Historical case H-01 with similar symptoms was resolved by installing a repeater due to low RSSI (-86 dBm).",
+ "output": {
+  "repair_steps": [
+   "Check the camera's signal strength in the app (RSSI). If it is below -70 dBm, the signal is weak.",
+   "Move the camera closer to the base station temporarily to see if the disconnections stop.",
+   "If moving is not possible, install a Wi-Fi repeater or range extender between the garage and the base station.",
+   "After improving the signal, monitor the camera for 24-48 hours to confirm stability."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the camera is likely experiencing a weak Wi-Fi signal in the detached garage. This can cause intermittent disconnections and delayed notifications. We recommend improving the signal strength by moving the camera closer to the base station or installing a Wi-Fi repeater/extender between the garage and the base station. If the issue persists after improving the signal, please contact us again for further assistance."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.8,
+ "llm_seconds": 6.6,
+ "llm_calls": 1,
+ "tokens": 1323,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The camera in my detached garage keeps dropping off. It is offline maybe five times a day for 10 to 30 minutes and then comes back by itself, and notifications from it are delayed. I replaced the camera battery and updated the app, but nothing changes. The camera is brand new, bought in the spring, so it shouldn't be faulty.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering concrete diagnostic steps (RSSI check, relocation test, repeater, monitoring) and a reasonable hypothesis. It avoids claiming any checks or fixes were completed, since none were performed. Minor deduction: it presents a likely cause without confirming the customer's actual signal strength, but it frames this as a recommendation rather than a completed diagnosis."
+}

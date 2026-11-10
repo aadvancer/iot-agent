@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C030",
+ "pred_root_cause": "BATCH_LINK_FAILURE",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Three sensors went offline simultaneously while the front camera remains online, indicating a common link issue rather than individual battery failures. The base station is likely online since the camera works, so the problem is with the sensor group.",
+ "output": {
+  "symptom_summary": "Three sensors went offline simultaneously, with offline notifications received within seconds of each other. The front camera remains online.",
+  "suspected_root_cause": "Batch link failure affecting multiple sensors, possibly due to a base station issue or interference.",
+  "key_abnormal_indicators": [
+   "Multiple sensors offline at the same time",
+   "Front camera still online",
+   "Offline notifications received in quick succession"
+  ],
+  "customer_reply": "Thank you for the details. Since multiple sensors went offline at the same time and your camera is still working, this suggests a link issue affecting those sensors rather than low batteries. We recommend checking the base station and sensor connections before replacing batteries."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.3,
+ "llm_calls": 1,
+ "tokens": 862,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "Three of my sensors went offline at the same time this afternoon. I got three offline notifications within a few seconds of each other. The front camera is still fine. I assumed the batteries had run low because they are the originals from 18 months ago, so I'm about to order a bunch of new ones. Is that the right call?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable: it summarizes the symptom, explains why simultaneous offline events point away from battery depletion, and recommends checking base station/sensor connections before buying batteries. It avoids claiming any checks or fixes were performed, consistent with the empty session record. Minor deduction because the suspected root cause is somewhat speculative and the actionability could be more specific (e.g., concrete steps to check the base station)."
+}

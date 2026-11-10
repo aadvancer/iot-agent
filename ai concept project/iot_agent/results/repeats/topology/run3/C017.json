@@ -1,0 +1,441 @@
+{
+ "system": "topology_agent",
+ "case_id": "C017",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The shed door sensor (SEN-D1) showed RSSI -88 dBm, below the -80 dBm threshold that causes intermittent disconnections, while all other devices were online. The problem began after the metal shed was installed, which strongly attenuates the sub-GHz signal. Relocation did not help, but installing the official RP-1 repeater resolved the issue and the sensor has stayed online since — confirming weak signal as the root cause.",
+ "output": {
+  "repair_steps": [
+   "Confirm the shed door sensor has remained online since installing the RP-1 repeater.",
+   "Verify the sensor's RSSI is now above -80 dBm in Device Settings > Device Info.",
+   "Document the resolution in the case notes and close the ticket."
+  ],
+  "customer_reply": "Thank you for your patience. I'm glad the RP-1 repeater resolved the issue with your shed door sensor. The sensor should now stay connected reliably. If you experience any further problems, please don't hesitate to reach out. Have a great day!"
+ },
+ "rule_hints": [
+  {
+   "cause": "WEAK_SIGNAL",
+   "tier": "L1",
+   "evidence": "door_shed rssi -88 dBm"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_shed"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_shed"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "WEAK_SIGNAL sensor intermittent offline metal shed fix procedure"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer through relocating the shed door sensor to improve signal: move it to a spot with a clearer line of sight to the base station (e.g., higher on the door frame, or on the exterior side facing the house), away from the metal shed walls. If relocation doesn't bring RSSI above -80 dBm, recommend installing the official RP-1 repeater between the shed and the base station. Ask the customer to check the RSSI in Device Settings > Device Info after moving it.",
+    "target_cause": "WEAK_SIGNAL"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "RP-1 repeater install procedure weak signal metal shed"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Recommend installing the official RP-1 repeater between the shed and the base station (e.g., inside the house near the wall facing the shed, or just inside the shed away from the metal walls). Walk the customer through placing it and pairing it to the base station, then confirm the shed door sensor stays online and its RSSI rises above -80 dBm.",
+    "target_cause": "WEAK_SIGNAL"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "WEAK_SIGNAL",
+    "rationale": "The shed door sensor (SEN-D1) showed RSSI -88 dBm, below the -80 dBm threshold that causes intermittent disconnections, while all other devices were online. The problem began after the metal shed was installed, which strongly attenuates the sub-GHz signal. Relocation did not help, but installing the official RP-1 repeater resolved the issue and the sensor has stayed online since — confirming weak signal as the root cause."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_shed",
+      "name": "Shed Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "intermittent"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_shed"
+   },
+   "result": {
+    "id": "door_shed",
+    "name": "Shed Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -88,
+    "battery": 67,
+    "status": "intermittent"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "door_shed heartbeat lost repeatedly (RSSI -88 dBm)",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_shed"
+   },
+   "result": {
+    "device_id": "door_shed",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "WEAK_SIGNAL sensor intermittent offline metal shed fix procedure"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Wireless range and signal strength",
+      "text": "Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Walk the customer through relocating the shed door sensor to improve signal: move it to a spot with a clearer line of sight to the base station (e.g., higher on the door frame, or on the exterior side facing the house), away from the metal shed walls. If relocation doesn't bring RSSI above -80 dBm, recommend installing the official RP-1 repeater between the shed and the base station. Ask the customer to check the RSSI in Device Settings > Device Info after moving it."
+   },
+   "result": {
+    "outcome": "I moved the sensor higher on the door frame and tried the outside facing the house, but it's still going offline and coming back like before. I also looked in Device Settings > Device Info but I couldn't find any RSSI number to check."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "RP-1 repeater install procedure weak signal metal shed"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     },
+     {
+      "source": "manual_peripherals#Wireless range and signal strength",
+      "text": "Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater."
+     },
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Recommend installing the official RP-1 repeater between the shed and the base station (e.g., inside the house near the wall facing the shed, or just inside the shed away from the metal walls). Walk the customer through placing it and pairing it to the base station, then confirm the shed door sensor stays online and its RSSI rises above -80 dBm."
+   },
+   "result": {
+    "outcome": "I got the RP-1 repeater and set it up halfway between the shed and the base station, and since then the shed door sensor has stayed online. I still can't find an RSSI number anywhere in the app, so I can't tell you the exact reading."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_shed",
+     "name": "Shed Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "intermittent"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "door_shed"
+  ],
+  "device_details": {
+   "door_shed": {
+    "id": "door_shed",
+    "name": "Shed Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -88,
+    "battery": 67,
+    "status": "intermittent"
+   }
+  },
+  "firmware_compat": {
+   "door_shed": {
+    "device_id": "door_shed",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "door_shed heartbeat lost repeatedly (RSSI -88 dBm)",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "Walk the customer through relocating the shed door sensor to improve signal: move it to a spot with a clearer line of sight to the base station (e.g., higher on the door frame, or on the exterior side facing the house), away from the metal shed walls. If relocation doesn't bring RSSI above -80 dBm, recommend installing the official RP-1 repeater between the shed and the base station. Ask the customer to check the RSSI in Device Settings > Device Info after moving it.",
+    "target_cause": "WEAK_SIGNAL",
+    "outcome": "I moved the sensor higher on the door frame and tried the outside facing the house, but it's still going offline and coming back like before. I also looked in Device Settings > Device Info but I couldn't find any RSSI number to check.",
+    "resolved": false,
+    "standard_fix": true
+   },
+   {
+    "action": "Recommend installing the official RP-1 repeater between the shed and the base station (e.g., inside the house near the wall facing the shed, or just inside the shed away from the metal walls). Walk the customer through placing it and pairing it to the base station, then confirm the shed door sensor stays online and its RSSI rises above -80 dBm.",
+    "target_cause": "WEAK_SIGNAL",
+    "outcome": "I got the RP-1 repeater and set it up halfway between the shed and the base station, and since then the shed door sensor has stayed online. I still can't find an RSSI number anywhere in the app, so I can't tell you the exact reading.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[manual_peripherals#Wireless range and signal strength] Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater.",
+   "[historical_cases#H-05 Three sensors offline at once] Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly.",
+   "[historical_cases#H-04 Whole house offline] All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline.",
+   "[historical_cases#H-01 Garage camera keeps dropping] Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline.",
+   "[escalation_policy#Close at frontline (L1)] Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+  ]
+ },
+ "wall_seconds": 28.6,
+ "llm_seconds": 28.6,
+ "llm_calls": 10,
+ "tokens": 25906,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The shed door sensor keeps going offline and coming back. Honestly it only started after we put up the new metal shed in October. The app notifies me about it at random times, including at night. I tried moving the sensor to the other side of the door frame, but that made no difference.",
+ "user_turns": 2,
+ "console_calls": 5
+}

@@ -1,0 +1,348 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C023",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station auto-updated to firmware 4.5, which supports only protocol v3, while cam_yard was still on firmware 1.8 speaking protocol v2 (check_firmware_compat: compatible=false, E-305 logged). The standard L1 fix — OTA upgrade of the camera to 2.1 — completed successfully and clips resumed, confirming the firmware/protocol mismatch as the root cause.",
+ "output": {
+  "repair_steps": [
+   "Confirm the Yard Cam firmware is now 2.1 and clips are being recorded.",
+   "Verify no E-305 error remains in base station logs.",
+   "Check that all other devices are online and functioning normally.",
+   "Close the case as resolved."
+  ],
+  "customer_reply": "We're glad to confirm your Yard Cam is back online and recording clips after the firmware update. The issue was a compatibility mismatch between the camera and base station, now resolved. If you notice any further problems, please don't hesitate to reach out. Thank you for your patience!"
+ },
+ "rule_hints": [
+  {
+   "cause": "PERIPHERAL_FW_OUTDATED",
+   "tier": "L1",
+   "evidence": "cam_yard protocol v2 unsupported, OTA to 2.1 available"
+  }
+ ],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_yard"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_yard"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "PERIPHERAL_FW_OUTDATED E-305 OTA upgrade camera firmware procedure"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the app, go to the Yard Cam device settings and trigger a firmware update (OTA). Confirm the camera stays within normal signal range and battery is above 30% during the update. Report whether the update completes and the camera firmware reaches 2.1.",
+    "target_cause": "PERIPHERAL_FW_OUTDATED"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "PERIPHERAL_FW_OUTDATED",
+    "rationale": "The base station auto-updated to firmware 4.5, which supports only protocol v3, while cam_yard was still on firmware 1.8 speaking protocol v2 (check_firmware_compat: compatible=false, E-305 logged). The standard L1 fix — OTA upgrade of the camera to 2.1 — completed successfully and clips resumed, confirming the firmware/protocol mismatch as the root cause."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.5",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-305"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_yard",
+      "name": "Yard Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "connected_no_events"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_yard"
+   },
+   "result": {
+    "id": "cam_yard",
+    "name": "Yard Cam",
+    "model": "CAM-S1",
+    "fw": "1.8",
+    "rssi": -63,
+    "battery": 72,
+    "status": "connected_no_events"
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_yard"
+   },
+   "result": {
+    "device_id": "cam_yard",
+    "device_fw": "1.8",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "2.1"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "PERIPHERAL_FW_OUTDATED E-305 OTA upgrade camera firmware procedure"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-305 Protocol / firmware mismatch",
+      "text": "The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "In the app, go to the Yard Cam device settings and trigger a firmware update (OTA). Confirm the camera stays within normal signal range and battery is above 30% during the update. Report whether the update completes and the camera firmware reaches 2.1."
+   },
+   "result": {
+    "outcome": "I ran the update for the Yard Cam from the app and it finished fine — it now shows version 2.1, and clips are coming through again when someone walks past."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.5",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-305"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_yard",
+     "name": "Yard Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "connected_no_events"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_yard"
+  ],
+  "device_details": {
+   "cam_yard": {
+    "id": "cam_yard",
+    "name": "Yard Cam",
+    "model": "CAM-S1",
+    "fw": "1.8",
+    "rssi": -63,
+    "battery": 72,
+    "status": "connected_no_events"
+   }
+  },
+  "firmware_compat": {
+   "cam_yard": {
+    "device_id": "cam_yard",
+    "device_fw": "1.8",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v3"
+    ],
+    "compatible": false,
+    "ota_available_to": "2.1"
+   }
+  },
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "In the app, go to the Yard Cam device settings and trigger a firmware update (OTA). Confirm the camera stays within normal signal range and battery is above 30% during the update. Report whether the update completes and the camera firmware reaches 2.1.",
+    "target_cause": "PERIPHERAL_FW_OUTDATED",
+    "outcome": "I ran the update for the Yard Cam from the app and it finished fine — it now shows version 2.1, and clips are coming through again when someone walks past.",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-305 Protocol / firmware mismatch] The peripheral firmware speaks a radio protocol the base station no longer supports, or vice versa. Frontline action: trigger OTA upgrade of the peripheral. If OTA is not available for the device or fails twice, escalate to FAE as protocol conflict.",
+   "[manual_peripherals#Peripheral firmware and OTA] Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3.",
+   "[historical_cases#H-03 Indoor camera lost after night update] After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+  ]
+ },
+ "wall_seconds": 0.1,
+ "llm_seconds": 26.6,
+ "llm_calls": 10,
+ "tokens": 26158,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "The yard camera used to upload a clip every time somebody walked past. Since a night when the system updated itself, the clips stopped, although live view still works. I checked the storage page and there is plenty of space, so that is not it. My neighbour with the same system has no problem.",
+ "user_turns": 1,
+ "console_calls": 4,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable with concrete verification steps. It avoids overclaiming: the firmware update and restored clips are supported by the customer's report. However, the root-cause claim of a 'compatibility mismatch between camera and base station' is not evidenced in the session record, and the E-305 log check is introduced without prior mention, slightly reducing confidence."
+}

@@ -1,0 +1,201 @@
+{
+ "system": "react",
+ "case_id": "C007",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station was offline with no_internet and E-503, LED solid red, and all devices showed offline in the app. The customer had moved the TV cabinet and disturbed cables behind it. Reseating the Ethernet cable and power-cycling the router and base station restored the uplink (LED solid blue, all devices online), confirming a physical network disconnection rather than a battery or device fault.",
+ "output": {
+  "repair_steps": [
+   "Check the Ethernet cable between the base station and router; reseat firmly at both ends.",
+   "Power-cycle the router: unplug power, wait 30 seconds, plug back in, wait 2 minutes.",
+   "Power-cycle the base station.",
+   "Verify base station LED turns solid blue and all devices show online in the app."
+  ],
+  "customer_reply": "Thank you for your patience. The issue was caused by a loose Ethernet cable after moving the TV cabinet. I've guided you through reseating the cable and restarting your router and base station. Your system is now back online with all devices connected. If you notice any further issues, please don't hesitate to reach out. Have a great day!"
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 base station no internet uplink"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "Is the base station connected to the router with an Ethernet cable, and after moving the TV cabinet, is that cable still firmly plugged in at both ends (base station and router)? Also, what color is the LED on the base station right now?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Check the Ethernet cable between the base station and the router. Unplug it at both ends and plug it back in firmly (or try a different cable/port). Then power-cycle the router (unplug power, wait 30 seconds, plug back in, wait 2 minutes), then power-cycle the base station. Report whether the base station LED changes from solid red and whether the app shows devices online."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_main",
+      "name": "Main Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "base station uplink lost: E-503"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 base station no internet uplink"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#Network uplink",
+      "text": "The base station connects to the home router by Ethernet (recommended) or 2.4 GHz Wi-Fi. If all cameras and sensors show offline in the app at the same time, first check whether the base station itself is online. Power-cycle the router, wait 2 minutes, then power-cycle the base station. The base station requires outbound TCP 443 and 8883 to the cloud."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Is the base station connected to the router with an Ethernet cable, and after moving the TV cabinet, is that cable still firmly plugged in at both ends (base station and router)? Also, what color is the LED on the base station right now?"
+   },
+   "result": {
+    "answer": "I'm not sure about the cable — we moved the TV cabinet last weekend and some cables behind it got disturbed, so it may have been moved, but I haven't checked whether it's firmly plugged in at both ends. The LED on the base station is solid red right now."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Check the Ethernet cable between the base station and the router. Unplug it at both ends and plug it back in firmly (or try a different cable/port). Then power-cycle the router (unplug power, wait 30 seconds, plug back in, wait 2 minutes), then power-cycle the base station. Report whether the base station LED changes from solid red and whether the app shows devices online."
+   },
+   "result": {
+    "outcome": "I unplugged and re-plugged the Ethernet cable at both ends, then power-cycled the router, waited two minutes, and restarted the base station. The light on the base station is now solid blue and all the devices show as online in the app."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 18.7,
+ "llm_seconds": 18.7,
+ "llm_calls": 8,
+ "tokens": 15398,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "The red light on the base station has been on since I got home. The app shows no connection for every device and the live view just spins. Last weekend we moved the TV cabinet and I may have pulled some cables behind it. My son insists that all the camera batteries ran out at the same time, but that seems unlikely to me. The smart TV also complains about something, I haven't looked into it.",
+ "user_turns": 2,
+ "console_calls": 3
+}

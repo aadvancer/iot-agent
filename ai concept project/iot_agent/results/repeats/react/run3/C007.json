@@ -1,0 +1,235 @@
+{
+ "system": "react",
+ "case_id": "C007",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station showed online:false, uplink_status no_internet, and error E-503 with a solid red LED (per the manual, solid red = no internet uplink). The customer's smart TV also had no internet, confirming the whole home network was down rather than a base-station fault. After reseating cables and power-cycling the modem/router, the base station LED turned solid blue and all devices returned online, confirming a network-level outage caused by cables disturbed during the TV cabinet move.",
+ "output": {
+  "repair_steps": [
+   "Check base station LED: solid red indicates no internet uplink.",
+   "Ask customer to verify Ethernet and power cables are firmly seated at base station and router.",
+   "If cables are seated but LED remains red, ask customer to check if other devices (e.g., smart TV) have internet.",
+   "If other devices also lack internet, guide customer to power-cycle modem and router: unplug both, wait 30 seconds, plug in modem first, wait for boot, then plug in router.",
+   "After network restoration, confirm base station LED turns solid blue and all devices show online in app."
+  ],
+  "customer_reply": "We found that your home internet was down, which caused the base station's red light and offline devices. After reseating cables and restarting your modem/router, everything is back online. If the issue recurs, please check your internet connection first. Thank you for your patience!"
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "base station red LED blinking no internet E-503 all devices offline"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "Can you check the back of the base station — is the Ethernet cable (or power cable) fully plugged in, and is the Ethernet cable connected to the correct port on your router? Also, is the base station's LED solid red or blinking red?"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Please check the back of the base station: make sure the Ethernet cable is firmly seated in the base station's WAN/LAN port and in the correct LAN port on the router (not the WAN port), and that the power cable is fully plugged in. If anything is loose or in the wrong port, reseat/reconnect it, then wait 1-2 minutes and check whether the LED turns solid blue."
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "Does your smart TV or phone still have working internet right now (e.g., can you load a website or stream on the TV)? This tells us whether the whole home internet is down or just the base station's connection."
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Since the smart TV also has no internet, the issue is likely at your router or modem. Please check the router/modem: make sure its power cable is plugged in, the cable from your internet provider (coax/fiber/DSL) is firmly connected, and that the router's internet/WAN light is on. If the router appears off or its internet light is off/red, unplug the router and modem from power for 30 seconds, plug the modem back in first, wait for it to fully boot, then plug the router back in. Then check if the base station LED turns solid blue."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": false,
+    "uplink_status": "no_internet",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_main",
+      "name": "Main Camera",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "base station uplink lost: E-503",
+     "all peripherals unavailable"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "base station red LED blinking no internet E-503 all devices offline"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Can you check the back of the base station — is the Ethernet cable (or power cable) fully plugged in, and is the Ethernet cable connected to the correct port on your router? Also, is the base station's LED solid red or blinking red?"
+   },
+   "result": {
+    "answer": "The base station's LED is solid red. I haven't looked behind the base station yet, so I can't tell you whether the cables are fully plugged in or which router port the Ethernet cable is in — I can go check if you'd like."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Please check the back of the base station: make sure the Ethernet cable is firmly seated in the base station's WAN/LAN port and in the correct LAN port on the router (not the WAN port), and that the power cable is fully plugged in. If anything is loose or in the wrong port, reseat/reconnect it, then wait 1-2 minutes and check whether the LED turns solid blue."
+   },
+   "result": {
+    "outcome": "I checked behind the base station and made sure the Ethernet and power cables were firmly seated, but nothing seems to have changed — the light is still solid red and the app still shows the same devices offline."
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Does your smart TV or phone still have working internet right now (e.g., can you load a website or stream on the TV)? This tells us whether the whole home internet is down or just the base station's connection."
+   },
+   "result": {
+    "answer": "The smart TV says there's no internet connection, so it looks like the internet is out for that too. I haven't tried loading a website on my phone, so I can't say about that."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Since the smart TV also has no internet, the issue is likely at your router or modem. Please check the router/modem: make sure its power cable is plugged in, the cable from your internet provider (coax/fiber/DSL) is firmly connected, and that the router's internet/WAN light is on. If the router appears off or its internet light is off/red, unplug the router and modem from power for 30 seconds, plug the modem back in first, wait for it to fully boot, then plug the router back in. Then check if the base station LED turns solid blue."
+   },
+   "result": {
+    "outcome": "I unplugged the router and modem, plugged the modem back in first, waited for it to boot, then plugged the router back in and restarted the base station. After a couple of minutes the light turned solid blue and all my devices came back online in the app."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 29.2,
+ "llm_seconds": 29.1,
+ "llm_calls": 12,
+ "tokens": 24538,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "The red light on the base station has been on since I got home. The app shows no connection for every device and the live view just spins. Last weekend we moved the TV cabinet and I may have pulled some cables behind it. My son insists that all the camera batteries ran out at the same time, but that seems unlikely to me. The smart TV also complains about something, I haven't looked into it.",
+ "user_turns": 4,
+ "console_calls": 3
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C006",
+ "pred_root_cause": "BS_NETWORK_DOWN",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "All devices are offline in the app, the base station is unreachable even via mobile data, and the issue started after a router replacement. This suggests the base station lost network connectivity, likely due to a network configuration issue after the router change.",
+ "output": {
+  "repair_steps": [
+   "Check the base station LED status. If it is blinking red, it indicates no network connection.",
+   "Ensure the base station is properly connected to the new router via Ethernet cable.",
+   "Restart the base station and the router.",
+   "If the base station was previously connected via Wi-Fi, reconfigure its Wi-Fi settings to connect to the new router's network.",
+   "If the issue persists, perform a network reset on the base station and reconfigure it."
+  ],
+  "customer_reply": "Thank you for the details. Since all devices are offline and the base station is unreachable, the issue is likely with the base station's network connection after the router replacement. Please check the base station's LED status and ensure it is properly connected to the new router. If the LED is blinking red, it indicates no network connection. Try restarting the base station and router, and verify the Ethernet cable connection. If the issue persists, we may need to reset the base station's network settings."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.5,
+ "llm_calls": 1,
+ "tokens": 958,
+ "gt_root_cause": "BS_NETWORK_DOWN",
+ "gt_tier": "L1",
+ "complaint": "Hi, everything in my security app went grey around 7 this morning: all my cameras and sensors show offline and I get no notifications at all. Yesterday afternoon our internet provider's technician replaced the router, and since then the Wi-Fi on my laptop works fine. I tried opening the app on mobile data and it says the base station is unreachable. I'm travelling next week, so I need this working. I think the base station has died.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with concrete steps (LED check, Ethernet connection, restart, Wi-Fi reconfiguration, network reset) that directly address the likely cause (router replacement). It avoids claiming any checks or fixes were completed, since no actions were performed in the session. It falls short of 5 only because it does not ask clarifying questions or confirm the base station model/connection type before prescribing steps, and the customer's 'base station died' hypothesis is not explicitly addressed."
+}

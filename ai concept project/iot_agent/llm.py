@@ -9,7 +9,7 @@ import json
 import time
 from dataclasses import dataclass, field
 
-from openai import OpenAI
+from openai import APITimeoutError, OpenAI
 
 import config
 
@@ -21,7 +21,9 @@ def _get_client() -> OpenAI:
     if _client is None:
         if not config.API_KEY:
             raise RuntimeError("DEEPSEEK_API_KEY is not set (see .env.example)")
-        _client = OpenAI(api_key=config.API_KEY, base_url=config.BASE_URL)
+        # retries are handled in chat(); SDK retries would multiply the worst-case wait
+        _client = OpenAI(api_key=config.API_KEY, base_url=config.BASE_URL,
+                         timeout=config.LLM_TIMEOUT, max_retries=0)
     return _client
 
 
@@ -49,7 +51,8 @@ USAGE = Usage()
 
 
 def _cache_path(payload: dict):
-    key = hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    keyed = {**payload, "_namespace": config.CACHE_NAMESPACE} if config.CACHE_NAMESPACE else payload
+    key = hashlib.sha256(json.dumps(keyed, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     return config.CACHE_DIR / key[:2] / f"{key}.json"
 
 
@@ -69,16 +72,23 @@ def chat(messages, model=None, tools=None, json_mode=False, role="agent",
         payload["tools"] = tools
     if json_mode:
         payload["response_format"] = {"type": "json_object"}
+    # DeepSeek thinking mode; part of the payload so cached responses are kept apart per mode
+    if config.LLM_THINKING == "disabled":
+        payload["extra_body"] = {"thinking": {"type": "disabled"}}
+    elif config.LLM_THINKING in ("low", "high", "max"):
+        payload["reasoning_effort"] = config.LLM_THINKING
+        payload["extra_body"] = {"thinking": {"type": "enabled"}}
 
     use_cache = config.USE_CACHE if use_cache is None else use_cache
     path = _cache_path(payload)
     if use_cache and path.exists():
         result = json.loads(path.read_text(encoding="utf-8"))
-        # cached calls still count tokens so cost reports reflect a full run
-        USAGE.add(role, result["usage"]["prompt"], result["usage"]["completion"], 0.0)
+        # cached calls still count tokens and their original API latency so cost reports reflect a full run
+        USAGE.add(role, result["usage"]["prompt"], result["usage"]["completion"], result.get("seconds", 0.0))
         return result
 
     client = _get_client()
+    timeouts = 0
     for attempt in range(config.MAX_RETRIES):
         try:
             t0 = time.time()
@@ -86,7 +96,9 @@ def chat(messages, model=None, tools=None, json_mode=False, role="agent",
             secs = time.time() - t0
             break
         except Exception as e:  # network / rate limit / 5xx
-            if attempt == config.MAX_RETRIES - 1:
+            # a slow model is unlikely to be faster on retry; cap the total wait
+            timeouts += isinstance(e, APITimeoutError)
+            if attempt == config.MAX_RETRIES - 1 or timeouts > config.MAX_TIMEOUT_RETRIES:
                 raise
             wait = 2 ** attempt
             print(f"[llm] {type(e).__name__}: {e}; retrying in {wait}s")

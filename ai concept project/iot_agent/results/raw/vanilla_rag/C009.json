@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C009",
+ "pred_root_cause": "PAIR_TIMEOUT",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer is adding a new window sensor and pairing times out after 120 seconds. Other sensors work, so base station is likely fine. The issue is specific to the new device pairing process. Possible causes include not holding SYNC correctly, distance >1m, or device not in pairing mode. Since no error code like E-201 or E-305 is mentioned, PAIR_TIMEOUT is the best fit.",
+ "output": {
+  "repair_steps": [
+   "Ensure the base station is in pairing mode via the app (Add Device).",
+   "Hold the SYNC button on the window sensor for 3 seconds until the LED blinks blue.",
+   "Keep the sensor within 1 metre of the base station during pairing.",
+   "If pairing fails, remove the sensor from the app if it appears, then factory reset the sensor by holding SYNC for 15 seconds until LED flashes white, and try pairing again.",
+   "If still failing, check if the base station has reached its device limit (error E-201 would indicate capacity exceeded)."
+  ],
+  "customer_reply": "Thank you for the details. Since your other sensors are working, the base station is likely fine. The pairing timeout usually happens when the new sensor isn't in pairing mode correctly or is too far from the base station. Please try again: put the base station into pairing mode via the app, then hold the SYNC button on the sensor for 3 seconds until the LED blinks blue, and keep the sensor within 1 metre of the base station. If it still fails, we can check for other issues."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.5,
+ "llm_calls": 1,
+ "tokens": 1248,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "I bought a new window sensor yesterday and followed the leaflet, but the app keeps counting down 120 seconds and then says pairing failed. I've tried five times now. I changed the sensor's battery twice, just in case. Other sensors in the house work perfectly, so I don't think there is a problem with the base station.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and provides concrete, actionable pairing steps (pairing mode, SYNC hold, proximity, reset, device-limit check). It avoids claiming any checks or fixes were completed, since no actions were performed in the session. Minor deduction: it speculates the base station is 'likely fine' and references error E-201 without confirming it applies, but overall usability is strong."
+}

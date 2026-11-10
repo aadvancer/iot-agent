@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C005",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes a single device (back door sensor) going offline while the front camera works normally. The customer suspects distance from the base station, which aligns with weak signal causing intermittent connectivity issues. No other devices are affected, and there is no mention of pairing, battery, storage, or firmware errors.",
+ "output": {
+  "repair_steps": [
+   "Check the signal strength indicator for the back door sensor in the app.",
+   "Move the sensor closer to the base station temporarily to test if it comes online.",
+   "If possible, reposition the base station to a more central location.",
+   "Consider installing a signal repeater to extend the range.",
+   "Ensure there are no physical obstructions or interference sources (e.g., thick walls, metal objects) between the sensor and base station."
+  ],
+  "customer_reply": "Thank you for the details. Based on the information provided, the issue appears to be related to a weak signal between the back door sensor and the base station. We recommend checking the signal strength in the app and considering relocating the sensor or base station to improve connectivity. A signal repeater may also help if the distance is significant."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.2,
+ "llm_calls": 1,
+ "tokens": 898,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "The back door sensor went offline. Probably the signal, it's a bit far from the base. I got a push notification around 2 pm but didn't think much of it, and only noticed in the evening that the app showed it offline. I'm thinking of buying a signal repeater for that side of the house. The front camera works as normal.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, offering concrete troubleshooting steps and acknowledging the customer's own hypothesis about signal weakness. It avoids claiming any checks or fixes were completed, since none were performed. Minor deduction because the steps are generic and not tailored to confirming the specific offline event, but overall usability is high."
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C017",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor intermittently goes offline and comes back, which is characteristic of a weak or unstable wireless signal. The issue began after installing a new metal shed, which can block or reflect radio signals, and moving the sensor did not help, suggesting environmental interference rather than a device fault.",
+ "output": {
+  "repair_steps": [
+   "Check the signal strength indicator in the app for the shed door sensor.",
+   "Try repositioning the sensor to a location with a clearer line of sight to the base station, avoiding metal obstructions.",
+   "If possible, move the base station closer to the shed or install a Wi-Fi range extender to improve coverage.",
+   "Consider using a signal repeater compatible with your security system if the distance is too great.",
+   "If the issue persists, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. The intermittent offline behavior and the timing after the metal shed installation suggest the sensor is experiencing a weak wireless signal. Metal structures can significantly reduce signal strength. We recommend trying to improve the signal path, such as relocating the sensor or adding a range extender if available."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 7.1,
+ "llm_calls": 1,
+ "tokens": 886,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "The shed door sensor keeps going offline and coming back. Honestly it only started after we put up the new metal shed in October. The app notifies me about it at random times, including at night. I tried moving the sensor to the other side of the door frame, but that made no difference.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and offers plausible, actionable steps (check signal strength, reposition, move base station, add extender/repeater). However, it does not acknowledge or build on the customer's already-performed action (moving the sensor to the other side of the door frame), and it presents a root-cause explanation (metal shed weakening signal) as a conclusion without any diagnostic check being shown as completed. It also asks the customer to 'contact support' despite being the support response. Clarity and actionability are moderate, but it lacks tailoring to the session record and overstates the diagnosis."
+}

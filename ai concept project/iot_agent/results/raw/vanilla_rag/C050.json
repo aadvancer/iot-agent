@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C050",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer states the porch camera said low battery a few days ago and is now offline. According to the manual, a battery camera below 3% goes offline. This matches the symptom of a single device offline with a prior low battery warning. No other devices are reported offline, and the customer is willing to swap parts, but the likely cause is simply a depleted battery.",
+ "output": {
+  "repair_steps": [
+   "Remove the porch camera from its mount.",
+   "Connect the supplied USB-C cable to the camera and a USB power adapter.",
+   "Charge for approximately 6 hours until the battery is full.",
+   "Reinstall the camera and check the app to confirm it is online."
+  ],
+  "customer_reply": "Your porch camera is offline because its battery is depleted. Please charge it using the supplied USB-C cable for about 6 hours. Once charged, it should come back online. If it still doesn't work after charging, let us know and we'll investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.3,
+ "llm_seconds": 5.3,
+ "llm_calls": 1,
+ "tokens": 1193,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "Porch camera offline. It said low battery a few days ago, so maybe that's all it is. I don't have much time to deal with this, so please just tell me what to do or send me whatever part I need and I'll swap it myself this weekend.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable with concrete charging steps and a follow-up path. It avoids claiming any checks or fixes were performed, since none were. Minor deduction: it asserts the battery is depleted as the cause without any diagnostic confirmation, though the customer's own low-battery report makes this a reasonable inference rather than an unsupported claim."
+}

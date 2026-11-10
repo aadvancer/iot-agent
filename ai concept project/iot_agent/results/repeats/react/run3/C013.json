@@ -1,0 +1,192 @@
+{
+ "system": "react",
+ "case_id": "C013",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station (HB-100) has a hard limit of 8 bound peripherals and the binding table shows 8/8 devices, including an offline \"Old Test Sensor\" the customer likely isn't counting. Pairing the new door sensor is rejected with E-201 \"capacity reached (8/8)\", and the app and base station binding tables agree, so this is a genuine capacity limit, not a binding-table corruption. Removing the unused \"Old Test Sensor\" frees a slot and resolves the issue at L1.",
+ "output": {
+  "repair_steps": [
+   "In the app, go to Devices and locate 'Old Test Sensor' (offline).",
+   "Tap the sensor, then select Device Settings > Remove Device.",
+   "Confirm removal to free one binding slot.",
+   "Pair the new door sensor again."
+  ],
+  "customer_reply": "I found the issue: your base station has a limit of 8 devices, and it's currently full. There's an offline 'Old Test Sensor' still taking up a slot. Please remove it in the app (Devices > Old Test Sensor > Device Settings > Remove Device), then try pairing your new door sensor again. That should resolve the capacity error."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-201"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity exceeded max devices"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-201"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_drive",
+      "name": "Driveway Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "old_test",
+      "name": "Old Test Sensor",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "new_door",
+      "name": "New Door Sensor",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-201"
+   },
+   "result": {
+    "lines": [
+     "pairing rejected: E-201 capacity reached (8/8)"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity exceeded max devices"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-201 Capacity reached",
+      "text": "The base station already holds its maximum number of bound peripherals. Frontline action: remove an unused device. Not an escalation case."
+     },
+     {
+      "source": "manual_base_station#Device capacity",
+      "text": "HB-100 supports up to 8 bound peripherals. HB-200 supports up to 16 bound peripherals. When the limit is reached, pairing a new device fails with error E-201 even if the device is in pairing mode. Remove an unused device in the app (Device Settings > Remove Device) to free a slot."
+     },
+     {
+      "source": "manual_base_station#Orphaned binding (device removed in app but still bound in base station)",
+      "text": "If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 11.4,
+ "llm_seconds": 11.4,
+ "llm_calls": 4,
+ "tokens": 8453,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "Since the weekend I can't add another door sensor. The app shows capacity reached, but I only see about six devices on the home screen. I've reset my phone's Bluetooth and tried a different phone as well, and nothing changes. I don't see why the system would be full.",
+ "user_turns": 0,
+ "console_calls": 3
+}

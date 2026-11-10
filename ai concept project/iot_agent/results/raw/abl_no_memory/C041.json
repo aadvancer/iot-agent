@@ -1,0 +1,531 @@
+{
+ "system": "abl_no_memory",
+ "case_id": "C041",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [
+  {
+   "rule": "R5_HW_PERSISTS",
+   "evidence": "customer: 'The LED goes solid when I hold the reset button, then goes dark — that's what I saw yesterday' / 'Can the customer check the Garage Cam's LED status right now, and has anything changed physically near the garage in the'"
+  }
+ ],
+ "rationale": "The garage camera (CAM-I2) is offline while the base station and all five other devices are online, ruling out a system-level fault. The customer already moved the camera next to the base station and it still failed to come online, and the log shows a power-on event with no heartbeat following — a failed reset/reboot cycle. This matches escalation policy criterion (5): a device fails even next to the base station after a reset, indicating a hardware fault rather than weak signal.",
+ "output": {
+  "symptom_summary": "Garage Cam (CAM-I2) is offline while base station and all other devices are online. Customer moved camera next to base station and reset it, but it still failed to come online.",
+  "suspected_root_cause": "Hardware fault suspected in the camera, as it fails to connect even next to the base station after a reset.",
+  "key_abnormal_indicators": [
+   "cam_garage status: offline",
+   "cam_garage RSSI: -83 dBm (recorded 2 days ago at garage location)",
+   "cam_garage firmware: 2.0 (compatible with base station protocols v2/v3)",
+   "cam_garage power-on event 09:12 yesterday, no heartbeat followed",
+   "all other 5 devices online",
+   "base station online, no error codes"
+  ],
+  "customer_reply": "Thank you for your patience. Our engineering team will review your case and contact you within 24-48 hours with next steps. No further action is needed from you at this time.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": []
+   },
+   "affected_devices": [
+    {
+     "id": "cam_garage",
+     "name": "Garage Cam",
+     "model": "CAM-I2",
+     "fw": "2.0",
+     "rssi": -83,
+     "battery": null,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [
+    {
+     "rule": "R5_HW_PERSISTS",
+     "evidence": "customer: 'The LED goes solid when I hold the reset button, then goes dark — that's what I saw yesterday' / 'Can the customer check the Garage Cam's LED status right now, and has anything changed physically near the garage in the'"
+    }
+   ],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "WEAK_SIGNAL",
+   "tier": "L1",
+   "evidence": "cam_garage rssi -83 dBm"
+  },
+  {
+   "cause": "HW_FAULT_SUSPECTED",
+   "tier": "L2",
+   "evidence": "still fails next to the base after a reset (customer: 'The LED goes solid when I hold the reset button, then goes dark — that's what I saw yesterday' / 'Can the customer check the Garage Cam's LED status right now, and has anything changed physically near the garage in the')"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 power-on event no heartbeat RSSI -83 dBm offline"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_garage"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "Can the customer check the Garage Cam's LED status right now, and has anything changed physically near the garage in the last two days (new appliance, metal shelving, moved the camera, new router/Wi-Fi gear, or a power cycle of the camera)?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 power-on event no heartbeat LED solid then dark reset fails to come online hardware fault"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 factory reset procedure power cycle fails to come online next to base station hardware fault escalation"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "HW_FAULT_SUSPECTED",
+    "rationale": "The garage camera (CAM-I2) is offline while the base station and all five other devices are online, ruling out a system-level fault. The customer already moved the camera next to the base station and it still failed to come online, and the log shows a power-on event with no heartbeat following — a failed reset/reboot cycle. This matches escalation policy criterion (5): a device fails even next to the base station after a reset, indicating a hardware fault rather than weak signal."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_garage",
+      "name": "Garage Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   },
+   "result": {
+    "id": "cam_garage",
+    "name": "Garage Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -83,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "cam_garage last RSSI -83 dBm (recorded 2 days ago at the garage location)",
+     "cam_garage offline since 2 days 14:22",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "cam_garage power-on event 09:12 yesterday, no heartbeat followed",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_garage"
+   },
+   "result": {
+    "device_id": "cam_garage",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 power-on event no heartbeat RSSI -83 dBm offline"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garage"
+   },
+   "result": {
+    "id": "cam_garage",
+    "name": "Garage Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -83,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_garage"
+   },
+   "result": {
+    "lines": [
+     "cam_garage last RSSI -83 dBm (recorded 2 days ago at the garage location)",
+     "cam_garage offline since 2 days 14:22",
+     "cam_garage power-on event 09:12 yesterday, no heartbeat followed"
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Can the customer check the Garage Cam's LED status right now, and has anything changed physically near the garage in the last two days (new appliance, metal shelving, moved the camera, new router/Wi-Fi gear, or a power cycle of the camera)?"
+   },
+   "result": {
+    "answer": "The LED goes solid when I hold the reset button, then goes dark — that's what I saw yesterday. As for physical changes, I haven't changed anything, but I did bring the camera inside yesterday and put it right next to the base station to test, and it still didn't come online."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 power-on event no heartbeat LED solid then dark reset fails to come online hardware fault"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_base_station#LED status indicators",
+      "text": "Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent)."
+     },
+     {
+      "source": "historical_cases#H-04 Whole house offline",
+      "text": "All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "CAM-I2 factory reset procedure power cycle fails to come online next to base station hardware fault escalation"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "escalation_policy#Escalate to FAE (L2)",
+      "text": "Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset."
+     },
+     {
+      "source": "historical_cases#H-03 Indoor camera lost after night update",
+      "text": "After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly."
+     },
+     {
+      "source": "manual_base_station#Restart and reset",
+      "text": "A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "cam_garage",
+     "name": "Garage Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_front",
+     "name": "Front Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "cam_garage"
+  ],
+  "device_details": {
+   "cam_garage": {
+    "id": "cam_garage",
+    "name": "Garage Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -83,
+    "battery": null,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "cam_garage": {
+    "device_id": "cam_garage",
+    "device_fw": "2.0",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "cam_garage last RSSI -83 dBm (recorded 2 days ago at the garage location)",
+    "cam_garage offline since 2 days 14:22",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "cam_garage power-on event 09:12 yesterday, no heartbeat followed",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%"
+   ],
+   "cam_garage": [
+    "cam_garage last RSSI -83 dBm (recorded 2 days ago at the garage location)",
+    "cam_garage offline since 2 days 14:22",
+    "cam_garage power-on event 09:12 yesterday, no heartbeat followed"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "Can the customer check the Garage Cam's LED status right now, and has anything changed physically near the garage in the last two days (new appliance, metal shelving, moved the camera, new router/Wi-Fi gear, or a power cycle of the camera)?",
+    "answer": "The LED goes solid when I hold the reset button, then goes dark — that's what I saw yesterday. As for physical changes, I haven't changed anything, but I did bring the camera inside yesterday and put it right next to the base station to test, and it still didn't come online."
+   }
+  ],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[historical_cases#H-01 Garage camera keeps dropping] Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline.",
+   "[historical_cases#H-06 Events not in cloud] Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly.",
+   "[historical_cases#H-05 Three sensors offline at once] Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly.",
+   "[manual_base_station#LED status indicators] Solid blue: online and connected to cloud. Blinking blue: pairing mode (lasts 120 seconds). Solid red: no internet uplink. Blinking red: booting or firmware update in progress, do not unplug. Solid purple: storage almost full (over 95 percent).",
+   "[historical_cases#H-04 Whole house offline] All devices offline, base station LED solid red. Router had been replaced the previous day and the Ethernet cable was in the wrong port. Resolved at frontline.",
+   "[historical_cases#H-03 Indoor camera lost after night update] After HB-200 auto-updated to 4.5, a CAM-I2 running 1.2 disconnected with E-305. OTA not offered for this hardware revision. Escalated; FAE confirmed protocol v2 dropped and arranged a compatibility firmware. Escalated correctly.",
+   "[escalation_policy#Escalate to FAE (L2)] Escalate when any of the following holds: (1) two or more peripherals fail at the same time while the base station is online; (2) a firmware or protocol mismatch remains after an OTA attempt or OTA is not possible; (3) the standard frontline fix was executed and the problem persists; (4) the app's device list and the base station binding table disagree; (5) a device fails even next to the base station after a factory reset.",
+   "[manual_base_station#Restart and reset] A short press (1 s) on the rear button restarts the base station without data loss. A long press (10 s) performs a factory reset and erases all bindings; frontline staff must never instruct customers to factory-reset the base station without FAE approval."
+  ]
+ },
+ "wall_seconds": 26.4,
+ "llm_seconds": 31.0,
+ "llm_calls": 9,
+ "tokens": 27522,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "Our garage camera has been offline for two days. The garage is at the far end of the house, so I assume the signal is just too weak out there. Is there a booster or repeater I can buy? Everything else seems to work fine and I haven't changed anything in the app.",
+ "user_turns": 1,
+ "console_calls": 7,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it correctly summarizes the customer's reported actions (moving the camera next to the base station and resetting it). However, actionability is weak: it tells the customer no further action is needed and defers to engineering without providing troubleshooting steps or answering the booster/repeater question. It also references an RSSI value recorded two days ago at the garage location as an abnormal indicator, which is somewhat misleading given the camera was later tested next to the base station. The escalation is reasonable, but the response offers little concrete help and does not address the customer's actual question about a booster."
+}

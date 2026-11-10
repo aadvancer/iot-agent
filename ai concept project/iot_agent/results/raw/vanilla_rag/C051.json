@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C051",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer reports a single back door sensor showing low battery and offline. This matches the BATTERY_LOW label: a battery camera/sensor offline or missing events, with live view failing to start. No other devices are reported offline, and the customer has not checked the rest of the system. The issue is isolated to one device with a clear low battery indication.",
+ "output": {
+  "repair_steps": [
+   "Replace the battery in the back door sensor with a fresh one of the correct type.",
+   "After replacing the battery, check the sensor's status in the app to see if it comes back online.",
+   "If the sensor does not come back online, try moving it closer to the base station temporarily to rule out signal issues.",
+   "If still offline, follow the app instructions to re-pair the sensor with the base station.",
+   "If the sensor remains offline after re-pairing, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the information. Since the back door sensor is showing a low battery and has gone offline, replacing the battery is the correct first step. After replacing the battery, please check if the sensor comes back online in the app. If it does not, you may need to re-pair the sensor or check its signal strength. Is there anything else I can help you with?"
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.9,
+ "llm_calls": 1,
+ "tokens": 1103,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "The back door sensor shows a low battery and has gone offline, so I'll change the battery tonight. While I have you on the line, is there anything else I should check? I haven't looked at the rest of the system today, I've been at work.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and provides actionable troubleshooting steps for the low-battery/offline sensor. It does not claim any checks or fixes were completed, consistent with the session record showing no actions performed. Minor deduction because the customer's broader question ('anything else I should check?') is only partially addressed and the response doesn't acknowledge that the rest of the system hasn't been reviewed."
+}

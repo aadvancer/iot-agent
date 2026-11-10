@@ -10,19 +10,22 @@
    "evidence": "cam_kitchen incompatible and OTA unavailable"
   }
  ],
- "rationale": "The base station was updated from firmware 4.2 to 4.5 at 02:47 and now only supports protocol v3, but cam_kitchen (CAM-I2, fw 1.2) speaks protocol v2. Logs show \"E-305 protocol v2 not supported\" and \"OTA unavailable for hardware rev A\", with no upgrade path, so the kitchen camera cannot rejoin. The other two devices remain online, confirming this is specific to the kitchen camera's firmware protocol after the base-station update.",
+ "rationale": "The base station firmware was updated from 4.2 to 4.5, after which the kitchen camera (CAM-I2, hardware rev A) went offline. Logs show \"E-305 protocol v2 not supported\" and \"OTA unavailable for hardware rev A\": the camera speaks protocol v2 while the base station now supports only v3, and there is no OTA upgrade path for this hardware revision. Other devices (including the same-model Hall Cam) remain online, confirming this is a protocol incompatibility specific to the oldest camera, not a system-wide or signal fault.",
  "output": {
-  "symptom_summary": "After the base station firmware update to 4.5, Kitchen Cam (CAM-I2) went offline and cannot rejoin, while the other two devices remain online.",
-  "suspected_root_cause": "The updated base station now only supports protocol v3, but Kitchen Cam firmware 1.2 speaks protocol v2 with no OTA upgrade path, causing a protocol conflict.",
+  "symptom_summary": "Kitchen Cam (CAM-I2, hardware rev A) went offline after base station firmware update from 4.2 to 4.5. Logs show E-305 protocol v2 not supported and OTA unavailable for hardware rev A.",
+  "suspected_root_cause": "Protocol conflict: base station now supports only protocol v3, while Kitchen Cam uses v2 and has no OTA upgrade path for its hardware revision.",
   "key_abnormal_indicators": [
-   "Base station firmware updated from 4.2 to 4.5 at 02:47",
-   "Base station supported_protocols: [\"v3\"]",
-   "cam_kitchen device_fw: 1.2, device_protocol: v2",
-   "Error code E-305 'protocol v2 not supported'",
+   "Base station firmware updated 4.2 -> 4.5",
+   "Base station supported protocols: [v3]",
+   "Kitchen Cam protocol: v2",
+   "Kitchen Cam firmware: 1.2",
+   "Kitchen Cam hardware rev: A",
+   "Error code: E-305 protocol v2 not supported",
    "OTA unavailable for hardware rev A",
-   "cam_kitchen status offline; cam_garden and door_front online"
+   "Kitchen Cam status: offline",
+   "Hall Cam (same model CAM-I2) online"
   ],
-  "customer_reply": "Thanks for your patience. Our diagnosis indicates a protocol compatibility issue after the recent base station update. We have escalated your case to a field applications engineer, who will contact you with next steps. No further action is required from you at this time.",
+  "customer_reply": "We've identified a compatibility issue between your Kitchen Cam and the updated base station. Our engineering team will review and contact you with next steps. No action needed from you at this time.",
   "ticket": {
    "base_station": {
     "model": "HB-200",
@@ -101,7 +104,7 @@
    "tool": "submit_diagnosis",
    "args": {
     "root_cause": "PROTOCOL_CONFLICT",
-    "rationale": "The base station was updated from firmware 4.2 to 4.5 at 02:47 and now only supports protocol v3, but cam_kitchen (CAM-I2, fw 1.2) speaks protocol v2. Logs show \"E-305 protocol v2 not supported\" and \"OTA unavailable for hardware rev A\", with no upgrade path, so the kitchen camera cannot rejoin. The other two devices remain online, confirming this is specific to the kitchen camera's firmware protocol after the base-station update."
+    "rationale": "The base station firmware was updated from 4.2 to 4.5, after which the kitchen camera (CAM-I2, hardware rev A) went offline. Logs show \"E-305 protocol v2 not supported\" and \"OTA unavailable for hardware rev A\": the camera speaks protocol v2 while the base station now supports only v3, and there is no OTA upgrade path for this hardware revision. Other devices (including the same-model Hall Cam) remain online, confirming this is a protocol incompatibility specific to the oldest camera, not a system-wide or signal fault."
    }
   }
  ],
@@ -129,7 +132,7 @@
    "tool": "get_topology",
    "args": {},
    "result": {
-    "bound_count": 3,
+    "bound_count": 6,
     "max_devices": 16,
     "devices": [
      {
@@ -152,6 +155,30 @@
       "id": "door_front",
       "name": "Front Door",
       "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
       "bound_in_base": true,
       "bound_in_app": true,
       "status": "online"
@@ -181,9 +208,16 @@
    },
    "result": {
     "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
      "base station firmware updated 4.2 -> 4.5 at 02:47",
      "cam_kitchen: E-305 protocol v2 not supported",
-     "cam_kitchen: OTA unavailable for hardware rev A"
+     "cam_kitchen: OTA unavailable for hardware rev A",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 win_kitchen heartbeat ok",
+     "23:58:02 motion_stairs heartbeat ok",
+     "23:59:20 local app session opened from the home network"
     ]
    }
   },
@@ -229,7 +263,7 @@
    ]
   },
   "binding_table": {
-   "bound_count": 3,
+   "bound_count": 6,
    "max_devices": 16,
    "devices": [
     {
@@ -252,6 +286,30 @@
      "id": "door_front",
      "name": "Front Door",
      "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
      "bound_in_base": true,
      "bound_in_app": true,
      "status": "online"
@@ -286,20 +344,32 @@
   },
   "logs": {
    "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
     "base station firmware updated 4.2 -> 4.5 at 02:47",
     "cam_kitchen: E-305 protocol v2 not supported",
-    "cam_kitchen: OTA unavailable for hardware rev A"
+    "cam_kitchen: OTA unavailable for hardware rev A",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 win_kitchen heartbeat ok",
+    "23:58:02 motion_stairs heartbeat ok",
+    "23:59:20 local app session opened from the home network"
    ]
   },
   "customer_answers": [],
   "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
   "knowledge_snippets": []
  },
- "wall_seconds": 14.8,
+ "wall_seconds": 0.0,
+ "llm_seconds": 10.9,
  "llm_calls": 2,
- "tokens": 5043,
+ "tokens": 5325,
  "gt_root_cause": "PROTOCOL_CONFLICT",
  "gt_tier": "L2",
+ "complaint": "My kitchen camera disappeared this morning. It says offline. I already unplugged it and plugged it back in, tried a different power socket, and even restarted my Wi-Fi router because I assumed that is what the camera uses. The garden camera and the door sensor are fine, which is why I'm confused. The kitchen camera is the oldest one I own.",
  "user_turns": 0,
- "console_calls": 5
+ "console_calls": 5,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it avoids claiming any checks or fixes were performed (steps_performed is empty, and the customer reply says no action is needed). However, actionability is weak: it only says engineering will review and contact the customer, with no concrete next steps, timeline, or interim guidance. It also presents detailed diagnostic findings (logs, error codes, protocol versions) that are not supported by the session record, which shows no questions asked and no actions performed. The root-cause label is plausible but not evidenced by customer-performed actions, so it should not be rewarded on its own."
 }

@@ -1,0 +1,305 @@
+{
+ "system": "react",
+ "case_id": "C044",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Both offline devices are battery-powered SEN-D1 sensors that logged low-battery warnings (7% and 9%) immediately before going offline, with healthy RSSI (-58 to -63 dBm) and compatible firmware. The base station is online with a good uplink and all 5 other devices online, ruling out a base-station failure. The customer confirmed both sensors were installed on the same day ~14 months ago and never had batteries replaced, so they drained simultaneously — a coincidence, not a systemic fault.",
+ "output": {
+  "repair_steps": [
+   "Instruct the customer to replace the batteries in the Back Door and Back Window sensors with fresh CR123A batteries.",
+   "After battery replacement, ask the customer to press the tamper button on each sensor to force a reconnection.",
+   "Verify in the app that both sensors come back online and show battery level above 20%.",
+   "Advise the customer to set a reminder to replace sensor batteries every 12 months to avoid recurrence."
+  ],
+  "customer_reply": "Thanks for your patience. We found both sensors had low batteries (7% and 9%) and went offline. Your base station is fine. Please replace the batteries in the Back Door and Back Window sensors with fresh CR123A batteries, then press the tamper button on each to reconnect. They should come back online within a minute. We recommend replacing sensor batteries yearly to avoid this. Let us know if you need further help."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "win_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "win_back"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor offline low battery overnight multiple devices"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "ask_user",
+   "args": {
+    "question": "Both the Back Door and Back Window sensors are battery-powered. Can you confirm when these two sensors were last had their batteries replaced, and whether they were installed at roughly the same time?"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "win_back",
+      "name": "Back Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_back"
+   },
+   "result": {
+    "id": "door_back",
+    "name": "Back Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 3,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "win_back"
+   },
+   "result": {
+    "id": "win_back",
+    "name": "Back Window",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": null,
+    "battery": 5,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "door_back"
+   },
+   "result": {
+    "lines": [
+     "Thursday 08:12 door_back low battery warning (7%)",
+     "02:14:51 door_back lost",
+     "rssi history (7 days) door_back -58 to -61 dBm, win_back -60 to -63 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "win_back"
+   },
+   "result": {
+    "lines": [
+     "Thursday 08:15 win_back low battery warning (9%)",
+     "05:47:09 win_back lost",
+     "rssi history (7 days) door_back -58 to -61 dBm, win_back -60 to -63 dBm"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_back"
+   },
+   "result": {
+    "device_id": "door_back",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "win_back"
+   },
+   "result": {
+    "device_id": "win_back",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "sensor offline low battery overnight multiple devices"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     },
+     {
+      "source": "escalation_policy#Close at frontline (L1)",
+      "text": "Uplink loss of the base station, pairing timeouts, capacity limit reached, weak signal of a single device, low battery, outdated peripheral firmware that upgrades successfully via OTA, and full storage. Provide the customer with step-by-step instructions and confirm the issue is resolved."
+     },
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "Both the Back Door and Back Window sensors are battery-powered. Can you confirm when these two sensors were last had their batteries replaced, and whether they were installed at roughly the same time?"
+   },
+   "result": {
+    "answer": "They were both installed on the same day, about 14 months ago, and I don't think I've ever replaced the batteries in either one. I do remember dismissing some low battery notifications last week, though."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 19.2,
+ "llm_seconds": 19.2,
+ "llm_calls": 7,
+ "tokens": 15772,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "Two of my sensors went offline overnight, the back door and the back window. Two at once seems like something bigger is wrong with the system. Should I be worried that the base station is failing? It's quite new and I don't want to lose the warranty period.",
+ "user_turns": 1,
+ "console_calls": 8
+}

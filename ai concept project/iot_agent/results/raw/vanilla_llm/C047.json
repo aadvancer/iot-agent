@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C047",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor stopped sending alerts, and the app reports low battery at 12%. The LED still blinks on motion, indicating the device is powered but may not have enough voltage for radio transmission. This matches the BATTERY_LOW pattern: battery camera/sensor offline or misses events, live view fails to start.",
+ "output": {
+  "repair_steps": [
+   "Replace the battery in the living room motion sensor with a new one of the correct type.",
+   "After replacement, verify the battery level in the app shows 100% or high.",
+   "Test the sensor by walking past it and checking if alerts are received in the app.",
+   "If alerts still do not come through, ensure the sensor is within range of the base station and not obstructed.",
+   "If the problem continues, contact support for further troubleshooting."
+  ],
+  "customer_reply": "Thank you for the details. Based on the information you provided, the most likely cause is a low battery. The sensor's battery level is at 12%, which is below the recommended threshold for reliable operation. Even though the LED blinks when motion is detected, the battery may not have enough power to transmit alerts to the base station. Please replace the battery with a fresh one and check if alerts resume. If the issue persists after battery replacement, we can investigate further."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.6,
+ "llm_calls": 1,
+ "tokens": 916,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "The living room motion sensor stopped sending alerts since yesterday. The app shows that its battery is getting low (12%), so I guess that's the reason? I'll buy batteries, but wanted to check first because its light still blinks when I walk past it.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with step-by-step instructions and a plausible explanation for the blinking light. It avoids claiming any checks or fixes were completed, since no actions were performed in the session. It loses a point only because it does not explicitly ask the customer to confirm the battery type or report back results, though it does invite further contact if the issue persists."
+}

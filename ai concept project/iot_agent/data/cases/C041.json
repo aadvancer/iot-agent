@@ -1,0 +1,114 @@
+{
+  "case_id": "C041",
+  "complaint": "Our garage camera has been offline for two days. The garage is at the far end of the house, so I assume the signal is just too weak out there. Is there a booster or repeater I can buy? Everything else seems to work fine and I haven't changed anything in the app.",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-200",
+      "fw": "4.2",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 42,
+      "loop_recording": true,
+      "error_codes": []
+    },
+    "devices": [
+      {
+        "id": "cam_garage",
+        "name": "Garage Cam",
+        "model": "CAM-I2",
+        "fw": "2.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -83,
+        "battery": null,
+        "status": "offline"
+      },
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -57,
+        "battery": 83,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -63,
+        "battery": 66,
+        "status": "online"
+      },
+      {
+        "id": "cam_front",
+        "name": "Front Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -67,
+        "battery": 58,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -61,
+        "battery": 47,
+        "status": "online"
+      },
+      {
+        "id": "cam_hall",
+        "name": "Hall Cam",
+        "model": "CAM-I2",
+        "fw": "2.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -59,
+        "battery": null,
+        "status": "online"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "cam_garage last RSSI -83 dBm (recorded 2 days ago at the garage location)",
+      "cam_garage offline since 2 days 14:22",
+      "04:10:48 cloud time sync ok (drift 1 s)",
+      "cam_garage power-on event 09:12 yesterday, no heartbeat followed",
+      "06:30:12 radio channel scan: channel 4 selected, utilisation 18%"
+    ]
+  },
+  "user_knowledge": {
+    "device_location": "next to the base station",
+    "move_history": "Yesterday I brought the camera inside and put it right next to the base station to test; it still did not come online.",
+    "reset_performed": "I held its reset button for 10 seconds yesterday; the LED goes solid, then dark.",
+    "recent_changes": "none"
+  },
+  "action_outcomes": {
+    "move_device_closer": "It is already sitting right next to the base station since yesterday and it is still offline.",
+    "install_repeater": "I don't own a repeater, and the camera is next to the base station anyway; still offline.",
+    "restart_base_station": "No change, the camera stays offline.",
+    "re_pair_device": "Pairing starts, but the camera drops off again within a minute."
+  },
+  "gt_root_cause": "HW_FAULT_SUSPECTED",
+  "gt_tier": "L2",
+  "gt_key_checks": [
+    "S1",
+    "S3",
+    "S5"
+  ],
+  "difficulty": "hard",
+  "split": "challenge",
+  "requires_interaction": true,
+  "notes": "The console RSSI is a stale reading from the garage. The customer already tested the camera next to the base after a reset. Rules and complaint point to WEAK_SIGNAL; only dialogue reveals a hardware fault."
+}

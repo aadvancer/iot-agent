@@ -1,0 +1,23 @@
+{
+ "system": "abl_no_hints",
+ "core": {
+  "case_count": 40,
+  "diagnosis_success_rate": 0.975,
+  "average_interaction_rounds": 1.075,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 0.95,
+  "support_usability_score": 3.575,
+  "usability_scored_cases": 40,
+  "average_tokens": 20391.375
+ },
+ "challenge": {
+  "case_count": 12,
+  "diagnosis_success_rate": 1.0,
+  "average_interaction_rounds": 1.25,
+  "redundant_inquiry_rate": 0.0,
+  "fault_classification_accuracy": 1.0,
+  "support_usability_score": 3.75,
+  "usability_scored_cases": 12,
+  "average_tokens": 26459.75
+ }
+}

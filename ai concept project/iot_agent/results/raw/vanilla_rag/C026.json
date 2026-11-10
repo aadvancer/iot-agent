@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C026",
+ "pred_root_cause": "STORAGE_FULL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The complaint describes a storage warning that returns after deleting clips, with cameras online and live view working. This matches the STORAGE_FULL pattern: new events not recorded and storage warning persists. The knowledge snippet indicates that when storage reaches 98% and loop recording is disabled, new events are not recorded and error E-402 is shown. The customer's manual deletion frees space temporarily but the warning returns, suggesting storage is filling up again. No other symptoms (offline devices, pairing issues, etc.) are present.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to Base Station Settings > Storage.",
+   "Check if loop recording is enabled. If not, enable it to allow automatic overwriting of oldest clips.",
+   "If you prefer to keep all clips, export important clips to an external storage or cloud, then format the base station storage to clear all data.",
+   "After formatting or enabling loop recording, monitor the storage warning to ensure it does not return."
+  ],
+  "customer_reply": "Thank you for the details. The storage warning indicates that the base station's local storage is nearly full. When loop recording is disabled, the base station stops recording new events once storage reaches 98%. Deleting clips frees space temporarily, but new recordings fill it again. To resolve this, you can enable loop recording so that the oldest clips are automatically overwritten, or format the storage after exporting any clips you want to keep. Please go to Base Station Settings > Storage in the app to adjust these settings."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.6,
+ "llm_seconds": 6.5,
+ "llm_calls": 1,
+ "tokens": 1345,
+ "gt_root_cause": "STORAGE_FULL",
+ "gt_tier": "L1",
+ "complaint": "The app shows a storage warning but I don't know what it wants me to do. I deleted some old clips one by one, which frees a bit of space, but the warning comes back the next day. All cameras show online and live view works. Is the base station's memory failing?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with concrete steps (enable loop recording or export and format) and a plausible explanation for the recurring warning. It avoids claiming any checks or fixes were performed, consistent with the empty session record. Minor deduction because it does not directly address the customer's question about whether the base station memory is failing, and it assumes the customer can locate the described settings without confirmation."
+}

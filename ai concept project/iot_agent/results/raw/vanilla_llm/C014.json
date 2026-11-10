@@ -1,0 +1,34 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C014",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor pairs fine on another system, ruling out a hardware fault. Immediate failure with an error (likely E-201) suggests the base station has reached its device capacity limit.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to device settings.",
+   "Check the number of devices currently paired to the base station.",
+   "If the count is at the maximum supported limit, remove any unused or old devices.",
+   "Retry pairing the new garage sensor."
+  ],
+  "customer_reply": "Your base station may have reached its maximum device capacity. Please check the device list in the app and remove any unused devices, then try pairing again."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.1,
+ "llm_calls": 1,
+ "tokens": 777,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "Pairing the new garage sensor fails immediately, within a second, with an error. It does not wait for the 120 seconds. I tested the sensor on a friend's system and it paired fine there, so I'm sure it isn't the sensor. I'm on the latest app version. What else can it be?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear, polite, and provides actionable steps (check device count, remove unused devices, retry pairing). However, it makes an unsupported claim that the base station 'may have reached its maximum device capacity' without any diagnostic questions or actions in the session record to substantiate this. The steps are reasonable but the root-cause assertion is speculative and not grounded in confirmed checks."
+}

@@ -1,0 +1,310 @@
+{
+ "system": "abl_no_override",
+ "case_id": "C052",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Base station is online with uplink_status \"ok\", yet E-503 \"TLS handshake error\" repeats in the logs, meaning events never reach the cloud (hence no push notifications while local siren still works). The standard L1 fix (router + base station power-cycle, DNS set to automatic) was attempted and did not resolve the issue. Per the fault-code reference and historical case H-06, persistent E-503 with TLS handshake failure while the base is online indicates a backend certificate/cloud-channel issue requiring FAE escalation.",
+ "output": {
+  "symptom_summary": "Base station HB-200 (FW 4.2) is online with uplink_status 'ok', but events are not reaching the cloud; no push notifications are received while local siren works. Logs show repeated E-503 'TLS handshake error'.",
+  "suspected_root_cause": "Persistent TLS handshake failure during cloud reporting despite normal uplink status suggests a backend certificate or cloud-channel issue, consistent with historical case H-06.",
+  "key_abnormal_indicators": [
+   "E-503 cloud report failed: TLS handshake error (repeated)",
+   "Base station online: true",
+   "uplink_status: ok",
+   "Standard L1 fix (router + base power-cycle, DNS automatic) did not resolve",
+   "Historical case H-06: expired device certificate on backend"
+  ],
+  "customer_reply": "Thank you for your patience. Our engineering team will investigate the cloud connection issue further. We will contact you with an update as soon as possible. In the meantime, your local alarm functions remain operational.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": [
+     "E-503"
+    ]
+   },
+   "affected_devices": [],
+   "escalation_rules": [],
+   "steps_performed": [
+    "Ask the customer to power-cycle their internet router and the base station (unplug both for 30 seconds, plug router back in first, wait for it to fully come online, then power the base station back on). Also confirm the router's DNS is set to automatic. Then check whether push notifications resume. -> I unplugged the router and the base station for 30 seconds, plugged the router back in first, waited for it to come online, then powered the base station back on. Notifications still aren't coming through."
+   ]
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "UPLINK_BLOCKED_PERSIST",
+   "tier": "L2",
+   "evidence": "E-503 cloud reporting failure while base online"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 TLS handshake error cloud report failed push notifications"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Ask the customer to power-cycle their internet router and the base station (unplug both for 30 seconds, plug router back in first, wait for it to fully come online, then power the base station back on). Also confirm the router's DNS is set to automatic. Then check whether push notifications resume.",
+    "target_cause": "UPLINK_BLOCKED_PERSIST"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "UPLINK_BLOCKED_PERSIST",
+    "rationale": "Base station is online with uplink_status \"ok\", yet E-503 \"TLS handshake error\" repeats in the logs, meaning events never reach the cloud (hence no push notifications while local siren still works). The standard L1 fix (router + base station power-cycle, DNS set to automatic) was attempted and did not resolve the issue. Per the fault-code reference and historical case H-06, persistent E-503 with TLS handshake failure while the base is online indicates a backend certificate/cloud-channel issue requiring FAE escalation."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-503"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 5,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_front",
+      "name": "Front Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "E-503"
+   },
+   "result": {
+    "lines": [
+     "E-503 cloud report failed: TLS handshake error",
+     "E-503 cloud report failed: TLS handshake error"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-503 TLS handshake error cloud report failed push notifications"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-503 Cloud reporting failed",
+      "text": "The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue)."
+     },
+     {
+      "source": "historical_cases#H-06 Events not in cloud",
+      "text": "Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly."
+     },
+     {
+      "source": "fault_codes#E-610 Radio module error",
+      "text": "Logged by the base station when its sub-GHz radio fails self-test or multiple peripherals drop simultaneously. Always escalate to FAE."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Ask the customer to power-cycle their internet router and the base station (unplug both for 30 seconds, plug router back in first, wait for it to fully come online, then power the base station back on). Also confirm the router's DNS is set to automatic. Then check whether push notifications resume."
+   },
+   "result": {
+    "outcome": "I unplugged the router and the base station for 30 seconds, plugged the router back in first, waited for it to come online, then powered the base station back on. Notifications still aren't coming through."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-503"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 5,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_front",
+     "name": "Front Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [],
+  "device_details": {},
+  "firmware_compat": {},
+  "logs": {
+   "E-503": [
+    "E-503 cloud report failed: TLS handshake error",
+    "E-503 cloud report failed: TLS handshake error"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [
+   {
+    "action": "Ask the customer to power-cycle their internet router and the base station (unplug both for 30 seconds, plug router back in first, wait for it to fully come online, then power the base station back on). Also confirm the router's DNS is set to automatic. Then check whether push notifications resume.",
+    "target_cause": "UPLINK_BLOCKED_PERSIST",
+    "outcome": "I unplugged the router and the base station for 30 seconds, plugged the router back in first, waited for it to come online, then powered the base station back on. Notifications still aren't coming through.",
+    "resolved": false,
+    "standard_fix": null
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-503 Cloud reporting failed] The base station could not deliver events to the cloud. Frontline action: verify internet access, restart router and base station, set router DNS to automatic. If E-503 persists after these steps while the base station is online, escalate to FAE (cloud channel or certificate issue).",
+   "[historical_cases#H-06 Events not in cloud] Base station online, live view works on local network, but no event notifications; E-503 every few minutes. Router restart and DNS reset did not help. Escalated; expired device certificate on backend. Escalated correctly.",
+   "[fault_codes#E-610 Radio module error] Logged by the base station when its sub-GHz radio fails self-test or multiple peripherals drop simultaneously. Always escalate to FAE."
+  ]
+ },
+ "wall_seconds": 0.2,
+ "llm_seconds": 21.3,
+ "llm_calls": 7,
+ "tokens": 16129,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "Since last week we don't get any push notifications on our phones, even though the siren works when the alarm goes off at home. I reinstalled the app on both phones and it didn't help. Maybe the latest app version is just buggy? Is there an older version I can install?",
+ "user_turns": 1,
+ "console_calls": 3,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clearly summarizes the symptom and suspected cause, and it accurately reflects that the power-cycle/DNS step was performed and did not resolve the issue. However, actionability is weak: it offers no concrete next steps for the customer, no timeline, and does not address the customer's question about an older app version. It also references internal diagnostics (E-503, historical case H-06) without explaining them, and the escalation is vague ('engineering team will investigate'). It avoids overclaiming fixes, which is good, but the customer is left without meaningful guidance."
+}

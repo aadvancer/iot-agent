@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C030",
+ "pred_root_cause": "BATCH_LINK_FAILURE",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Three sensors went offline simultaneously while the base station and front camera remain online. This matches the escalation policy for two or more peripherals failing at the same time with the base station online, and the historical case H-05 where three sensors went offline at once and required radio module replacement.",
+ "output": {
+  "symptom_summary": "Three sensors went offline at the same time, with offline notifications received within seconds of each other. The front camera remains online.",
+  "suspected_root_cause": "Batch link failure affecting multiple peripherals simultaneously, possibly due to a base station radio module issue.",
+  "key_abnormal_indicators": [
+   "Three sensors offline simultaneously",
+   "Base station online",
+   "Front camera online",
+   "Historical case H-05 with similar symptoms required radio module replacement"
+  ],
+  "customer_reply": "Thank you for the details. Since three sensors went offline at the same time while your front camera is still working, this is unlikely to be a battery issue. Batteries would typically drain at different rates, and simultaneous failure suggests a system-level problem. I recommend not ordering batteries yet. We will escalate this to our advanced support team for further diagnosis."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.7,
+ "llm_seconds": 5.6,
+ "llm_calls": 1,
+ "tokens": 1261,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "Three of my sensors went offline at the same time this afternoon. I got three offline notifications within a few seconds of each other. The front camera is still fine. I assumed the batteries had run low because they are the originals from 18 months ago, so I'm about to order a bunch of new ones. Is that the right call?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable: it explains why simultaneous failures are unlikely to be battery-related, advises against ordering batteries yet, and states a concrete next step (escalation). It avoids claiming any checks or fixes were completed, consistent with the empty session record. Minor deduction because the suspected root cause (radio module issue) is speculative and not grounded in any diagnostic actions shown, though it is framed as a suspicion rather than a confirmed finding."
+}

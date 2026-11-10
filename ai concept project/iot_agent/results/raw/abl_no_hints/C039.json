@@ -1,0 +1,501 @@
+{
+ "system": "abl_no_hints",
+ "case_id": "C039",
+ "pred_root_cause": "HW_FAULT_SUSPECTED",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The Workshop Door sensor (SEN-D1) is the only offline device while an identical SEN-D1 and all other peripherals are online, ruling out base-station, protocol, signal, and battery causes (RSSI -60 dBm, battery 75%, firmware 1.3 current, protocol v3 compatible). With a fresh battery inserted and the sensor held against the base station, the SYNC reset produced no LED activity at all and the device remained offline, indicating the unit is not powering on or responding — a hardware fault. The standard battery-reseat + SYNC reset fix was attempted and failed, so this warrants escalation to L2.",
+ "output": {
+  "symptom_summary": "Workshop Door sensor (SEN-D1) is offline and unresponsive. After battery replacement and SYNC reset, no LED activity was observed and the device remains offline in the app.",
+  "suspected_root_cause": "Hardware fault in the Workshop Door sensor (SEN-D1), as it fails to power on or respond to reset.",
+  "key_abnormal_indicators": [
+   "Only device offline among 7 bound devices",
+   "RSSI -60 dBm (good signal)",
+   "Battery 75% (fresh battery inserted)",
+   "Firmware 1.3 (current)",
+   "Protocol v3 compatible with base station",
+   "No LED activity during SYNC reset",
+   "Base station online, no error codes"
+  ],
+  "customer_reply": "Thank you for your patience. We've identified a likely hardware issue with your Workshop Door sensor. Our engineering team will review the case and contact you within 1-2 business days with next steps. No further action is needed from you at this time.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": []
+   },
+   "affected_devices": [
+    {
+     "id": "door_workshop",
+     "name": "Workshop Door",
+     "model": "SEN-D1",
+     "fw": "1.3",
+     "rssi": -60,
+     "battery": 75,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [],
+   "steps_performed": [
+    "Ask the customer to remove the battery, wait 10 seconds, reinsert the fresh battery, then hold the SYNC button for 15 seconds while watching the LED closely. Report exactly what the LED does: does it light up at all, and what colour/pattern (e.g. steady, blinking, white flash)? -> I took the battery out, waited 10 seconds, put the fresh one back in and held the SYNC button for 15 seconds. I watched closely but honestly couldn't see the LED do anything, and the sensor is still showing offline in the app."
+   ]
+  }
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_workshop"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 sensor offline after reset good battery good signal hardware fault"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer resets the Workshop Door sensor (holding the reset button), does the LED on the sensor light up or blink at all? If so, what colour/pattern?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 factory reset procedure LED indicator hardware fault escalation policy"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer holds the SYNC button on the Workshop Door sensor for 15 seconds, does the LED flash white at any point? (This confirms the sensor is actually powering on and responding.)"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Ask the customer to remove the battery, wait 10 seconds, reinsert the fresh battery, then hold the SYNC button for 15 seconds while watching the LED closely. Report exactly what the LED does: does it light up at all, and what colour/pattern (e.g. steady, blinking, white flash)?",
+    "target_cause": "HW_FAULT_SUSPECTED"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "HW_FAULT_SUSPECTED",
+    "rationale": "The Workshop Door sensor (SEN-D1) is the only offline device while an identical SEN-D1 and all other peripherals are online, ruling out base-station, protocol, signal, and battery causes (RSSI -60 dBm, battery 75%, firmware 1.3 current, protocol v3 compatible). With a fresh battery inserted and the sensor held against the base station, the SYNC reset produced no LED activity at all and the device remained offline, indicating the unit is not powering on or responding — a hardware fault. The standard battery-reseat + SYNC reset fix was attempted and failed, so this warrants escalation to L2."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 7,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "door_workshop",
+      "name": "Workshop Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "door_workshop remains offline after peripheral reset",
+     "door_workshop RSSI -60 dBm",
+     "23:57:40 remote app session authenticated",
+     "23:58:01 cam_garden heartbeat ok",
+     "23:58:02 win_kitchen heartbeat ok",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "door_workshop"
+   },
+   "result": {
+    "device_id": "door_workshop",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 sensor offline after reset good battery good signal hardware fault"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "manual_peripherals#Wireless range and signal strength",
+      "text": "Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater."
+     },
+     {
+      "source": "historical_cases#H-02 Cannot add ninth sensor",
+      "text": "HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer resets the Workshop Door sensor (holding the reset button), does the LED on the sensor light up or blink at all? If so, what colour/pattern?"
+   },
+   "result": {
+    "answer": "I'm not sure — I didn't really pay attention to the LED when I reset it, so I can't tell you the colour or pattern."
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "SEN-D1 factory reset procedure LED indicator hardware fault escalation policy"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     },
+     {
+      "source": "manual_peripherals#Peripheral firmware and OTA",
+      "text": "Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3."
+     },
+     {
+      "source": "escalation_policy#Escalation ticket content",
+      "text": "An escalation ticket must contain: customer symptom summary, base station model and firmware, affected devices with model, firmware, RSSI and battery, fault codes and relevant log lines, the troubleshooting steps already performed with their results, and the suspected root cause."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "When the customer holds the SYNC button on the Workshop Door sensor for 15 seconds, does the LED flash white at any point? (This confirms the sensor is actually powering on and responding.)"
+   },
+   "result": {
+    "answer": "I don't know — I didn't watch the LED closely during the reset, so I can't say whether it flashed white or not."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Ask the customer to remove the battery, wait 10 seconds, reinsert the fresh battery, then hold the SYNC button for 15 seconds while watching the LED closely. Report exactly what the LED does: does it light up at all, and what colour/pattern (e.g. steady, blinking, white flash)?"
+   },
+   "result": {
+    "outcome": "I took the battery out, waited 10 seconds, put the fresh one back in and held the SYNC button for 15 seconds. I watched closely but honestly couldn't see the LED do anything, and the sensor is still showing offline in the app."
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: done",
+   "S4": "firmware / protocol compatibility: done",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 7,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "door_workshop",
+     "name": "Workshop Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "door_workshop"
+  ],
+  "device_details": {
+   "door_workshop": {
+    "id": "door_workshop",
+    "name": "Workshop Door",
+    "model": "SEN-D1",
+    "fw": "1.3",
+    "rssi": -60,
+    "battery": 75,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "door_workshop": {
+    "device_id": "door_workshop",
+    "device_fw": "1.3",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "door_workshop remains offline after peripheral reset",
+    "door_workshop RSSI -60 dBm",
+    "23:57:40 remote app session authenticated",
+    "23:58:01 cam_garden heartbeat ok",
+    "23:58:02 win_kitchen heartbeat ok",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "When the customer resets the Workshop Door sensor (holding the reset button), does the LED on the sensor light up or blink at all? If so, what colour/pattern?",
+    "answer": "I'm not sure — I didn't really pay attention to the LED when I reset it, so I can't tell you the colour or pattern."
+   },
+   {
+    "question": "When the customer holds the SYNC button on the Workshop Door sensor for 15 seconds, does the LED flash white at any point? (This confirms the sensor is actually powering on and responding.)",
+    "answer": "I don't know — I didn't watch the LED closely during the reset, so I can't say whether it flashed white or not."
+   }
+  ],
+  "fix_attempts": [
+   {
+    "action": "Ask the customer to remove the battery, wait 10 seconds, reinsert the fresh battery, then hold the SYNC button for 15 seconds while watching the LED closely. Report exactly what the LED does: does it light up at all, and what colour/pattern (e.g. steady, blinking, white flash)?",
+    "target_cause": "HW_FAULT_SUSPECTED",
+    "outcome": "I took the battery out, waited 10 seconds, put the fresh one back in and held the SYNC button for 15 seconds. I watched closely but honestly couldn't see the LED do anything, and the sensor is still showing offline in the app.",
+    "resolved": false,
+    "standard_fix": null
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[manual_peripherals#Peripheral firmware and OTA] Peripheral firmware is upgraded over the air (OTA) from the base station. Requirements: device within normal signal range, battery above 30 percent. CAM-S1 1.x upgrades to 2.1 (protocol v3). SEN-D1 1.0 upgrades to 1.3, SEN-M1 1.1 upgrades to 1.4. CAM-I2 hardware revision A with firmware 1.2 cannot be upgraded to protocol v3.",
+   "[manual_peripherals#Wireless range and signal strength] Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater.",
+   "[historical_cases#H-02 Cannot add ninth sensor] HB-100 owner could not add a new door sensor; app showed E-201. Base station already had 8 devices. Customer removed an old test sensor and pairing succeeded. Resolved at frontline.",
+   "[manual_peripherals#Factory reset of a peripheral] Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again.",
+   "[escalation_policy#Escalation ticket content] An escalation ticket must contain: customer symptom summary, base station model and firmware, affected devices with model, firmware, RSSI and battery, fault codes and relevant log lines, the troubleshooting steps already performed with their results, and the suspected root cause."
+  ]
+ },
+ "wall_seconds": 40.7,
+ "llm_seconds": 44.9,
+ "llm_calls": 11,
+ "tokens": 30836,
+ "gt_root_cause": "HW_FAULT_SUSPECTED",
+ "gt_tier": "L2",
+ "complaint": "The workshop sensor will not report although it has good battery and was reset. I even put a brand new battery in and held it right against the base station while resetting it. The app shows it offline. The other sensors from the same box are perfect, so I don't think it is a setup problem.",
+ "user_turns": 3,
+ "console_calls": 5,
+ "usability_score": 4,
+ "usability_reason": "Clear, polite, and actionable: it summarizes the symptom, states a likely hardware fault, and gives a concrete next step (engineering review with 1-2 business day contact). It avoids overclaiming fixes—no repair is asserted as completed. Minor deduction because the root-cause label is somewhat inferred from limited evidence (no LED activity), but the response does not claim unsupported checks or fixes."
+}

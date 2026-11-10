@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C052",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station is online locally (siren works when alarm goes off), but push notifications are not received on phones. This indicates that events are not reaching the cloud, which is consistent with uplink blockage. Reinstalling the app did not help, suggesting the issue is not with the app but with the connection between the base station and the cloud.",
+ "output": {
+  "symptom_summary": "No push notifications on phones, but siren works locally when alarm triggers.",
+  "suspected_root_cause": "Uplink from base station to cloud is blocked or intermittent, preventing event notifications from reaching the app.",
+  "key_abnormal_indicators": [
+   "Local alarm functions (siren) work, indicating base station is operational.",
+   "Push notifications are not received on multiple phones, suggesting a cloud connectivity issue.",
+   "Reinstalling the app did not resolve the issue, ruling out app-specific problems."
+  ],
+  "customer_reply": "Thank you for the details. Since the siren works locally but you are not receiving push notifications, it appears that the base station is unable to communicate with the cloud. This is likely due to a network issue on the uplink side. We will guide you through some checks to resolve this."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.4,
+ "llm_calls": 1,
+ "tokens": 902,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "Since last week we don't get any push notifications on our phones, even though the siren works when the alarm goes off at home. I reinstalled the app on both phones and it didn't help. Maybe the latest app version is just buggy? Is there an older version I can install?",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clear, and it avoids claiming any checks or fixes were completed (none were performed). However, actionability is limited: it only promises future guidance without providing concrete troubleshooting steps, and it does not address the customer's direct question about installing an older app version. The root-cause label is plausible but not supported by any diagnostic actions in the session record."
+}

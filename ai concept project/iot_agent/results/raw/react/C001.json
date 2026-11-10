@@ -1,0 +1,214 @@
+{
+ "system": "react",
+ "case_id": "C001",
+ "pred_root_cause": "WEAK_SIGNAL",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The living room camera shows RSSI -84 dBm (below the -80 dBm threshold for reliable operation) and lost heartbeat 14 times in 24h, while all other devices are online. The issue began when the customer moved the base station into the study, increasing distance/obstacles to the living room camera. This matches the documented weak-signal pattern and is resolvable at frontline by repositioning the base station or adding an RP-1 repeater.",
+ "output": {
+  "repair_steps": [
+   "Ask the customer to move the base station back to a central location (e.g., hallway) or closer to the living room camera, ensuring no major obstacles like thick walls or metal objects in between.",
+   "If moving the base station is not possible, recommend installing an RP-1 repeater between the base station and the living room camera.",
+   "After repositioning or adding a repeater, check the RSSI of the living room camera in Device Settings > Device Info; it should be above -80 dBm (ideally above -70 dBm).",
+   "Monitor the camera for 24 hours to confirm no further heartbeat losses or offline events."
+  ],
+  "customer_reply": "Thanks for your patience. The issue is due to a weak wireless signal between your base station and the living room camera, likely because the base station was moved to the study. To fix it, please move the base station back to a more central location (like the hallway) or closer to the living room camera. If that's not possible, we recommend adding an RP-1 repeater to boost the signal. Once adjusted, the camera should stay online reliably. Let us know if you need further help!"
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_living"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_living"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "search_kb",
+   "args": {
+    "query": "RSSI -84 dBm weak signal intermittent offline camera"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garden"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 41,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_living",
+      "name": "Living Room Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "intermittent"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_living"
+   },
+   "result": {
+    "id": "cam_living",
+    "name": "Living Room Cam",
+    "model": "CAM-I2",
+    "fw": "2.0",
+    "rssi": -84,
+    "battery": null,
+    "status": "intermittent"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_living"
+   },
+   "result": {
+    "lines": [
+     "cam_living heartbeat lost 14 times in last 24h",
+     "cam_living reconnected (rssi -84)"
+    ]
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "RSSI -84 dBm weak signal intermittent offline camera"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "manual_peripherals#Wireless range and signal strength",
+      "text": "Peripherals talk to the base station over a sub-GHz proprietary radio. Signal strength (RSSI) is shown in Device Settings > Device Info. Above -70 dBm is good, -70 to -80 dBm is acceptable, below -80 dBm causes intermittent disconnections, delayed notifications and choppy live view. Concrete walls, metal doors and fridges strongly attenuate the signal. Fix: move the device or base station, or install the official RP-1 repeater."
+     },
+     {
+      "source": "historical_cases#H-01 Garage camera keeps dropping",
+      "text": "Customer reported a CAM-S1 in a detached garage going offline several times a day. RSSI was -86 dBm; all other devices normal. Installing an RP-1 repeater solved it. Resolved at frontline."
+     },
+     {
+      "source": "historical_cases#H-05 Three sensors offline at once",
+      "text": "Three sensors in different rooms went offline at the same minute; base station online, RSSI history normal, E-610 in log. Restarting did not help. Escalated; radio module replaced. Escalated correctly."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_garden"
+   },
+   "result": {
+    "id": "cam_garden",
+    "name": "Garden Cam",
+    "model": "CAM-S1",
+    "fw": "2.1",
+    "rssi": -79,
+    "battery": 63,
+    "status": "online"
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 11.3,
+ "llm_seconds": 14.4,
+ "llm_calls": 5,
+ "tokens": 10766,
+ "gt_root_cause": "WEAK_SIGNAL",
+ "gt_tier": "L1",
+ "complaint": "My living room camera keeps going offline a few times a day, then comes back by itself. The other devices seem fine. It started about a week ago, around when we rearranged the flat and I moved the base station into the study to free up a socket in the hallway. I've restarted the camera several times and checked that it is plugged in properly. My partner thinks the camera is faulty and wants to return it, but I'd rather not buy anything new if I can avoid it.",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable, with concrete steps (reposition base station, add repeater, check RSSI, monitor). It avoids claiming any checks or fixes were completed, since no actions were performed. Minor deduction: it asserts a root cause (weak signal) as fact without diagnostic confirmation, though it is framed as likely and tied to the customer's reported move."
+}

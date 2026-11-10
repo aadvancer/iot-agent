@@ -1,0 +1,186 @@
+{
+ "system": "react",
+ "case_id": "C018",
+ "pred_root_cause": "BATTERY_LOW",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The porch camera (CAM-S1) is a battery-powered camera reporting 7% battery and status offline, while all other devices are online and the base station uplink/storage are healthy. Firmware is compatible (v3 protocol supported) and RSSI is fine (-62 dBm), so the low battery is the decisive cause of the failed live view.",
+ "output": {
+  "repair_steps": [
+   "Instruct customer to remove the porch camera from its mount and bring it indoors.",
+   "Guide customer to connect the camera to the provided USB charging cable and a standard USB power adapter.",
+   "Advise customer to charge the camera for at least 4-6 hours or until the LED indicator shows solid green (fully charged).",
+   "After charging, instruct customer to remount the camera and verify the live view works in the app.",
+   "If live view still fails, check the battery percentage in the app; if it remains low, try a different cable/adapter and charge again.",
+   "If the camera still does not come online after a full charge, escalate to Tier 2 for possible battery replacement."
+  ],
+  "customer_reply": "Thanks for your patience. We found that your porch camera's battery is critically low at 7%, which is why live view isn't working. Please bring the camera inside, charge it with the included USB cable for at least 4-6 hours until the LED is solid green, then remount it. After charging, try live view again. If the issue persists, let us know and we'll assist further."
+ },
+ "rule_hints": [],
+ "log": [
+  {
+   "phase": "react",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "react",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_porch"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_porch"
+   }
+  },
+  {
+   "phase": "react",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_porch"
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "cam_porch",
+      "name": "Porch Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "cam_porch"
+   },
+   "result": {
+    "id": "cam_porch",
+    "name": "Porch Cam",
+    "model": "CAM-S1",
+    "fw": "2.1",
+    "rssi": -62,
+    "battery": 7,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": "cam_porch"
+   },
+   "result": {
+    "lines": [
+     "cam_porch battery level 7%"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "cam_porch"
+   },
+   "result": {
+    "device_id": "cam_porch",
+    "device_fw": "2.1",
+    "device_protocol": "v3",
+    "base_protocols": [
+     "v2",
+     "v3"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 12.5,
+ "llm_seconds": 12.5,
+ "llm_calls": 5,
+ "tokens": 9585,
+ "gt_root_cause": "BATTERY_LOW",
+ "gt_tier": "L1",
+ "complaint": "The porch camera won't start live view; it just spins and then says camera unavailable. It started a couple of days ago. I thought it was the Wi-Fi because our router was updated recently, so I rebooted the router twice, but nothing changed. The other cameras are fine.",
+ "user_turns": 0,
+ "console_calls": 5
+}

@@ -1,0 +1,100 @@
+{
+  "case_id": "C049",
+  "complaint": "Our camera recordings stopped about two weeks ago. Live view works fine, but there are no new clips in the event list after the 3rd. I think the internet must be dropping at night, our broadband has been flaky. Should I call my internet provider about it?",
+  "hidden_state": {
+    "base_station": {
+      "model": "HB-200",
+      "fw": "4.2",
+      "online": true,
+      "uplink_status": "ok",
+      "storage_used_pct": 99,
+      "loop_recording": false,
+      "error_codes": [
+        "E-402"
+      ]
+    },
+    "devices": [
+      {
+        "id": "door_front",
+        "name": "Front Door",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -57,
+        "battery": 83,
+        "status": "online"
+      },
+      {
+        "id": "motion_hall",
+        "name": "Hallway Motion",
+        "model": "SEN-M1",
+        "fw": "1.4",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -63,
+        "battery": 66,
+        "status": "online"
+      },
+      {
+        "id": "cam_front",
+        "name": "Front Cam",
+        "model": "CAM-S1",
+        "fw": "2.1",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -67,
+        "battery": 58,
+        "status": "online"
+      },
+      {
+        "id": "win_kitchen",
+        "name": "Kitchen Window",
+        "model": "SEN-D1",
+        "fw": "1.3",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -61,
+        "battery": 47,
+        "status": "online"
+      },
+      {
+        "id": "cam_hall",
+        "name": "Hall Cam",
+        "model": "CAM-I2",
+        "fw": "2.0",
+        "bound_in_base": true,
+        "bound_in_app": true,
+        "rssi": -59,
+        "battery": null,
+        "status": "online"
+      }
+    ],
+    "logs": [
+      "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+      "E-402 recording storage full (99%)",
+      "event clip discarded: no free space",
+      "event clip discarded: no free space",
+      "04:10:48 cloud time sync ok (drift 1 s)"
+    ]
+  },
+  "user_knowledge": {
+    "loop_recording_setting": "I don't know what that is.",
+    "storage": "We never changed the storage.",
+    "internet": "Streaming and everything else at home works fine, actually."
+  },
+  "action_outcomes": {
+    "restart_router": "No change, still no new clips.",
+    "enable_loop_recording": "After switching on loop recording, new clips appear again within minutes.",
+    "format_storage": "After backing up and formatting, recordings resume."
+  },
+  "gt_root_cause": "STORAGE_FULL",
+  "gt_tier": "L1",
+  "gt_key_checks": [
+    "S1"
+  ],
+  "difficulty": "hard",
+  "split": "challenge",
+  "requires_interaction": false,
+  "notes": "Blamed on the internet; the base station is online but storage is 99% full with loop recording off."
+}

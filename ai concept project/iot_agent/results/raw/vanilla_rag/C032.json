@@ -1,0 +1,36 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C032",
+ "pred_root_cause": "BATCH_LINK_FAILURE",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Three sensors went offline simultaneously while the base station and a farther camera remain online, indicating a localized link failure affecting multiple devices rather than a network-wide outage or weak signal. Restarting the base station did not resolve the issue, and the historical case H-05 with similar symptoms required hardware replacement, suggesting a possible hardware fault in the radio module.",
+ "output": {
+  "symptom_summary": "Three sensors stopped responding simultaneously; base station restart did not restore them; front camera remains online.",
+  "suspected_root_cause": "Batch link failure affecting multiple sensors, possibly due to base station radio module issue.",
+  "key_abnormal_indicators": [
+   "Multiple devices offline at the same time",
+   "Base station online and other devices unaffected",
+   "Restart did not resolve the issue",
+   "Historical case with similar symptoms required hardware replacement"
+  ],
+  "customer_reply": "Thank you for the detailed information. Since multiple sensors went offline at the same time while other devices remain online, this suggests a possible issue with the base station's radio module or a batch link failure. We will escalate this to our technical team for further investigation. In the meantime, please ensure the base station is powered on and connected to your network. We will follow up with next steps."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 6.6,
+ "llm_calls": 1,
+ "tokens": 1140,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "Three sensors stopped responding within seconds of each other yesterday evening. I restarted the base station, hoping it would help, but they all stayed offline. The base station is at the far end of the flat from some of them, so maybe the signal is the problem. The front camera, which is farther away, is still online though.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clearly summarizes the symptom, and it avoids claiming any checks or fixes were completed (none were performed). However, actionability is weak: it only asks the customer to ensure the base station is powered and networked, which they already effectively did via restart, and defers to escalation without concrete troubleshooting steps. The suspected root cause is speculative and not supported by any diagnostic actions in the record, though it is framed as a possibility rather than a confirmed finding."
+}

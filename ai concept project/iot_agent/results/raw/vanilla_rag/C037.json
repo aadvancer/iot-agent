@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C037",
+ "pred_root_cause": "BINDING_TABLE_CORRUPT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The app lists the lobby sensor, but the base station says it is not bound. This mismatch between app and base station binding tables, along with repeated failed re-pairing attempts, indicates a binding table inconsistency or corruption. The knowledge snippets confirm that such a mismatch (app lists device, base station does not) and repeated E-207 errors point to binding table corruption, requiring escalation to FAE.",
+ "output": {
+  "symptom_summary": "App lists lobby sensor, but base station reports it as not bound. User has deleted and re-added the device twice without success. Possible account sync confusion with husband's account.",
+  "suspected_root_cause": "Binding table corruption or inconsistency between app and base station.",
+  "key_abnormal_indicators": [
+   "App and base station disagree on device binding status.",
+   "Repeated re-pairing attempts fail.",
+   "No mention of E-201 or E-207 in complaint, but mismatch is a key indicator per knowledge base."
+  ],
+  "customer_reply": "Thank you for the details. Based on the information you provided, the issue appears to be a mismatch between the app and the base station's binding records. This type of inconsistency typically requires advanced troubleshooting by our engineering team. I have escalated your case to our Field Application Engineers, who will be able to correct the binding table. They will contact you with further instructions. We appreciate your patience."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.3,
+ "llm_seconds": 6.2,
+ "llm_calls": 1,
+ "tokens": 1273,
+ "gt_root_cause": "BINDING_TABLE_CORRUPT",
+ "gt_tier": "L2",
+ "complaint": "The app lists my lobby sensor, but the base station says it is not bound. I'm confused: the app says one thing and the base station another. I've deleted and re-added it twice. I wonder whether my account is out of sync with my husband's account, since he also uses the app.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it avoids claiming any checks or fixes were completed—it only says the case was escalated. However, actionability is limited: it gives the customer no interim steps or diagnostic questions (e.g., about the husband's account sync, which the customer raised), and the escalation is not shown as actually performed in the session record, so it is an unsupported claim of action. The root-cause label is plausible but not substantiated by any performed checks."
+}

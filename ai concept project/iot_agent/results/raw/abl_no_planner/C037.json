@@ -1,0 +1,344 @@
+{
+ "system": "abl_no_planner",
+ "case_id": "C037",
+ "pred_root_cause": "BINDING_TABLE_CORRUPT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [
+  {
+   "rule": "R4_TOPOLOGY_MISMATCH",
+   "evidence": "app/base disagree on ['motion_lobby']"
+  }
+ ],
+ "rationale": "The base station reports E-207 (binding write failed), and the topology shows motion_lobby is bound_in_app=true but bound_in_base=false — the app and base station binding tables disagree. The customer has already deleted and re-added the device twice without success, which per the fault-code reference indicates a corrupted binding table rather than a transient power-interruption glitch. This is an L2 fault requiring FAE to clear the entry with the backend binding tool; frontline cannot resolve it and must not factory-reset the base station.",
+ "output": {
+  "symptom_summary": "Customer reports Lobby Motion sensor offline and unable to re-add after multiple attempts. Base station shows E-207 binding write failed; app lists device as bound but base station does not.",
+  "suspected_root_cause": "Binding table corruption on base station (HB-200, fw 4.2) causing mismatch between app and base station binding entries for motion_lobby.",
+  "key_abnormal_indicators": [
+   "E-207 binding write failed",
+   "motion_lobby bound_in_app=true, bound_in_base=false",
+   "Device deleted and re-added twice without success",
+   "Base station model HB-200, firmware 4.2",
+   "Device model SEN-M1, firmware 1.4",
+   "Bound count 6/16"
+  ],
+  "customer_reply": "We've identified an issue with the base station's device binding table that requires advanced troubleshooting. Our engineering team will follow up with you shortly to resolve this. No further action is needed from you at this time. Thank you for your patience.",
+  "ticket": {
+   "base_station": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "error_codes": [
+     "E-207"
+    ]
+   },
+   "affected_devices": [
+    {
+     "id": "motion_lobby",
+     "name": "Lobby Motion",
+     "model": "SEN-M1",
+     "fw": "1.4",
+     "rssi": null,
+     "battery": 72,
+     "status": "offline"
+    }
+   ],
+   "escalation_rules": [
+    {
+     "rule": "R4_TOPOLOGY_MISMATCH",
+     "evidence": "app/base disagree on ['motion_lobby']"
+    }
+   ],
+   "steps_performed": []
+  }
+ },
+ "rule_hints": [
+  {
+   "cause": "BINDING_TABLE_CORRUPT",
+   "tier": "L2",
+   "evidence": "app/base binding mismatch: ['motion_lobby']"
+  }
+ ],
+ "log": [
+  {
+   "phase": "reason",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "reason",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_lobby"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-207 binding table corrupt re-pairing fails"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "BINDING_TABLE_CORRUPT",
+    "rationale": "The base station reports E-207 (binding write failed), and the topology shows motion_lobby is bound_in_app=true but bound_in_base=false — the app and base station binding tables disagree. The customer has already deleted and re-added the device twice without success, which per the fault-code reference indicates a corrupted binding table rather than a transient power-interruption glitch. This is an L2 fault requiring FAE to clear the entry with the backend binding tool; frontline cannot resolve it and must not factory-reset the base station."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-200",
+    "fw": "4.2",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-207"
+    ],
+    "max_devices": 16,
+    "supported_protocols": [
+     "v2",
+     "v3"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 6,
+    "max_devices": 16,
+    "devices": [
+     {
+      "id": "motion_lobby",
+      "name": "Lobby Motion",
+      "model": "SEN-M1",
+      "bound_in_base": false,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_hall",
+      "name": "Hall Cam",
+      "model": "CAM-I2",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_lobby"
+   },
+   "result": {
+    "id": "motion_lobby",
+    "name": "Lobby Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": null,
+    "battery": 72,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-207 binding table corrupt re-pairing fails"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-207 Binding write failed",
+      "text": "The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station."
+     },
+     {
+      "source": "manual_base_station#Orphaned binding (device removed in app but still bound in base station)",
+      "text": "If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+     },
+     {
+      "source": "manual_peripherals#Factory reset of a peripheral",
+      "text": "Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+     }
+    ]
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: done"
+  },
+  "base_station": {
+   "model": "HB-200",
+   "fw": "4.2",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-207"
+   ],
+   "max_devices": 16,
+   "supported_protocols": [
+    "v2",
+    "v3"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 6,
+   "max_devices": 16,
+   "devices": [
+    {
+     "id": "motion_lobby",
+     "name": "Lobby Motion",
+     "model": "SEN-M1",
+     "bound_in_base": false,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_hall",
+     "name": "Hall Cam",
+     "model": "CAM-I2",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "motion_lobby"
+  ],
+  "device_details": {
+   "motion_lobby": {
+    "id": "motion_lobby",
+    "name": "Lobby Motion",
+    "model": "SEN-M1",
+    "fw": "1.4",
+    "rssi": null,
+    "battery": 72,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {},
+  "logs": {},
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-207 Binding write failed] The base station could not write the new binding into its binding table. A single occurrence can follow a power interruption during pairing; retry once after restarting the base station. If E-207 repeats, or the app lists a device that the base station table does not contain, the binding table is likely corrupted: escalate to FAE. Do not factory-reset the base station.",
+   "[manual_base_station#Orphaned binding (device removed in app but still bound in base station)] If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket.",
+   "[manual_peripherals#Factory reset of a peripheral] Hold SYNC for 15 seconds until the LED flashes white. This removes the peripheral's own binding but does not remove it from the base station table; remove it in the app first, then reset, then pair again."
+  ]
+ },
+ "wall_seconds": 8.8,
+ "llm_seconds": 17.6,
+ "llm_calls": 6,
+ "tokens": 18050,
+ "gt_root_cause": "BINDING_TABLE_CORRUPT",
+ "gt_tier": "L2",
+ "complaint": "The app lists my lobby sensor, but the base station says it is not bound. I'm confused: the app says one thing and the base station another. I've deleted and re-added it twice. I wonder whether my account is out of sync with my husband's account, since he also uses the app.",
+ "user_turns": 0,
+ "console_calls": 3,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and clearly summarizes the symptom, but it is largely non-actionable: it tells the customer no action is needed and that engineering will follow up, without any troubleshooting steps or explanation of the account-sync question. It also presents detailed diagnostic indicators (E-207, binding table corruption, bound_in_app/bound_in_base mismatch, firmware versions) as if observed, yet the session record shows no questions asked and no actions performed, so these checks/fixes are unsupported claims. Clarity is decent, but actionability and evidence integrity are weak."
+}

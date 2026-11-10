@@ -1,0 +1,458 @@
+{
+ "system": "topology_agent",
+ "case_id": "C012",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station (HB-100) was at its 8/8 device capacity, and pairing the new sensor failed with error E-201. After the customer removed the unused \"Old Test Sensor\" to free a slot, the new garage door sensor paired successfully, confirming capacity exhaustion as the root cause.",
+ "output": {
+  "repair_steps": [
+   "Confirm the customer removed the Old Test Sensor from the app.",
+   "Verify the new garage door sensor is now paired and online.",
+   "Check the base station binding table shows 8/8 devices with the new sensor included.",
+   "Advise the customer to remove any future unused devices before adding new ones."
+  ],
+  "customer_reply": "Thank you for your patience. We removed the old test sensor to free up a slot, and your new garage door sensor is now paired successfully. If you need to add more devices in the future, please remove any unused ones first. Is there anything else I can help you with today?"
+ },
+ "rule_hints": [
+  {
+   "cause": "CAPACITY_EXCEEDED",
+   "tier": "L1",
+   "evidence": "8/8 slots used"
+  },
+  {
+   "cause": "BATTERY_LOW",
+   "tier": "L1",
+   "evidence": "old_test battery 0%"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "old_test"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "old_test"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity reached remove device free slot pairing"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "ask_user",
+   "args": {
+    "question": "There is an \"Old Test Sensor\" in the device list that is offline. Is this a device the customer no longer needs and would be willing to remove to free up a slot for the new garage door sensor?"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "instruct_user",
+   "args": {
+    "action": "Have the customer open the app, go to Device Settings for \"Old Test Sensor\", and select Remove Device to free up a slot. Then retry pairing the new garage door sensor.",
+    "target_cause": "CAPACITY_EXCEEDED"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "CAPACITY_EXCEEDED",
+    "rationale": "The base station (HB-100) was at its 8/8 device capacity, and pairing the new sensor failed with error E-201. After the customer removed the unused \"Old Test Sensor\" to free a slot, the new garage door sensor paired successfully, confirming capacity exhaustion as the root cause."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 42,
+    "loop_recording": true,
+    "error_codes": [
+     "E-201"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_drive",
+      "name": "Driveway Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "old_test",
+      "name": "Old Test Sensor",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "new_door",
+      "name": "New Door Sensor",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "old_test"
+   },
+   "result": {
+    "id": "old_test",
+    "name": "Old Test Sensor",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": null,
+    "battery": 0,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "pairing rejected: E-201 capacity reached (8/8)",
+     "23:57:40 remote app session authenticated",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "old_test"
+   },
+   "result": {
+    "device_id": "old_test",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  {
+   "tool": "search_kb",
+   "args": {
+    "query": "E-201 capacity reached remove device free slot pairing"
+   },
+   "result": {
+    "results": [
+     {
+      "source": "fault_codes#E-201 Capacity reached",
+      "text": "The base station already holds its maximum number of bound peripherals. Frontline action: remove an unused device. Not an escalation case."
+     },
+     {
+      "source": "manual_base_station#Device capacity",
+      "text": "HB-100 supports up to 8 bound peripherals. HB-200 supports up to 16 bound peripherals. When the limit is reached, pairing a new device fails with error E-201 even if the device is in pairing mode. Remove an unused device in the app (Device Settings > Remove Device) to free a slot."
+     },
+     {
+      "source": "manual_base_station#Orphaned binding (device removed in app but still bound in base station)",
+      "text": "If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+     }
+    ]
+   }
+  },
+  {
+   "tool": "ask_user",
+   "args": {
+    "question": "There is an \"Old Test Sensor\" in the device list that is offline. Is this a device the customer no longer needs and would be willing to remove to free up a slot for the new garage door sensor?"
+   },
+   "result": {
+    "answer": "Yes, that's an old test sensor I don't use anymore — I never deleted it from the app. I'd be happy to remove it if that helps."
+   }
+  },
+  {
+   "tool": "instruct_user",
+   "args": {
+    "action": "Have the customer open the app, go to Device Settings for \"Old Test Sensor\", and select Remove Device to free up a slot. Then retry pairing the new garage door sensor."
+   },
+   "result": {
+    "outcome": "I went into Device Settings for the Old Test Sensor and removed it, then tried pairing the new garage door sensor again — and this time it paired successfully!"
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-100",
+   "fw": "3.4",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 42,
+   "loop_recording": true,
+   "error_codes": [
+    "E-201"
+   ],
+   "max_devices": 8,
+   "supported_protocols": [
+    "v2"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 8,
+   "max_devices": 8,
+   "devices": [
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_drive",
+     "name": "Driveway Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_back",
+     "name": "Back Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "old_test",
+     "name": "Old Test Sensor",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "new_door",
+     "name": "New Door Sensor",
+     "model": "SEN-D1",
+     "bound_in_base": false,
+     "bound_in_app": false,
+     "status": "not_paired"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "old_test",
+   "new_door"
+  ],
+  "device_details": {
+   "old_test": {
+    "id": "old_test",
+    "name": "Old Test Sensor",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": null,
+    "battery": 0,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "old_test": {
+    "device_id": "old_test",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "pairing rejected: E-201 capacity reached (8/8)",
+    "23:57:40 remote app session authenticated",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [
+   {
+    "question": "There is an \"Old Test Sensor\" in the device list that is offline. Is this a device the customer no longer needs and would be willing to remove to free up a slot for the new garage door sensor?",
+    "answer": "Yes, that's an old test sensor I don't use anymore — I never deleted it from the app. I'd be happy to remove it if that helps."
+   }
+  ],
+  "fix_attempts": [
+   {
+    "action": "Have the customer open the app, go to Device Settings for \"Old Test Sensor\", and select Remove Device to free up a slot. Then retry pairing the new garage door sensor.",
+    "target_cause": "CAPACITY_EXCEEDED",
+    "outcome": "I went into Device Settings for the Old Test Sensor and removed it, then tried pairing the new garage door sensor again — and this time it paired successfully!",
+    "resolved": true,
+    "standard_fix": true
+   }
+  ],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": [
+   "[fault_codes#E-201 Capacity reached] The base station already holds its maximum number of bound peripherals. Frontline action: remove an unused device. Not an escalation case.",
+   "[manual_base_station#Device capacity] HB-100 supports up to 8 bound peripherals. HB-200 supports up to 16 bound peripherals. When the limit is reached, pairing a new device fails with error E-201 even if the device is in pairing mode. Remove an unused device in the app (Device Settings > Remove Device) to free a slot.",
+   "[manual_base_station#Orphaned binding (device removed in app but still bound in base station)] If a device is removed in the app while it is offline or out of range, the base station may keep its entry. This orphaned (\"ghost\") binding still occupies a slot, so the base station can report E-201 although the app lists fewer devices than the limit. Frontline cannot clear it: the app only removes devices it lists, re-pairing does not free the slot, and a base-station factory reset is not allowed. Treat it as a binding-table inconsistency (app and base station disagree) and escalate to FAE, who remove the entry with the backend binding tool. Put the orphaned device id and the bound count (for example 8/8) in the ticket."
+  ]
+ },
+ "wall_seconds": 18.8,
+ "llm_seconds": 18.7,
+ "llm_calls": 8,
+ "tokens": 20850,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "I want to add a sensor to the garage door, but the app refuses to register it. The screen shows an error with a code and I'm not sure what it means. I held the button on the sensor until it blinked, exactly like in the video. I've had this system for a few years and added things bit by bit. Is the new sensor dead on arrival?",
+ "user_turns": 2,
+ "console_calls": 5
+}

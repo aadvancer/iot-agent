@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_llm",
+ "case_id": "C032",
+ "pred_root_cause": "BATCH_LINK_FAILURE",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "Multiple sensors went offline simultaneously while the base station and a farther camera remain online, indicating a batch link failure rather than individual signal issues.",
+ "output": {
+  "symptom_summary": "Three sensors went offline simultaneously; base station and front camera remain online.",
+  "suspected_root_cause": "Batch link failure affecting multiple sensors at once.",
+  "key_abnormal_indicators": [
+   "Multiple devices offline at the same time",
+   "Base station itself online",
+   "A farther device (front camera) remains online"
+  ],
+  "customer_reply": "Thank you for the details. Since several sensors stopped responding at the same time while your base station and front camera are still online, this points to a batch link issue rather than a signal problem with individual devices. We will guide you through steps to restore the connection."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 0.0,
+ "llm_seconds": 5.3,
+ "llm_calls": 1,
+ "tokens": 844,
+ "gt_root_cause": "BATCH_LINK_FAILURE",
+ "gt_tier": "L2",
+ "complaint": "Three sensors stopped responding within seconds of each other yesterday evening. I restarted the base station, hoping it would help, but they all stayed offline. The base station is at the far end of the flat from some of them, so maybe the signal is the problem. The front camera, which is farther away, is still online though.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and clear, and it reasonably avoids overclaiming by not asserting that any checks or fixes were completed. However, actionability is weak: it promises future guidance but provides no concrete troubleshooting steps, and it does not ask any diagnostic questions. The root-cause label is plausible but not supported by any performed checks in the session record, so it should not be credited on its own."
+}

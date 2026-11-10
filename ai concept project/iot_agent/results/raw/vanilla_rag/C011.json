@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C011",
+ "pred_root_cause": "BINDING_TABLE_CORRUPT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer removed the old sensor from the app, but the base station may still have an orphaned binding for it, causing the replacement to time out during pairing. The knowledge snippet about orphaned binding indicates that removing a device in the app while it is offline or out of range can leave a ghost entry that occupies a slot and prevents new pairing. This matches the symptom of pairing timing out after 120 seconds. The customer's brother suspects a defective sensor, but the issue is likely a binding-table inconsistency, not hardware failure.",
+ "output": {
+  "symptom_summary": "Replacement door sensor times out during pairing after 120 seconds; old sensor was removed from app.",
+  "suspected_root_cause": "Orphaned binding in base station for the removed sensor, causing pairing timeout.",
+  "key_abnormal_indicators": [
+   "Pairing times out after 120 seconds",
+   "Old sensor removed from app but base station may still have its binding",
+   "All other devices work normally"
+  ],
+  "customer_reply": "Thank you for the details. We suspect the base station still has an entry for the old sensor, which is preventing the new one from pairing. This requires a backend fix by our advanced support team. We have escalated your case and will update you shortly."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 5.7,
+ "llm_seconds": 5.6,
+ "llm_calls": 1,
+ "tokens": 1238,
+ "gt_root_cause": "PAIR_TIMEOUT",
+ "gt_tier": "L1",
+ "complaint": "I'm replacing a broken door sensor. I removed the old one from the app, but the replacement just times out when I try to add it, and the app says pairing expired after two minutes. My brother is an electrician and says the new sensor is probably defective, so I'm thinking of returning it. Everything else in the system works.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it gives a plausible root cause and next step (escalation). However, actionability is limited because no troubleshooting steps are offered to the customer, and it asserts a suspected orphaned binding and that the case 'has been escalated' without any session record showing questions asked, diagnostics performed, or escalation completed. It avoids blaming the customer's hardware, but the claim of escalation is unsupported by the record."
+}

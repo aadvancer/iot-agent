@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C013",
+ "pred_root_cause": "BINDING_TABLE_CORRUPT",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer sees only about six devices in the app, but the base station reports capacity reached (E-201). This mismatch suggests an orphaned binding: a device removed in the app while offline still occupies a slot in the base station's binding table. The knowledge snippet explicitly states that such orphaned bindings cause E-201 even when the app shows fewer devices, and frontline cannot clear them; escalation to FAE is required.",
+ "output": {
+  "symptom_summary": "Customer cannot add a new door sensor; app shows capacity reached (E-201) despite only about six devices visible in the app.",
+  "suspected_root_cause": "Orphaned binding in base station occupying a slot, causing a mismatch between app device list and base station binding table.",
+  "key_abnormal_indicators": [
+   "App shows capacity reached (E-201) when adding a new device.",
+   "Customer sees only about six devices in the app, but base station reports full capacity.",
+   "Resetting phone Bluetooth and trying a different phone did not resolve the issue."
+  ],
+  "customer_reply": "Thank you for the details. It sounds like the base station may have a hidden entry from a previously removed device, which is why it thinks it's full even though you only see six devices. I'll escalate this to our advanced support team so they can clear that hidden entry and restore your ability to add the new sensor."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.3,
+ "llm_seconds": 6.2,
+ "llm_calls": 1,
+ "tokens": 1241,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "Since the weekend I can't add another door sensor. The app shows capacity reached, but I only see about six devices on the home screen. I've reset my phone's Bluetooth and tried a different phone as well, and nothing changes. I don't see why the system would be full.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 4,
+ "usability_reason": "The response is clear, polite, and actionable in that it explains the likely cause and states it will escalate to advanced support. It avoids claiming any checks or fixes were completed, since no actions were performed in the session. It loses a point because the customer reply does not give the customer any immediate next step or concrete action they can take themselves."
+}

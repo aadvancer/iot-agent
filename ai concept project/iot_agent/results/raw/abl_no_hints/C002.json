@@ -1,0 +1,383 @@
+{
+ "system": "abl_no_hints",
+ "case_id": "C002",
+ "pred_root_cause": "CAPACITY_EXCEEDED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The base station (HB-100) has a hard limit of 8 devices and the binding table already shows 8 bound devices (bound_count 8/8). The event log explicitly records \"pairing request rejected: E-201 capacity reached (8/8)\", and the base station's active error code is E-201. The new door sensor is not faulty; the system simply has no free slot.",
+ "output": {
+  "repair_steps": [
+   "Inform the customer that the base station has reached its maximum capacity of 8 devices.",
+   "Ask the customer to identify a device they no longer use or need, such as the offline 'Test Sensor'.",
+   "Guide the customer to remove the selected device from the base station using the app: Settings > Devices > [Device Name] > Remove Device.",
+   "After removal, confirm the base station shows a free slot (bound count 7/8).",
+   "Guide the customer to pair the new garage door sensor: Settings > Devices > Add Device, and follow the pairing instructions.",
+   "Verify the new sensor appears online and is bound in both base station and app."
+  ],
+  "customer_reply": "Your base station supports up to 8 devices and is currently full. To add the new garage door sensor, please remove an unused device (e.g., the offline 'Test Sensor') via the app: Settings > Devices > [Device Name] > Remove Device. Once removed, you can pair the new sensor. Let me know if you need assistance."
+ },
+ "rule_hints": [
+  {
+   "cause": "CAPACITY_EXCEEDED",
+   "tier": "L1",
+   "evidence": "8/8 slots used"
+  },
+  {
+   "cause": "BATTERY_LOW",
+   "tier": "L1",
+   "evidence": "motion_old battery 0%"
+  }
+ ],
+ "log": [
+  {
+   "phase": "collect",
+   "stage": "S1",
+   "tool": "get_base_status",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S2",
+   "tool": "get_topology",
+   "args": {}
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_old"
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S3",
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   }
+  },
+  {
+   "phase": "collect",
+   "stage": "S4",
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_old"
+   }
+  },
+  {
+   "phase": "reason",
+   "tool": "submit_diagnosis",
+   "args": {
+    "root_cause": "CAPACITY_EXCEEDED",
+    "rationale": "The base station (HB-100) has a hard limit of 8 devices and the binding table already shows 8 bound devices (bound_count 8/8). The event log explicitly records \"pairing request rejected: E-201 capacity reached (8/8)\", and the base station's active error code is E-201. The new door sensor is not faulty; the system simply has no free slot."
+   }
+  }
+ ],
+ "trace": [
+  {
+   "tool": "get_base_status",
+   "args": {},
+   "result": {
+    "model": "HB-100",
+    "fw": "3.4",
+    "online": true,
+    "uplink_status": "ok",
+    "storage_used_pct": 55,
+    "loop_recording": true,
+    "error_codes": [
+     "E-201"
+    ],
+    "max_devices": 8,
+    "supported_protocols": [
+     "v2"
+    ]
+   }
+  },
+  {
+   "tool": "get_topology",
+   "args": {},
+   "result": {
+    "bound_count": 8,
+    "max_devices": 8,
+    "devices": [
+     {
+      "id": "cam_garden",
+      "name": "Garden Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "cam_drive",
+      "name": "Driveway Cam",
+      "model": "CAM-S1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_front",
+      "name": "Front Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_back",
+      "name": "Back Door",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "win_kitchen",
+      "name": "Kitchen Window",
+      "model": "SEN-D1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_hall",
+      "name": "Hallway Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "motion_old",
+      "name": "Test Sensor",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "offline"
+     },
+     {
+      "id": "motion_stairs",
+      "name": "Stairs Motion",
+      "model": "SEN-M1",
+      "bound_in_base": true,
+      "bound_in_app": true,
+      "status": "online"
+     },
+     {
+      "id": "door_garage",
+      "name": "New Garage Door",
+      "model": "SEN-D1",
+      "bound_in_base": false,
+      "bound_in_app": false,
+      "status": "not_paired"
+     }
+    ]
+   }
+  },
+  {
+   "tool": "get_device_info",
+   "args": {
+    "device_id": "motion_old"
+   },
+   "result": {
+    "id": "motion_old",
+    "name": "Test Sensor",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": null,
+    "battery": 0,
+    "status": "offline"
+   }
+  },
+  {
+   "tool": "get_logs",
+   "args": {
+    "keyword": ""
+   },
+   "result": {
+    "lines": [
+     "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+     "04:10:48 cloud time sync ok (drift 1 s)",
+     "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+     "pairing request rejected: E-201 capacity reached (8/8)",
+     "23:57:40 remote app session authenticated",
+     "23:59:20 local app session opened from the home network"
+    ]
+   }
+  },
+  {
+   "tool": "check_firmware_compat",
+   "args": {
+    "device_id": "motion_old"
+   },
+   "result": {
+    "device_id": "motion_old",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  }
+ ],
+ "dedup_hits": 0,
+ "memory": {
+  "stages_done": {
+   "S1": "base station status: done",
+   "S2": "binding / capacity: done",
+   "S3": "master-slave link quality: pending",
+   "S4": "firmware / protocol compatibility: pending",
+   "S5": "peripheral device itself: pending"
+  },
+  "base_station": {
+   "model": "HB-100",
+   "fw": "3.4",
+   "online": true,
+   "uplink_status": "ok",
+   "storage_used_pct": 55,
+   "loop_recording": true,
+   "error_codes": [
+    "E-201"
+   ],
+   "max_devices": 8,
+   "supported_protocols": [
+    "v2"
+   ]
+  },
+  "binding_table": {
+   "bound_count": 8,
+   "max_devices": 8,
+   "devices": [
+    {
+     "id": "cam_garden",
+     "name": "Garden Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "cam_drive",
+     "name": "Driveway Cam",
+     "model": "CAM-S1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_front",
+     "name": "Front Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_back",
+     "name": "Back Door",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "win_kitchen",
+     "name": "Kitchen Window",
+     "model": "SEN-D1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_hall",
+     "name": "Hallway Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "motion_old",
+     "name": "Test Sensor",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "offline"
+    },
+    {
+     "id": "motion_stairs",
+     "name": "Stairs Motion",
+     "model": "SEN-M1",
+     "bound_in_base": true,
+     "bound_in_app": true,
+     "status": "online"
+    },
+    {
+     "id": "door_garage",
+     "name": "New Garage Door",
+     "model": "SEN-D1",
+     "bound_in_base": false,
+     "bound_in_app": false,
+     "status": "not_paired"
+    }
+   ]
+  },
+  "abnormal_devices": [
+   "motion_old",
+   "door_garage"
+  ],
+  "device_details": {
+   "motion_old": {
+    "id": "motion_old",
+    "name": "Test Sensor",
+    "model": "SEN-M1",
+    "fw": "1.1",
+    "rssi": null,
+    "battery": 0,
+    "status": "offline"
+   }
+  },
+  "firmware_compat": {
+   "motion_old": {
+    "device_id": "motion_old",
+    "device_fw": "1.1",
+    "device_protocol": "v2",
+    "base_protocols": [
+     "v2"
+    ],
+    "compatible": true,
+    "ota_available_to": null
+   }
+  },
+  "logs": {
+   "": [
+    "02:00:03 scheduled housekeeping completed (event database vacuum 0.4 s)",
+    "04:10:48 cloud time sync ok (drift 1 s)",
+    "06:30:12 radio channel scan: channel 4 selected, utilisation 18%",
+    "pairing request rejected: E-201 capacity reached (8/8)",
+    "23:57:40 remote app session authenticated",
+    "23:59:20 local app session opened from the home network"
+   ]
+  },
+  "customer_answers": [],
+  "fix_attempts": [],
+  "historical_case_facts_for_confirmation": [],
+  "knowledge_snippets": []
+ },
+ "wall_seconds": 0.0,
+ "llm_seconds": 8.2,
+ "llm_calls": 2,
+ "tokens": 5395,
+ "gt_root_cause": "CAPACITY_EXCEEDED",
+ "gt_tier": "L1",
+ "complaint": "I bought a new door sensor last week but it just won't pair. I followed the instructions and held the button. The app shows an error with a code, and I have tried both my phone and my partner's phone with the same result. Our system has grown over the years and, honestly, I don't remember how many devices we have. Do I need to return the sensor?",
+ "user_turns": 0,
+ "console_calls": 5,
+ "usability_score": 2,
+ "usability_reason": "The response is polite and provides clear, actionable steps, but it asserts specific facts not supported by the session record—that the base station has a maximum of 8 devices, that it is currently full, and that an offline 'Test Sensor' exists. No questions were asked and no diagnostics were performed, so these claims are unverified. The root-cause label (capacity limit) is stated without evidence, which the rubric says not to reward on its own."
+}

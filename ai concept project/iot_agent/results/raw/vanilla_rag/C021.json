@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C021",
+ "pred_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "pred_tier": "L1",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The sensor stopped sending alerts after a base station update, but it still appears connected and its LED blinks. This matches a known issue where a peripheral on older firmware stops reporting after a base station update, often with error E-305. The historical case H-07 shows the same symptom (missing motion alerts after base update) resolved by updating the peripheral firmware.",
+ "output": {
+  "repair_steps": [
+   "Open the app and go to the device settings for the entry motion sensor.",
+   "Check for a firmware update for the sensor.",
+   "If an update is available, initiate the update and wait for it to complete.",
+   "After the update, test the sensor by walking past it to see if alerts resume.",
+   "If the issue persists, contact support for further assistance."
+  ],
+  "customer_reply": "Thank you for the details. Based on the symptoms, the sensor likely needs a firmware update to work with the updated base station. We will guide you through updating the sensor firmware."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 4.9,
+ "llm_seconds": 4.9,
+ "llm_calls": 1,
+ "tokens": 1195,
+ "gt_root_cause": "PERIPHERAL_FW_OUTDATED",
+ "gt_tier": "L1",
+ "complaint": "The entry motion sensor stopped sending alerts after the base station updated itself, at least that is what I assume, because the sensor LED still blinks when I walk past and the app still lists it as connected. It is the oldest sensor in the system. I'm worried because it covers the front door.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is polite and provides clear, actionable steps (check/update sensor firmware, then test). However, it asserts the sensor 'likely needs a firmware update' as a diagnosis without any troubleshooting or verification performed in the session record, and the session shows no questions asked or actions completed. It avoids claiming fixes were done, but the root-cause assertion is unsupported by evidence."
+}

@@ -1,0 +1,35 @@
+{
+ "system": "vanilla_rag",
+ "case_id": "C035",
+ "pred_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "pred_tier": "L2",
+ "tier_overridden": false,
+ "triggers": [],
+ "rationale": "The customer reports that cameras work locally but remote notifications have stopped after installing a new mesh Wi-Fi system. This suggests the base station is online locally but cannot reach the cloud, likely due to network configuration or blocked outbound connections. The knowledge snippet indicates that the base station requires outbound TCP 443 and 8883 to the cloud, and a similar historical case (H-06) with local live view but no notifications and E-503 errors was escalated as UPLINK_BLOCKED_PERSIST. Since the issue persists after disabling firewall features and rebooting nodes, it may require deeper investigation (L2).",
+ "output": {
+  "symptom_summary": "Cameras work locally, but remote notifications have stopped after installing a new mesh Wi-Fi system.",
+  "suspected_root_cause": "The new mesh Wi-Fi system may be blocking outbound connections from the base station to the cloud, preventing event notifications.",
+  "key_abnormal_indicators": [
+   "Remote notifications stopped after network change",
+   "Local camera functionality remains intact",
+   "Firewall features disabled and nodes rebooted but issue persists"
+  ],
+  "customer_reply": "Thank you for the details. Since your cameras work locally but remote notifications have stopped after installing the new mesh Wi-Fi system, it appears the base station may be unable to reach our cloud services. We will escalate this to our advanced support team for further diagnosis. In the meantime, you may try connecting the base station directly to your old router to see if notifications resume, but please do not change any settings without guidance."
+ },
+ "rule_hints": [],
+ "log": [],
+ "trace": [],
+ "dedup_hits": 0,
+ "memory": {},
+ "wall_seconds": 6.8,
+ "llm_seconds": 6.7,
+ "llm_calls": 1,
+ "tokens": 1330,
+ "gt_root_cause": "UPLINK_BLOCKED_PERSIST",
+ "gt_tier": "L2",
+ "complaint": "My cameras work locally, but remote notifications have stopped. We just got a new mesh Wi-Fi system and I wonder if it blocks something. I've disabled the firewall features in the mesh app and rebooted all the nodes. Our old router is in a drawer if I should plug it back in.",
+ "user_turns": 0,
+ "console_calls": 0,
+ "usability_score": 3,
+ "usability_reason": "The response is clear and polite, and it offers a concrete troubleshooting step (connecting the base station to the old router). However, actionability is limited: it defers to escalation and cautions against changes, and it does not ask diagnostic questions or confirm any checks. It also references the customer's firewall/reboot actions as reported, so no unsupported claims are made, but the response provides little hands-on guidance beyond one tentative suggestion."
+}

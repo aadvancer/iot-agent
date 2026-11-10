@@ -209,18 +209,101 @@ def _render_case_browser(cases, results, causes):
     )
     st.write(f"**预测分流：** {result.get('pred_tier', '未记录')}")
     st.write(f"**诊断理由：** {result.get('rationale', '未记录')}")
-    if result.get("triggers"):
-        st.write("**升级规则：**")
-        st.json(result["triggers"])
+    if not _is_ticket(result.get("output") or {}):
+        _render_rules(result.get("triggers"))
     if result.get("output"):
         st.write("**一线处理建议 / 升级工单：**")
-        _render_output(result["output"])
+        _render_output(result["output"], result)
     if result.get("trace"):
         with st.expander("完整工具调用轨迹"):
             st.json(result["trace"])
 
 
-def _render_output(output):
+RULE_NAMES = {
+    "R1_BATCH": "R1 多设备同时异常（基站在线）",
+    "R2_PROTOCOL": "R2 固件/协议不兼容且 OTA 无法解决",
+    "R3_FIX_FAILED": "R3 标准一线修复已执行但无效",
+    "R4_TOPOLOGY_MISMATCH": "R4 App 与基站绑定表不一致",
+    "R5_HW_PERSISTS": "R5 复位后放在基站旁仍故障（疑似硬件）",
+}
+DEVICE_STATUS = {
+    "online": "在线", "offline": "离线", "intermittent": "间歇掉线",
+    "connected_no_events": "已连接但无事件", "not_paired": "未配对",
+}
+
+
+def _rule_lines(triggers):
+    return [f"- **{RULE_NAMES.get(t.get('rule'), t.get('rule'))}**：{t.get('evidence', '')}" for t in triggers]
+
+
+def _render_rules(triggers):
+    if triggers:
+        st.markdown("**触发的升级规则：**\n" + "\n".join(_rule_lines(triggers)))
+
+
+def _fmt(value, unit=""):
+    return "—" if value is None or value == "" else f"{value}{unit}"
+
+
+def _ticket_markdown(output, result=None):
+    """FAE escalation ticket as readable Markdown (shown on the page and offered for download)."""
+    result = result or {}
+    ticket = output.get("ticket") or {}
+    lines = ["#### 🚨 FAE 升级工单", ""]
+    meta = []
+    if result.get("case_id"):
+        meta.append(f"**工单号：** {result['case_id']}")
+    if result.get("pred_root_cause"):
+        meta.append(f"**诊断根因：** `{result['pred_root_cause']}`")
+    meta.append("**处理级别：** L2（需 FAE 处理）")
+    lines += ["　｜　".join(meta), ""]
+
+    lines += ["##### 问题概述", output.get("symptom_summary", "—"), ""]
+    lines += ["##### 疑似根因", output.get("suspected_root_cause", "—"), ""]
+    indicators = output.get("key_abnormal_indicators") or []
+    if indicators:
+        lines += ["##### 关键异常指标", *[f"- {item}" for item in indicators], ""]
+
+    rules = ticket.get("escalation_rules") or result.get("triggers") or []
+    lines.append("##### 升级原因")
+    lines += _rule_lines(rules) if rules else ["- 诊断根因本身属于需要 FAE 处理的类别。"]
+    lines.append("")
+
+    base = ticket.get("base_station")
+    if base:
+        codes = ", ".join(base.get("error_codes") or []) or "无"
+        lines += ["##### 基站信息",
+                  f"- 型号：{_fmt(base.get('model'))}　固件：{_fmt(base.get('fw'))}　"
+                  f"状态：{'在线' if base.get('online') else '离线'}　故障码：{codes}", ""]
+
+    devices = ticket.get("affected_devices") or []
+    if devices:
+        lines += ["##### 受影响设备",
+                  "| 设备 | 型号 | 固件 | 信号 (RSSI) | 电量 | 状态 |",
+                  "|---|---|---|---|---|---|"]
+        for d in devices:
+            lines.append(
+                f"| {d.get('name') or d.get('id')} | {_fmt(d.get('model'))} | {_fmt(d.get('fw'))} | "
+                f"{_fmt(d.get('rssi'), ' dBm')} | {_fmt(d.get('battery'), '%')} | "
+                f"{DEVICE_STATUS.get(d.get('status'), _fmt(d.get('status')))} |")
+        lines.append("")
+
+    steps = ticket.get("steps_performed") or []
+    lines.append("##### 一线已执行的排查")
+    if steps:
+        for i, step in enumerate(steps, 1):
+            action, _, outcome = step.partition(" -> ")
+            lines.append(f"{i}. {action}" + (f"  \n　→ 客户反馈：{outcome}" if outcome else ""))
+    else:
+        lines.append("- 未指导客户执行操作（证据已足以判断需要升级）。")
+    return "\n".join(lines)
+
+
+def _is_ticket(output):
+    return bool(output.get("ticket") or output.get("symptom_summary"))
+
+
+def _render_output(output, result=None):
     """Show the hand-off for frontline staff: steps, customer reply template, FAE ticket."""
     if output.get("repair_steps"):
         st.write("**一线操作步骤（供客服执行或指导客户）：**")
@@ -229,9 +312,86 @@ def _render_output(output):
     if output.get("customer_reply"):
         st.write("**客户回复模板（客服可直接发送）：**")
         st.code(output["customer_reply"], language=None)
-    if output.get("ticket") or output.get("symptom_summary"):
-        st.write("**FAE 升级工单（客服提交给 FAE）：**")
-        st.json({k: v for k, v in output.items() if k != "customer_reply"})
+    if _is_ticket(output):
+        ticket_md = _ticket_markdown(output, result)
+        with st.container(border=True):
+            st.markdown(ticket_md)
+        st.download_button(
+            "下载 FAE 工单（Markdown）",
+            data=ticket_md,
+            file_name=f"{(result or {}).get('case_id', 'case')}_FAE_ticket.md",
+            mime="text/markdown",
+            key=f"ticket_download_{(result or {}).get('system', '')}_{(result or {}).get('case_id', '')}",
+        )
+
+
+_INTERACTIVE_KEYS = ("interactive_diagnosis", "interactive_messages", "interactive_case_id", "interactive_error")
+_ERRORS = (OpenAIError, RuntimeError, ValueError, OSError)
+
+
+def _clear_interactive_state():
+    for key in _INTERACTIVE_KEYS:
+        st.session_state.pop(key, None)
+
+
+_JUDGEMENT_LABELS = {True: "✅ 已解决", False: "❌ 未解决", None: "❔ 无法判断"}
+
+
+def _judgement_message(judgement):
+    label = _JUDGEMENT_LABELS[judgement.get("resolved")]
+    reason = judgement.get("reason") or ""
+    text = f"Agent 判断客户反馈：**{label}**" + (f"——{reason}" if reason else "")
+    if judgement.get("resolved") is None:
+        text += "（不计为修复失败，Agent 会继续确认）"
+    return text
+
+
+def _submit_reply(session, messages, answer):
+    """Send the customer's reply (relayed by staff) and show the agent's next step."""
+    from agent.interactive import SessionBusy
+
+    if session.busy:
+        st.info("上一条回复仍在处理中，请稍候，不要重复提交。")
+        return
+    was_action = session.pending["tool"] == "instruct_user"
+    messages.append({"role": "user", "content": answer})
+    with st.chat_message("user"):
+        st.markdown(answer)
+    try:
+        with st.spinner("Agent 正在根据客户回复继续诊断，通常需要 5–20 秒…"):
+            prompt = session.submit(answer)
+    except SessionBusy:
+        messages.pop()
+        st.info("上一条回复仍在处理中，请稍候，不要重复提交。")
+        return
+    except _ERRORS as exc:
+        if session.pending is not None:
+            messages.pop()
+            st.error(f"无法处理这条回复：{exc}")
+            return
+        st.session_state.interactive_error = f"处理回复时模型调用失败：{exc}"
+        st.rerun()
+    st.session_state.pop("interactive_error", None)
+    if was_action and session.judgement:
+        messages.append({"role": "assistant", "content": _judgement_message(session.judgement)})
+    if prompt:
+        messages.append({"role": "assistant", "content": prompt})
+    st.rerun()
+
+
+def _render_session_bar(session, case_id):
+    """Status of the current ticket plus a confirmed 'abandon' action."""
+    left, right = st.columns([4, 1], vertical_alignment="center")
+    if session.result is not None:
+        left.success(f"工单 {case_id} · 诊断已完成")
+        return
+    left.caption(f"工单 {case_id} · 进行中 · 第 {session.step} 步 / 最多 {session.max_steps} 步")
+    with right.popover("放弃本次诊断", use_container_width=True):
+        st.write("放弃后本次诊断进度不会保留，下次将从头开始处理该工单。")
+        if st.button("确认放弃", type="primary", key=f"interactive_abandon_{case_id}"):
+            session.abandon()
+            _clear_interactive_state()
+            st.rerun()
 
 
 def _render_interactive(cases):
@@ -241,22 +401,19 @@ def _render_interactive(cases):
         "你把客户的回答录入后它继续诊断，最后给出一线处理步骤、客户回复模板或 FAE 升级工单。"
         "Agent 不直接与客户对话；设备信息来自合成案例，当前没有连接真实设备。"
     )
-    case_id = st.selectbox("选择要处理的客户案例", list(cases), key="interactive_case_picker")
+    active = st.session_state.get("interactive_diagnosis")
+    if active is not None:
+        # lock the picker on the ticket being worked on
+        st.session_state.interactive_case_picker = st.session_state.interactive_case_id
+    case_id = st.selectbox(
+        "选择要处理的客户案例", list(cases), key="interactive_case_picker",
+        disabled=active is not None,
+        help="处理中的工单完成或放弃后才能切换案例。" if active is not None else None,
+    )
     case = cases[case_id]
     with st.expander("模拟客户可提供的信息（用于回答 Agent 的建议）"):
         st.write("请以该案例客户的口吻，根据以下已知信息回答 Agent 建议的问题；不需要猜测技术根因。")
         st.json(case.get("user_knowledge", {}))
-
-    active = st.session_state.get("interactive_diagnosis")
-    active_case_id = st.session_state.get("interactive_case_id")
-    if active is not None and active_case_id != case_id:
-        st.warning("已有对话属于另一个案例。请结束或重置后再开始新案例。")
-        if st.button("重置对话", key="interactive_case_change_reset"):
-            st.session_state.pop("interactive_diagnosis", None)
-            st.session_state.pop("interactive_messages", None)
-            st.session_state.pop("interactive_case_id", None)
-            st.rerun()
-        return
 
     if active is None:
         if st.button("开始处理工单", type="primary"):
@@ -269,17 +426,19 @@ def _render_interactive(cases):
                 {"role": "user", "content": f"【客户投诉】{case['complaint']}"},
                 {
                     "role": "assistant",
-                    "content": "已为您调取客户投诉和模拟支持台数据。我会给出诊断建议，需要向客户确认的内容由您转达。",
+                    "content": (
+                        "已恢复该工单上次未完成的诊断进度，可从下面的建议继续。"
+                        if session.resumed else
+                        "已为您调取客户投诉和模拟支持台数据。我会给出诊断建议，需要向客户确认的内容由您转达。"
+                    ),
                 },
             ]
             try:
-                prompt = session.start()
-            except (OpenAIError, RuntimeError, ValueError, OSError) as exc:
+                with st.spinner("Agent 正在读取支持台数据并分析，通常需要 5–20 秒…"):
+                    prompt = session.start()
+            except _ERRORS as exc:
                 st.error(f"无法启动诊断：{exc}")
-                st.session_state.pop("interactive_diagnosis", None)
-                st.session_state.pop("interactive_messages", None)
-                st.session_state.pop("interactive_case_id", None)
-                st.session_state.pop("interactive_error", None)
+                _clear_interactive_state()
                 return
             if prompt:
                 st.session_state.interactive_messages.append(
@@ -290,14 +449,16 @@ def _render_interactive(cases):
 
     session = active
     messages = st.session_state.interactive_messages
+    _render_session_bar(session, case_id)
     if st.session_state.get("interactive_error"):
         st.error(st.session_state.interactive_error)
     if session.result is None and session.pending is None:
         st.warning("刚才没有完成下一步诊断。可重试模型请求，已提交的回复会保留。")
         if st.button("重试诊断", key=f"interactive_retry_{case_id}_{session.step}"):
             try:
-                prompt = session.resume()
-            except (OpenAIError, RuntimeError, ValueError, OSError) as exc:
+                with st.spinner("Agent 正在重试分析…"):
+                    prompt = session.resume()
+            except _ERRORS as exc:
                 st.session_state.interactive_error = f"重试诊断失败：{exc}"
                 st.rerun()
             st.session_state.pop("interactive_error", None)
@@ -310,36 +471,11 @@ def _render_interactive(cases):
             st.markdown(message["content"])
 
     if session.result is None and session.pending is not None:
-        resolved = None
-        if session.pending["tool"] == "instruct_user":
-            choice = st.radio(
-                "客户执行后问题是否解决？",
-                ["请选择", "已解决", "未解决"],
-                horizontal=True,
-                key=f"interactive_resolution_{case_id}_{session.step}",
-            )
-            if choice != "请选择":
-                resolved = choice == "已解决"
-
-        answer = st.chat_input("录入客户的回答或操作结果")
-        if answer:
-            if session.pending["tool"] == "instruct_user" and resolved is None:
-                st.warning("请先选择操作是否解决问题，再提交结果。")
-                return
-            messages.append({"role": "user", "content": answer})
-            try:
-                prompt = session.submit(answer, resolved=resolved)
-            except (OpenAIError, RuntimeError, ValueError, OSError) as exc:
-                if session.pending is not None:
-                    messages.pop()
-                    st.error(f"无法处理这条回复：{exc}")
-                    return
-                st.session_state.interactive_error = f"处理回复时模型调用失败：{exc}"
-                st.rerun()
-            st.session_state.pop("interactive_error", None)
-            if prompt:
-                messages.append({"role": "assistant", "content": prompt})
-            st.rerun()
+        placeholder = ("录入客户操作后的反馈原话，例如：移近之后摄像头一整天都没掉线"
+                       if session.pending["tool"] == "instruct_user" else "录入客户的回答")
+        answer = st.chat_input(placeholder, key=f"interactive_reply_{case_id}")
+        if answer and answer.strip():
+            _submit_reply(session, messages, answer.strip())
 
     if session.result is not None:
         result = session.result
@@ -356,28 +492,26 @@ def _render_interactive(cases):
         )
         col2.metric("处理分流（L1 一线闭环 / L2 升级 FAE）", result["pred_tier"])
         st.write(f"**诊断依据：** {result['rationale']}")
-        _render_output(result["output"])
-        if result["triggers"]:
-            st.write("**触发的升级规则：**")
-            st.json(result["triggers"])
+        if not _is_ticket(result["output"]):   # an FAE ticket already lists the rules
+            _render_rules(result["triggers"])
+        _render_output(result["output"], result)
         with st.expander("查看本次设备检查轨迹"):
             st.json(result["trace"])
         with st.expander("查看案例标准答案（诊断结束后显示）"):
             st.write(f"根因：{expected_cause} / {case['gt_tier']}")
             st.write(case.get("notes", ""))
-        st.download_button(
+        col1, col2 = st.columns(2)
+        col1.download_button(
             "下载本次诊断记录",
             data=json.dumps(result, ensure_ascii=False, indent=2),
             file_name=f"{case_id}_interactive_diagnosis.json",
             mime="application/json",
+            use_container_width=True,
         )
-
-    if st.button("结束并重置对话", key=f"interactive_reset_{case_id}"):
-        st.session_state.pop("interactive_diagnosis", None)
-        st.session_state.pop("interactive_messages", None)
-        st.session_state.pop("interactive_case_id", None)
-        st.session_state.pop("interactive_error", None)
-        st.rerun()
+        if col2.button("处理下一个工单", type="primary", use_container_width=True,
+                       key=f"interactive_next_{case_id}"):
+            _clear_interactive_state()
+            st.rerun()
 
 
 def main():
